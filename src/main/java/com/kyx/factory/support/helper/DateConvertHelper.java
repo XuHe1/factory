@@ -22,7 +22,7 @@ public class DateConvertHelper {
     private static final String FMT_ISO_8601 = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     public static class Serializer extends JsonSerializer<Date> {
         @Override
-        public void serialize(Date value, JsonGenerator generator, SerializerProvider provider) throws IOException{
+        public void serialize(Date value, JsonGenerator generator, SerializerProvider provider) throws IOException {
             if (value == null) {
                 generator.writeNull();
             } else {

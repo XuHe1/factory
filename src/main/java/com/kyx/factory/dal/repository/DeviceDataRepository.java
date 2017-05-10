@@ -16,5 +16,5 @@ import java.util.List;
 
 public interface DeviceDataRepository extends JpaRepository<DeviceData, Long> {
     List<DeviceData> getBySn(String sn);
-    Page<DeviceData> findAllByDevice(Pageable var1,String device);
+    Page<DeviceData> findAllByDevice(Pageable var1, String device);
 }

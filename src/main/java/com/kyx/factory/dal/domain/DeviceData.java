@@ -27,7 +27,7 @@ import java.util.Date;
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class DeviceData implements Serializable{
+public class DeviceData implements Serializable {
     public final static String TABLE_NAME = "device_data";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

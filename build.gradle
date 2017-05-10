@@ -58,8 +58,8 @@ configurations {
 dependencies {
     // Base
     compile("org.springframework.boot:spring-boot-starter-actuator")
-    optional("org.springframework.boot:spring-boot-devtools")
-    optional "org.projectlombok:lombok:1.16.10"
+    compile("org.springframework.boot:spring-boot-devtools")
+    compile "org.projectlombok:lombok:1.16.10"
 
     // Utils
     compile("joda-time:joda-time:2.4")
@@ -89,7 +89,6 @@ dependencies {
         exclude module: "slf4j-rest"
     }
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
-    compile("com.google.code.gson:gson")
     // Test
     testCompile("org.springframework.boot:spring-boot-starter-test")
 }
