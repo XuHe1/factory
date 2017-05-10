@@ -77,7 +77,7 @@
                 field: 'sn',
                 title: '设备号',
                 formatter: function (value, row, index) {
-                    return value;
+                    return value == null? 'Z994499' : value;
                 }
             },
             {
