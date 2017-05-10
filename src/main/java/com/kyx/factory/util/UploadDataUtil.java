@@ -1,6 +1,4 @@
-package com.kyx.factory.util;/**
- * Created by XuHe on 17/5/10.
- */
+package com.kyx.factory.util;
 
 import com.kyx.factory.dal.domain.DeviceData;
 import com.kyx.factory.dal.repository.DeviceDataRepository;
