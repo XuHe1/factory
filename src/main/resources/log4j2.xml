@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration name="log4j.dev" status="DEBUG">
+    <Properties>
+        <Property name="LogDir">./build/log4j/@name@</Property>
+        <Property name="CommonPattern">%d{yyyy-MM-dd'T'HH:mm:ss.SSS} %5p %t %M(%F:%L) %m%n</Property>
+        <Property name="MainPackage">com.netstatx.device</Property>
+    </Properties>
+    <Filter type="ThresholdFilter" level="TRACE"/>
+
+    <Appenders>
+        <Console name="stdout" target="SYSTEM_OUT">
+            <PatternLayout pattern="${CommonPattern}"/>
+            <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+        </Console>
+        <Console name="stderr" target="SYSTEM_ERR">
+            <PatternLayout pattern="${CommonPattern}"/>
+            <ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+        </Console>
+        <RollingFile name="fileDebug" fileName="${LogDir}/debug.log"
+                     filePattern="${LogDir}/%d{yyyy-MM-dd'T'HH-mm-ss}.info.%i.log.gz">
+            <PatternLayout pattern="${CommonPattern}"/>
+            <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="512 MB"/>
+            </Policies>
+        </RollingFile>
+        <RollingFile name="fileInfo" fileName="${LogDir}/info.log"
+                     filePattern="${LogDir}/%d{yyyy-MM-dd'T'HH-mm-ss}.info.%i.log.gz">
+            <PatternLayout pattern="${CommonPattern}"/>
+            <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="512 MB"/>
+            </Policies>
+        </RollingFile>
+        <RollingFile name="fileWarn" fileName="${LogDir}/warn.log" append="true"
+                     filePattern="${LogDir}/%d{yyyy-MM-dd'T'HH-mm-ss}.warn.%i.log.gz">
+            <PatternLayout pattern="${CommonPattern}"/>
+            <ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="512 MB"/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="stdout"/>
+            <AppenderRef ref="stderr"/>
+            <AppenderRef ref="fileInfo"/>
+            <AppenderRef ref="fileWarn"/>
+        </Root>
+        <Logger name="${MainPackage}" level="DEBUG" additivity="true">
+            <AppenderRef ref="fileDebug"/>
+        </Logger>
+    </Loggers>
+</Configuration>

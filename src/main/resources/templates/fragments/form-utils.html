@@ -1,0 +1,11 @@
+{% macro formText(placeholder="", name, value) %}
+<input type="text" name="{{ name }}" value="{{ value }}" placeholder="{{ placeholder }}"/>
+{% endmacro %}
+
+{% macro formHidden(name, value) %}
+<input type="hidden" name="{{ name }}" value="{{ value }}"/>
+{% endmacro %}
+
+{% macro formPassword(placeholder="", name, value) %}
+<input type="password" name="{{ name }}" value="{{ value }}" placeholder="{{ placeholder }}"/>
+{% endmacro %}

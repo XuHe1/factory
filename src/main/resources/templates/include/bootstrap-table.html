@@ -1,0 +1,19 @@
+<script src="/js/bower_components/bootstrap-table/dist/bootstrap-table.min.js"></script>
+<script src="/js/bower_components/bootstrap-table/dist/locale/bootstrap-table-zh-CN.min.js"></script>
+<script type="text/javascript">
+$.extend($.fn.bootstrapTable.defaults, {
+    search: true,
+    searchText: 'device',
+    showColumns: true,
+    strictSearch:true,
+    customSearch: function(){}
+
+    pagination: true,
+    sidePagination: 'server',
+    pageList: [20, 50, 100],
+    pageSize: 20,
+    showRefresh: true,
+    idField: 'id',
+    toolbar: "#toolbar"
+});
+</script>

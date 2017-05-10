@@ -1,0 +1,99 @@
+group = "com.kyx.factory"
+version = "1.0.0"
+description = "factory"
+
+buildscript {
+    ext {
+        springBootVersion = "1.4.2.RELEASE"
+    }
+
+    repositories {
+        mavenCentral()
+        maven { url "http://repo.spring.io/plugins-release" }
+    }
+
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "org.springframework.build.gradle:propdeps-plugin:0.0.7"
+    }
+}
+
+apply from: file("gradle/common.gradle")
+
+configure(allprojects) {
+    apply plugin: "org.springframework.boot"
+    apply plugin: "propdeps"
+    apply plugin: "propdeps-maven"
+    apply plugin: "propdeps-idea"
+    apply plugin: "propdeps-eclipse"
+
+    springBoot {
+        executable = true
+    }
+
+    bootRun {
+        addResources = true
+        systemProperties = [
+                "spring.profiles.active": profile,
+        ]
+    }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:Brixton.SR7"
+    }
+}
+
+configurations {
+    all*.exclude group: "ch.qos.logback"
+    all*.exclude group: "log4j"
+    all*.exclude module: 'slf4j-log4j12'
+    all*.exclude group: "org.eclipse.jetty.websocket"
+    all*.exclude module: "spring-boot-starter-logging"
+    all*.exclude module: "spring-boot-starter-tomcat"
+    all*.exclude group: "org.apache.tomcat"
+}
+
+dependencies {
+    // Base
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    optional("org.springframework.boot:spring-boot-devtools")
+    optional "org.projectlombok:lombok:1.16.10"
+
+    // Utils
+    compile("joda-time:joda-time:2.4")
+    compile("com.google.guava:guava:18.0")
+    compile("commons-codec:commons-codec:1.10")
+    compile("org.apache.commons:commons-lang3:3.4")
+    compile("com.baidu.unbiz:fluent-validator:1.0.5")
+    compile("io.netty:netty-buffer:4.0.36.Final")
+    compile("net.objecthunter:exp4j:0.4.8")
+    compile('org.springframework.boot:spring-boot-starter-amqp')
+
+    // Web
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-jetty")
+
+    // Template
+    compile("com.mitchellbosecke:pebble-spring-boot-starter:2.3.0") {
+        exclude module: "guava"
+    }
+
+    // Log
+    compile("org.springframework.boot:spring-boot-starter-log4j2")
+
+    // Persistence
+    compile("mysql:mysql-connector-java:5.1.38")
+    compile("com.zaxxer:HikariCP:2.4.6") {
+        exclude module: "slf4j-rest"
+    }
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("com.google.code.gson:gson")
+    // Test
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = "2.14"
+}

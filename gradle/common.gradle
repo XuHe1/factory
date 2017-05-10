@@ -1,0 +1,61 @@
+import org.apache.tools.ant.filters.*
+
+allprojects {
+    apply plugin: "java"
+    apply plugin: "idea"
+    apply plugin: "maven"
+    apply plugin: 'eclipse-wtp'
+
+    sourceCompatibility = targetCompatibility = 1.8
+
+    [compileJava, compileTestJava, javadoc]*.options*.encoding = "UTF-8"
+
+    repositories {
+        jcenter()
+        mavenLocal()
+        mavenCentral()
+    }
+
+    ext {
+        // usage: gradle -Pprofile=test
+        profile = project.hasProperty("profile") ? project["profile"] : "dev"
+        println "build with profile:" + profile
+    }
+
+    sourceSets {
+        main {
+            resources {
+                srcDir "src/main/resources"
+                srcDir "src/main/resources_${profile}"
+            }
+        }
+    }
+
+    processResources {
+        //filesMatching("**/application*.*") {
+        //  expand(project.properties)
+        //}
+        from(sourceSets.main.resources.srcDirs) {
+            exclude("**/static/**")
+            //exclude("**/templates/**")
+            filter ReplaceTokens, tokens: [
+                    "name": project.name,
+                    "group": project.group,
+                    "version": project.version,
+                    "env": profile,
+            ]
+        }
+    }
+    compileJava.dependsOn(processResources)
+}
+
+idea {
+    project {
+        jdkName = '1.8'
+        languageLevel = '1.8'
+    }
+    module {
+        downloadJavadoc = false
+        downloadSources = false
+    }
+}

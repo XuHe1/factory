@@ -1,0 +1,7 @@
+{% macro breadcrumb(icon, main, sub, title) %}
+<ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-{{icon}}"></i> {{main}}</a></li>
+    <li><a href="#">{{sub}}</a></li>
+    <li class="active">{{title}}</li>
+</ol>
+{% endmacro %}
