@@ -7,12 +7,11 @@ import com.kyx.factory.dal.repository.ProductConfigRepository;
 import com.kyx.factory.exception.AppFailure;
 import com.kyx.factory.exception.Failure;
 import com.kyx.factory.exception.Ok;
+import com.kyx.factory.service.DeviceDataService;
 import com.kyx.factory.support.db.Page;
-import com.kyx.factory.util.UploadDataUtil;
 import com.kyx.factory.web.model.BootstrapTableDTO;
 import com.kyx.factory.web.support.BaseResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,10 +32,10 @@ import java.util.List;
  * @create 2017-05-10 上午10:32
  **/
 
+@Slf4j
 @RestController
 @RequestMapping("/")
-public class DeviceDataResource extends BaseResource{
-    private final static Logger logger = LoggerFactory.getLogger(DeviceDataResource.class);
+public class DeviceDataResource extends BaseResource {
     @Autowired
     private DeviceDataRepository deviceDataRepository;
 
@@ -44,11 +43,11 @@ public class DeviceDataResource extends BaseResource{
     private ProductConfigRepository productConfigRepository;
 
     @Autowired
-    private UploadDataUtil uploadDataUtil;
+    private DeviceDataService deviceDataService;
 
     @RequestMapping(path = "/product_config" , method = RequestMethod.POST)
-    public ResponseEntity add(@ModelAttribute ProductConfig productConfig){
-
+    public ResponseEntity add(@ModelAttribute ProductConfig productConfig) {
+        //数据验证
         String startSn = productConfig.getStartSn();
         Integer snCount = productConfig.getSnCount();
         String numStr = startSn.substring(1,startSn.length());
@@ -65,7 +64,8 @@ public class DeviceDataResource extends BaseResource{
         if(productConfigList != null || productConfigList.size() > 0) {
             Integer left, right;
             for(ProductConfig config : productConfigList){
-                if(config.getFactory().equals(factory) && config.getDevice().equals(device) && config.getProductLine().intValue() == productLine.intValue()){
+                if(config.getFactory().equals(factory) && config.getDevice().equals(device) &&
+                        config.getProductLine().intValue() == productLine.intValue()) {
                     productConfig.setId(config.getId());
                     productConfig.setCreateTime(config.getCreateTime());
                     productConfig.setUpdateTime(new Date());
@@ -74,15 +74,16 @@ public class DeviceDataResource extends BaseResource{
                 }
                 left = config.getEndSn() - config.getSnCount() + 1;
                 right = config.getEndSn();
-                if((startSnNum <= right && startSnNum >= left) || (endSnNum <= right && endSnNum >= left) || (endSnNum >= right && startSnNum <= left) ){
-                    logger.error("============" + AppFailure.SN_CONFLICT.toString());
+                if((startSnNum <= right && startSnNum >= left) || (endSnNum <= right && endSnNum >= left) ||
+                        (endSnNum >= right && startSnNum <= left) ) {
+                    log.error("{}", AppFailure.SN_CONFLICT.toString());
                     return new Failure(AppFailure.SN_CONFLICT);
                 }
             }
 
         }
 
-        if (isCreate){
+        if (isCreate) {
             productConfig.setCreateTime(new Date());
             productConfig.setUpdateTime(new Date());
         }
@@ -97,28 +98,14 @@ public class DeviceDataResource extends BaseResource{
     }
 
     @RequestMapping(path = "/product" , method = RequestMethod.POST)
-    public ResponseEntity add(@ModelAttribute DeviceData deviceData){
-
-//        String sn = deviceData.getSn();
-//        if(deviceData.getTestResult() == 0){
-//            List<DeviceData> deviceDataList = deviceDataRepository.getBySn(sn);
-//            if (deviceDataList != null  && deviceDataList.size() > 0){
-//                logger.error("" + AppFailure.ALREADY_EXISTS.toString());
-//                return new Failure(AppFailure.ALREADY_EXISTS);
-//            }
-//        }
-//
-//        deviceData.setReceiveTime(new Date());
-//        deviceDataRepository.save(deviceData);
-//        return new Ok(deviceData);
-         return  uploadDataUtil.uploadToDB(deviceData);
+    public ResponseEntity add(@ModelAttribute DeviceData deviceData) {
+         return  deviceDataService.save(deviceData);
 
     }
 
     @GetMapping("/product/list")
     BootstrapTableDTO<?> findDeviceTable(@RequestParam(defaultValue = "10") Integer limit,
-                                         @RequestParam(defaultValue = "0") Integer offset
-                                   ) {
+                                         @RequestParam(defaultValue = "0") Integer offset) {
 
         Integer page = (int)Math.floor(offset / limit);
         Pageable pageable = new PageRequest(page, limit);
