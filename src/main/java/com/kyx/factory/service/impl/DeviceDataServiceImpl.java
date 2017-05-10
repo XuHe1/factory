@@ -42,6 +42,8 @@ public class DeviceDataServiceImpl implements DeviceDataService {
                     log.error("{}", AppFailure.ALREADY_EXISTS.toString());
                     return new Failure(AppFailure.ALREADY_EXISTS);
                 }
+            }else {
+                deviceData.setSn(null);
             }
 
             deviceData.setReceiveTime(new Date());

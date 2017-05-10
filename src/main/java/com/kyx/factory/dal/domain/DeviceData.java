@@ -52,7 +52,7 @@ public class DeviceData implements Serializable {
     @Column(name = "chip_id")
     private String chipId;
 
-    @Column(name = "sn")
+    @Column(name = "sn", unique = true)
     private String sn;
 
     @Column(name = "iccid")
