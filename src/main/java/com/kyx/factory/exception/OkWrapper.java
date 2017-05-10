@@ -2,8 +2,10 @@ package com.kyx.factory.exception;
 
 
 /**
- * Created by wangle on 5/16/16.
- */
+ *
+ * @author h.xu
+ * @create 2017-05-10 上午10:32
+ **/
 class OkWrapper<T> {
     private T data;
 

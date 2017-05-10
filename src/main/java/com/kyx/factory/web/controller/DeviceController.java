@@ -7,8 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * @author wangle<thisiswangle@gmail.com>
- */
+ *
+ * @author h.xu
+ * @create 2017-05-10 上午10:32
+ **/
+
 @Slf4j
 @Controller
 @RequestMapping("/web/devices")

@@ -4,8 +4,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 /**
- * Created by wangle on 5/26/16.
- */
+ *
+ * @author h.xu
+ * @create 2017-05-10 上午10:32
+ **/
 public class Failure<T> extends ResponseEntity<FailureWrapper<T>> {
     public Failure(AppFailure appFailure) {
         super((FailureWrapper<T>) new FailureWrapper<>(appFailure.getCode(), appFailure.getMsg()),

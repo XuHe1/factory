@@ -14,8 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
- * @author wangle<thisiswangle@gmail.com>
- */
+ * @author h.xu
+ * @create 2017-05-10 上午10:32
+ **/
 @Configuration
 public class MvcConfig extends WebMvcConfigurerAdapter {
     @Override

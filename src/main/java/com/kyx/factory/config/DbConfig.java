@@ -11,8 +11,10 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 /**
- * Created by wangle on 16/02/2017.
- */
+ *
+ * @author h.xu
+ * @create 2017-05-10 上午10:32
+ **/
 @Configuration
 public class DbConfig {
     @Bean(destroyMethod = "close")

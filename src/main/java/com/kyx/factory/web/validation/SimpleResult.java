@@ -4,8 +4,10 @@ import com.baidu.unbiz.fluentvalidator.Result;
 import com.google.common.collect.Lists;
 
 /**
- * @author wangle<thisiswangle@gmail.com>
- */
+ *
+ * @author h.xu
+ * @create 2017-05-10 上午10:32
+ **/
 public class SimpleResult extends Result {
     private SimpleResult() {}
     public static SimpleResult build(String reason) {

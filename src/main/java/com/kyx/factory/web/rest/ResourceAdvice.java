@@ -16,8 +16,10 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * @author wangle<thisiswangle@gmail.com>
- */
+ *
+ * @author h.xu
+ * @create 2017-05-10 上午10:32
+ **/
 @Slf4j
 @ControllerAdvice("com.netstatng.device.rest")
 public class ResourceAdvice extends ResponseEntityExceptionHandler {

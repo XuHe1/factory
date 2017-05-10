@@ -1,8 +1,9 @@
 package com.kyx.factory.util;
 
 /**
- * Created by wangle on 5/25/16.
- */
+ * @author h.xu
+ * @create 2017-05-10 上午10:32
+ **/
 public class SqlUtils {
     public static boolean toBoolean(int intBoolean){
         return intBoolean == 1;

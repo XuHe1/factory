@@ -41,4 +41,7 @@
     "msg": "参数不合法"
  }
  ```
+## 接口定义
+[生产检测数据上报接口](https://git.1tianxia.net/h.xu/factory/blob/master/POST.-product_data.md)
 
+[生产计划配置接口](https://git.1tianxia.net/h.xu/factory/blob/master/POST.-product_config.md)

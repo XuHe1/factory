@@ -3,8 +3,11 @@ package com.kyx.factory.util;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author wangle<thisiswangle@gmail.com>
- */
+ * 判断登录名称类型.
+ *
+ * @author h.xu
+ * @create 2017-05-10 上午10:32
+ **/
 public class UserAgentUtils {
     private final static String USER_AGENT = "User-Agent";
 

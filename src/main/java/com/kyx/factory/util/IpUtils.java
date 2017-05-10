@@ -7,8 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 
 /**
- * Created by wangle on 21/12/2016.
- */
+ *
+ * @author h.xu
+ * @create 2017-05-10 上午10:32
+ **/
 public class IpUtils {
     private static final String[] PROXY_REMOTE_IP_ADDRESS_HEADERS = {"X-Forwarded-For", "X-Real-IP"};
     /**

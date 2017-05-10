@@ -14,8 +14,10 @@ import java.io.IOException;
 import java.util.Date;
 
 /**
- * @author wangle<thisiswangle@gmail.com>
- */
+ *
+ * @author h.xu
+ * @create 2017-05-10 上午10:32
+ **/
 public class DateConvertHelper {
     private static final String FMT_ISO_8601 = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     public static class Serializer extends JsonSerializer<Date> {

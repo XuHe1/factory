@@ -16,11 +16,13 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.*;
 
+
 /**
  * A json util based on jackson.
  *
- * Created by wangle on 3/21/15
- */
+ * @author h.xu
+ * @create 2017-05-10 上午10:32
+ **/
 public class JsonUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonUtils.class);
 

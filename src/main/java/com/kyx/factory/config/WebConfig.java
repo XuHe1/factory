@@ -19,8 +19,10 @@ import java.util.Date;
 import java.util.TimeZone;
 
 /**
- * @author wangle<thisiswangle@gmail.com>
- */
+ *
+ * @author h.xu
+ * @create 2017-05-10 上午10:32
+ **/
 @Configuration
 public class WebConfig {
     @Bean

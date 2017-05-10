@@ -1,8 +1,10 @@
 package com.kyx.factory.exception;
 
 /**
- * Created by wangle on 6/3/16.
- */
+ *
+ * @author h.xu
+ * @create 2017-05-10 上午10:32
+ **/
 public final class AppFailureCode {
     private static final String ERROR_CODE_PREFIX = "FA";
 

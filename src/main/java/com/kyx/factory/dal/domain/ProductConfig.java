@@ -16,8 +16,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Created by XuHe on 17/5/8.
- */
+ *
+ * @author h.xu
+ * @create 2017-05-10 上午10:32
+ **/
 @Entity
 @Table(name = ProductConfig.TABLE_NAME)
 @Getter

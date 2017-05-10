@@ -4,8 +4,9 @@ package com.kyx.factory.util;
 /**
  * 判断登录名称类型.
  *
- * @author wangle<thisiswangle@gmail.com>
- */
+ * @author h.xu
+ * @create 2017-05-10 上午10:32
+ **/
 public class LoginNameUtils {
     public static enum LoginNameEnum {
         PHONE_NUMBER, EMAIL, USERNAME

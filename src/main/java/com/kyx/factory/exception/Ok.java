@@ -4,8 +4,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 /**
- * Created by wangle on 5/16/16.
- */
+ *
+ * @author h.xu
+ * @create 2017-05-10 上午10:32
+ **/
 public class Ok<T> extends ResponseEntity<OkWrapper<T>> {
     private static class Empty {}
     public Ok(T body) {

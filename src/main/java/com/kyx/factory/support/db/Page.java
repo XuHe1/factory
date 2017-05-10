@@ -5,7 +5,11 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- */
+ * 分页
+ *
+ * @author h.xu
+ * @create 2017-05-10 上午10:32
+ **/
 public class Page<F> {
     private Integer totalCount;
     private Integer totalPages;

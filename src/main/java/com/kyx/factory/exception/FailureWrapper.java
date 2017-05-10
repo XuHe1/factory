@@ -1,8 +1,10 @@
 package com.kyx.factory.exception;
 
 /**
- * Created by wangle on 5/26/16.
- */
+ *
+ * @author h.xu
+ * @create 2017-05-10 上午10:32
+ **/
 public class FailureWrapper<T> {
     private String code;
     private String msg;

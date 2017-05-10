@@ -4,8 +4,10 @@ import com.kyx.factory.support.json.JsonResp;
 import com.kyx.factory.support.json.Ok;
 
 /**
- * @author wangle<thisiswangle@gmail.com>
- */
+ *
+ * @author h.xu
+ * @create 2017-05-10 上午10:32
+ **/
 public abstract class BaseResource {
     protected <T> JsonResp<?> ok(T data) {
         return Ok.newOk(data);
