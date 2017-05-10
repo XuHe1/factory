@@ -8,6 +8,7 @@ import com.kyx.factory.exception.AppFailure;
 import com.kyx.factory.exception.Failure;
 import com.kyx.factory.exception.Ok;
 import com.kyx.factory.support.db.Page;
+import com.kyx.factory.util.UploadDataUtil;
 import com.kyx.factory.web.model.BootstrapTableDTO;
 import com.kyx.factory.web.support.BaseResource;
 import org.slf4j.Logger;
@@ -41,6 +42,9 @@ public class DeviceDataResource extends BaseResource{
 
     @Autowired
     private ProductConfigRepository productConfigRepository;
+
+    @Autowired
+    private UploadDataUtil uploadDataUtil;
 
     @RequestMapping(path = "/product_config" , method = RequestMethod.POST)
     public ResponseEntity add(@ModelAttribute ProductConfig productConfig){
@@ -95,18 +99,20 @@ public class DeviceDataResource extends BaseResource{
     @RequestMapping(path = "/product" , method = RequestMethod.POST)
     public ResponseEntity add(@ModelAttribute DeviceData deviceData){
 
-        String sn = deviceData.getSn();
-        if(deviceData.getTestResult() == 0){
-            List<DeviceData> deviceDataList = deviceDataRepository.getBySn(sn);
-            if (deviceDataList != null  && deviceDataList.size() > 0){
-                logger.error("" + AppFailure.ALREADY_EXISTS.toString());
-                return new Failure(AppFailure.ALREADY_EXISTS);
-            }
-        }
+//        String sn = deviceData.getSn();
+//        if(deviceData.getTestResult() == 0){
+//            List<DeviceData> deviceDataList = deviceDataRepository.getBySn(sn);
+//            if (deviceDataList != null  && deviceDataList.size() > 0){
+//                logger.error("" + AppFailure.ALREADY_EXISTS.toString());
+//                return new Failure(AppFailure.ALREADY_EXISTS);
+//            }
+//        }
+//
+//        deviceData.setReceiveTime(new Date());
+//        deviceDataRepository.save(deviceData);
+//        return new Ok(deviceData);
+         return  uploadDataUtil.uploadToDB(deviceData);
 
-        deviceData.setReceiveTime(new Date());
-        deviceDataRepository.save(deviceData);
-        return new Ok(deviceData);
     }
 
     @GetMapping("/product/list")
