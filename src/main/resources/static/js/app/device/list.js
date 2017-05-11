@@ -27,6 +27,16 @@
 
 	$table.bootstrapTable({
 		'url': '/product/list',
+		'queryParams': function(params){
+            var temp = {
+               factory: $('#factory').val(),
+               productLine: $('#productLine').val(),
+               testResult: $('#testResult').val(),
+               limit: params.limit, //页面大小
+               offset: params.offset, //页码
+              };
+              return temp;
+		 },
         'columns': [
             {
                 checkbox: true

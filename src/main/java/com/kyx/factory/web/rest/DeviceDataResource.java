@@ -12,7 +12,9 @@ import com.kyx.factory.support.json.JsonResp;
 import com.kyx.factory.web.model.BootstrapTableDTO;
 import com.kyx.factory.web.support.BaseResource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -104,16 +106,41 @@ public class DeviceDataResource extends BaseResource {
 
     @GetMapping("/product/list")
     BootstrapTableDTO<?> findDeviceTable(@RequestParam(defaultValue = "10") Integer limit,
-                                         @RequestParam(defaultValue = "0") Integer offset) {
+                                         @RequestParam(defaultValue = "0") Integer offset,
+                                         @RequestParam Integer testResult,
+                                         @RequestParam String factory,
+                                         @RequestParam Integer productLine) {
+
+        BootstrapTableDTO<DeviceData> table  = new BootstrapTableDTO<>();
 
         Integer page = (int)Math.floor(offset / limit);
         Pageable pageable = new PageRequest(page, limit);
+        if(testResult == null && StringUtils.isBlank(factory) &&  productLine == null) {
+            Page<DeviceData> devicePage = Page.newPage(deviceDataRepository.findAll(pageable));
+            table.setTotal(devicePage.getTotalCount());
+            table.setRows(devicePage.getList());
+            return table;
+        }
 
-        Page<DeviceData> devicePage = Page.newPage(deviceDataRepository.findAll(pageable));
+        DeviceData data = new DeviceData();
+        if (testResult != null) {
+            data.setTestResult(testResult);
+        }
 
-        BootstrapTableDTO<DeviceData> table  = new BootstrapTableDTO<>();
-        table.setTotal(devicePage.getTotalCount());
-        table.setRows(devicePage.getList());
+        if (!StringUtils.isBlank(factory)) {
+            data.setFactory(factory);
+        }
+
+        if (productLine != null) {
+            data.setProductLine(productLine);
+        }
+
+        Example<DeviceData> example = Example.of(data);
+
+        org.springframework.data.domain.Page<DeviceData> devicePage = deviceDataRepository.findAll(Example.of(data), pageable);
+
+        table.setTotal(devicePage.getNumberOfElements());
+        table.setRows(devicePage.getContent());
         return table;
     }
 
