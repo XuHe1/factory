@@ -21,17 +21,17 @@ import java.util.Map;
  * @create 2017-05-10 上午10:32
  **/
 @Slf4j
-@ControllerAdvice("com.netstatng.device.rest")
+@ControllerAdvice("com.kyx.factory")
 public class ResourceAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({Exception.class})
     @ResponseBody
     JsonResp<?> handleApiControllerException(Exception ex, HttpServletRequest request) {
         if (ex instanceof GeneralException) {
-           // log.debug("GeneralException : {}", ((GeneralException) ex).getErrorEnum());
+            log.debug("GeneralException : {}", ((GeneralException) ex).getErrorEnum());
             return Error.newError(((GeneralException) ex).getErrorEnum(), meta(request));
         } else {
-            //log.debug("Unknown exception details", ex);
+            log.debug("Unknown exception details", ex);
             return Error.newError(ErrorEnum.UNKNOWN, meta(request));
         }
     }
