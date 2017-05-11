@@ -1,9 +1,7 @@
-package com.kyx.factory.service;/**
- * Created by XuHe on 17/5/10.
- */
+package com.kyx.factory.service;
 
 import com.kyx.factory.dal.domain.DeviceData;
-import org.springframework.http.ResponseEntity;
+import com.kyx.factory.support.json.JsonResp;
 
 /**
  * 生产数据上报服务
@@ -13,5 +11,5 @@ import org.springframework.http.ResponseEntity;
  **/
 
 public interface DeviceDataService {
-    ResponseEntity save(DeviceData deviceData);
+    JsonResp<?> save(DeviceData deviceData);
 }

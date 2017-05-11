@@ -4,8 +4,10 @@ import com.kyx.factory.exception.ErrorEnum;
 import org.springframework.http.HttpStatus;
 
 /**
- * Created by wangle on 5/26/16.
- */
+ *
+ * @author h.xu
+ * @create 2017-05-10 上午10:32
+ **/
 public class Error<T> extends JsonResp<JsonObject<T>> {
     public Error(ErrorEnum errorEnum) {
         super(new JsonObject<>(null, errorEnum.getCode(), errorEnum.getMsg(), null),

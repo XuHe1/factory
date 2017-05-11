@@ -4,18 +4,17 @@ import com.kyx.factory.dal.domain.DeviceData;
 import com.kyx.factory.dal.domain.ProductConfig;
 import com.kyx.factory.dal.repository.DeviceDataRepository;
 import com.kyx.factory.dal.repository.ProductConfigRepository;
-import com.kyx.factory.exception.AppFailure;
-import com.kyx.factory.exception.Failure;
-import com.kyx.factory.exception.Ok;
+import com.kyx.factory.exception.ErrorEnum;
+import com.kyx.factory.exception.GeneralException;
 import com.kyx.factory.service.DeviceDataService;
 import com.kyx.factory.support.db.Page;
+import com.kyx.factory.support.json.JsonResp;
 import com.kyx.factory.web.model.BootstrapTableDTO;
 import com.kyx.factory.web.support.BaseResource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,7 +45,7 @@ public class DeviceDataResource extends BaseResource {
     private DeviceDataService deviceDataService;
 
     @RequestMapping(path = "/product_config" , method = RequestMethod.POST)
-    public ResponseEntity add(@ModelAttribute ProductConfig productConfig) {
+    public JsonResp add(@ModelAttribute ProductConfig productConfig) {
         //数据验证
         String startSn = productConfig.getStartSn();
         Integer snCount = productConfig.getSnCount();
@@ -76,8 +75,8 @@ public class DeviceDataResource extends BaseResource {
                 right = config.getEndSn();
                 if((startSnNum <= right && startSnNum >= left) || (endSnNum <= right && endSnNum >= left) ||
                         (endSnNum >= right && startSnNum <= left) ) {
-                    log.error("{}", AppFailure.SN_CONFLICT.toString());
-                    return new Failure(AppFailure.SN_CONFLICT);
+                    log.error("{}", ErrorEnum.SN_CONFLICT);
+                    throw new GeneralException(ErrorEnum.SN_CONFLICT);
                 }
             }
 
@@ -94,11 +93,11 @@ public class DeviceDataResource extends BaseResource {
         productConfigRepository.saveAndFlush(productConfig);
 
 
-        return new Ok(productConfig);
+        return  ok(productConfig);
     }
 
     @RequestMapping(path = "/product" , method = RequestMethod.POST)
-    public ResponseEntity add(@ModelAttribute DeviceData deviceData) {
+    public JsonResp add(@ModelAttribute DeviceData deviceData) {
          return  deviceDataService.save(deviceData);
 
     }

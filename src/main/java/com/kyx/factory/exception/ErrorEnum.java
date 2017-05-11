@@ -3,6 +3,11 @@ package com.kyx.factory.exception;
 
 public enum ErrorEnum {
     UNKNOWN(ErrorCode.UNKNOWN, "未知错误"),
+    PARAM_INVALID(ErrorCode.PARAM_INVALID, "参数不合法"),
+    ALREADY_EXISTS(ErrorCode.ALREADY_EXISTS, "sn号已存在"),
+    NOT_EXISTS(ErrorCode.NOT_EXISTS, "资源不存在"),
+    BAD_REQUEST(ErrorCode.BAD_REQUEST, "非法请求"),
+    SN_CONFLICT(ErrorCode.SN_CONFLICT, "SN冲突");
     ;
 
     private String code;
