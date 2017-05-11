@@ -15,18 +15,19 @@
 - 返回数据结构
 
   ```
-	{
-		"data":{
-		  "id": 8,
-		  "device": "look",
-		  "factory": "APPLE",
-		  "productLine": 2,
-		  "startSn": "L001001",
-		  "snCount": 2000,
-		  "endSn": 3000
-		}
-	
-	}
+{
+	  "data": {
+	    "id": "3",
+	    "device": "look",
+	    "factory": "APPLES",
+	    "product_line": 1,
+	    "start_sn": "L001001",
+	    "sn_count": 800,
+	    "end_sn": 1800,
+	    "create_time": "2017-05-09T20:24:16.000+0800",
+	    "update_time": "2017-05-11T10:39:53.456+0800"
+	  }
+}
 ```
 	  
 	  
