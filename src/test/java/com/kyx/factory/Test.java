@@ -1,6 +1,4 @@
-package com.kyx.factory;/**
- * Created by XuHe on 17/5/10.
- */
+package com.kyx.factory;
 
 import com.kyx.factory.web.model.BootstrapTableDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +42,7 @@ public class Test {
         params.add("device", "look");
         params.add("factory", "APPLE");
         params.add("productLine","0");
-        params.add("testResult", "0");
+        params.add("testResult", "1");
         params.add("hwVersion", "0x0100");
         params.add("swVersion", "0x0123");
         params.add("chipId", "0x000102030405060708091011");
@@ -70,6 +68,7 @@ public class Test {
 
     }
 
+    @org.junit.Test
     public void addProductConfig() {
         String url = "http://localhost:8080/product_config";
         HttpHeaders headers = new HttpHeaders();
