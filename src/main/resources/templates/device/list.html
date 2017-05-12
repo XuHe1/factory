@@ -9,7 +9,7 @@
     <section class="content-header">
         <h1>
             设备
-            <small>所有设备xxx</small>
+            <small></small>
         </h1>
         {{ breadcrumb("briefcase", "设备", "列表", "查看") }}
     </section>
@@ -24,13 +24,17 @@
             <div class="box-body">
                 <div id="toolbar">
                     测试结果：
-                    <input class="form-control" style="display: inline-block;width: 16%;" type="text" id="testResult" name="testResult">
+                    <select class="selectpicker" id="testResult" name="testResult">
+                        <option value="">所有</option>
+                        <option value="0">通过</option>
+                        <option value="1">未通过</option>
+                    </select>
                     工厂：
                     <input class="form-control" style="display: inline-block;width: 16%;" type="text" id="factory" name="factory">
                     生产线：
                     <input class="form-control" style="display: inline-block;width: 16%;" type="text" id="productLine" name="productLine">
 
-                    <button id="add" class="btn btn-primary">
+                    <button id="export" class="btn btn-primary">
                         <i class="glyphicon glyphicon-search"></i> 导出
                     </button>
                     <!--<button id="remove" class="btn btn-danger" disabled>-->

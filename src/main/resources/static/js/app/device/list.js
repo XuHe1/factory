@@ -1,7 +1,7 @@
 (function ($) {
     var $table = $('.table'),
             $remove = $('#remove'),
-            $add = $('#add'),
+            $export = $('#export'),
             $save = $('#save'),
             $refresh = $('#refresh'),
             selections = ["device"];
@@ -167,8 +167,13 @@
         // push or splice the selections if you want to save all data selections
     });
 
-    $add.click(function() {
-        // TODO
+    $export.click(function() {
+
+         var factory = $('#factory').val();
+         var productLine = $('#productLine').val();
+         var testResult = $('#testResult').val();
+         window.location.href="/web/devices/export?factory=" + factory + "&productLine=" + productLine + "&testResult=" + testResult;
+
     });
 
     $save.click(function() {

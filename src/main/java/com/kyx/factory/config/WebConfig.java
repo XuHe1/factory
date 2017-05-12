@@ -9,6 +9,9 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.kyx.factory.support.helper.DateConvertHelper;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -48,6 +51,18 @@ public class WebConfig {
                 .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
                 .setSerializationInclusion(JsonInclude.Include.NON_NULL)
                 .setTimeZone(TimeZone.getTimeZone("GMT+8"));
+    }
+
+    @Bean
+    @ConfigurationProperties(prefix = "app")
+    public AppConfig appConfig() {
+        return new AppConfig();
+    }
+
+    @Getter
+    @Setter
+    public static class AppConfig {
+        private String defaultSN;
     }
 
 }

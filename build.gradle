@@ -70,6 +70,7 @@ dependencies {
     compile("io.netty:netty-buffer:4.0.36.Final")
     compile("net.objecthunter:exp4j:0.4.8")
     compile('org.springframework.boot:spring-boot-starter-amqp')
+    compile 'net.sourceforge.jexcelapi:jxl:2.6.12'
 
     // Web
     compile("org.springframework.boot:spring-boot-starter-web")
