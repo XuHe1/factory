@@ -1,7 +1,7 @@
 ### 新增／修改生产计划
 
 
-- POST /api/product_config
+- POST /product_config
 
 	```
      @Param required  device,String,设备名

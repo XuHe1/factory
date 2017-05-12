@@ -1,7 +1,7 @@
 ### 新增产品检测数据
 
 
-- POST /api/product
+- POST /product
 
 	```
      @Param required  device,String,设备名
