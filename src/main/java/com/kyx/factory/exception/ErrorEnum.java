@@ -7,8 +7,11 @@ public enum ErrorEnum {
     ALREADY_EXISTS(ErrorCode.ALREADY_EXISTS, "sn号已存在"),
     NOT_EXISTS(ErrorCode.NOT_EXISTS, "资源不存在"),
     BAD_REQUEST(ErrorCode.BAD_REQUEST, "非法请求"),
-    SN_CONFLICT(ErrorCode.SN_CONFLICT, "SN冲突");
-    ;
+    SN_CONFLICT(ErrorCode.SN_CONFLICT, "SN冲突"),
+    FACTORY_NOT_EXISTS(ErrorCode.FACTORY_NOT_EXISTS, "工厂不存在" ),
+    PRODUCT_LINE_NOT_EXISTS(ErrorCode.PRODUCT_LINE_NOT_EXISTS, "生产线不存在"),
+    DEVICE_NOT_SUPPORT(ErrorCode.DEVICE_NOT_SUPPORT, "暂不支持该种设备"),
+    SN_SUFFIX_ERROR(ErrorCode.SN_SUFFIX_ERROR, "SN号格式错误");
 
     private String code;
     private String msg;
