@@ -32,6 +32,10 @@
  - @error FA130001 资源已存在
  - @error FA130002 资源不存在
  - @error FA200002 SN冲突
+ - @error FA130003 工厂不存在
+ - @error FA130004 生产线不存在
+ - @error FA130005 暂不支持该种设备
+ - @error FA130006 SN号格式错误
 
 ## 错误返回结构样列
 
