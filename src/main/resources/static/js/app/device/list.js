@@ -38,9 +38,9 @@
               return temp;
 		 },
         'columns': [
-            {
-                checkbox: true
-            },
+//            {
+//                checkbox: true
+//            },
             {
                 field: 'device',
                 title: '设备',
