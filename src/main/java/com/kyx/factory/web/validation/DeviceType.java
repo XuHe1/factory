@@ -11,7 +11,8 @@ import java.util.Set;
  * @create 2017-05-12 下午4:12
  **/
 public enum  DeviceType {
-    look("look", "L");
+    look("look", "L"),
+    hdx("hdx", "Y");
 
     private String deviceName;
     private String snPrefix;
