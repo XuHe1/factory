@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
 
@@ -99,7 +100,7 @@ public class DeviceDataResource extends BaseResource {
     }
 
     @RequestMapping(path = "/product" , method = RequestMethod.POST)
-    public JsonResp add(@ModelAttribute DeviceData deviceData) {
+    public JsonResp add(@Valid  DeviceData deviceData) {
          return  deviceDataService.save(deviceData);
 
     }

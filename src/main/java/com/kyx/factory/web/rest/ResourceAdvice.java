@@ -1,11 +1,12 @@
 package com.kyx.factory.web.rest;
 
+import com.google.common.collect.Maps;
 import com.kyx.factory.exception.ErrorEnum;
 import com.kyx.factory.exception.GeneralException;
-import com.kyx.factory.support.json.JsonResp;
-import com.google.common.collect.Maps;
 import com.kyx.factory.support.json.Error;
+import com.kyx.factory.support.json.JsonResp;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,6 +22,7 @@ import java.util.Map;
  * @create 2017-05-10 上午10:32
  **/
 @Slf4j
+@Order(2)
 @ControllerAdvice("com.kyx.factory")
 public class ResourceAdvice extends ResponseEntityExceptionHandler {
 
