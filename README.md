@@ -35,7 +35,30 @@
  - @error FA130003 工厂不存在
  - @error FA130004 生产线不存在
  - @error FA130005 暂不支持该种设备
- - @error FA130006 SN号格式错误
+ - @error FA130006 SN号前缀错误
+ - @error FA000001 device不能为空
+ - @error FA000002 SN号格式错误
+ - @error FA000003 factory不能为空
+ - @error FA000004 productLine不能为空
+ - @error FA000005 hwVersion不能为空
+ - @error FA000006 swVersion不能为空
+ - @error FA000007 chipId不能为空
+ - @error FA000008 SN长度必须为7位
+ - @error FA000009 iccid不能为空
+ - @error FA000010 gps不能为空
+ - @error FA000011 flash不能为空
+ - @error FA000012 eeprom不能为空
+ - @error FA000013 gprs不能为空
+ - @error FA000014 batteryVoltage不能为空
+ - @error FA000015 electricCurrent不能为空
+ - @error FA000016 acceX不能为空
+ - @error FA000017 acceY不能为空
+ - @error FA000018 acceZ不能为空
+ - @error FA000019 gyroX不能为空
+ - @error FA000020 gyroY不能为空
+ - @error FA000021 gyroZ不能为空
+ - @error FA000022 testResult不能为空
+
 
 ## 错误返回结构样列
 
