@@ -1,0 +1,89 @@
+{% import "fragments/breadcrumb" %}
+{% extends "layout" %}
+
+{% block title %} 生产配置 {% endblock %}
+{% block content %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            生产计划
+            <small></small>
+        </h1>
+        {{ breadcrumb("briefcase", "生产计划", "列表", "查看") }}
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <!-- Default box -->
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">列表</h3>
+            </div>
+            <div class="box-body">
+                <div id="toolbar">
+                    设备：
+                    <select class="selectpicker" id="device" name="device">
+                        <option value="">所有</option>
+                        {% for device in devices %}
+                        <option value="{{device}}">{{device}}</option>
+                        {% endfor %}
+                    </select>
+                    工厂：
+                    <input class="form-control" style="display: inline-block;width: 16%;" type="text" id="factory" name="factory">
+                    生产线：
+                    <input class="form-control" style="display: inline-block;width: 16%;" type="text" id="productLine" name="productLine">
+
+                   <!-- <button id="export" class="btn btn-primary">
+                        <i class="glyphicon glyphicon-search"></i> 导出
+                    </button>  -->
+                    <!--<button id="remove" class="btn btn-danger" disabled>-->
+                        <!--<i class="glyphicon glyphicon-remove"></i> 删除-->
+                    <!--</button>-->
+                </div>
+                <table class="table">
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+    </section>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="packet-edit-modal" tabindex="-1" role="dialog" aria-labelledby="packet-edit-modal-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="packet-edit-modal-label">title</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="pid" class="control-label">包号(10进制)</label>
+                        <input type="number" class="form-control" id="pid" name="pid">
+                        <input type="hidden" id="id" name="id">
+                    </div>
+                    <div class="form-group">
+                        <label for="name" class="control-label">包名</label>
+                        <input type="text" class="form-control" id="name" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="description" class="control-label">说明</label>
+                        <textarea class="form-control" id="description" name="description"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id="save" type="button" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block body_script %}
+<script type="text/javascript" src="/js/bower_components/moment/min/moment-with-locales.min.js"></script>
+{% include "include/bootstrap-table" %}
+<script src="/js/app/config/list.js"></script>
+{% endblock %}
