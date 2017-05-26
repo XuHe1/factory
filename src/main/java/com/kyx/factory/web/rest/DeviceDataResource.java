@@ -99,6 +99,46 @@ public class DeviceDataResource extends BaseResource {
         return  ok(productConfig);
     }
 
+    @GetMapping("/product_config/list")
+    BootstrapTableDTO<?> findPlanTable(@RequestParam(defaultValue = "10") Integer limit,
+                                         @RequestParam(defaultValue = "0") Integer offset,
+                                         @RequestParam String device,
+                                         @RequestParam String factory,
+                                         @RequestParam Integer productLine) {
+
+        BootstrapTableDTO<ProductConfig> table  = new BootstrapTableDTO<>();
+
+        Integer page = (int)Math.floor(offset / limit);
+        Pageable pageable = new PageRequest(page, limit);
+        if (StringUtils.isBlank(device) && StringUtils.isBlank(factory) &&  productLine == null) {
+            Page<ProductConfig> configPage = Page.newPage(productConfigRepository.findAll(pageable));
+            table.setTotal(configPage.getTotalCount());
+            table.setRows(configPage.getList());
+            return table;
+        }
+
+        ProductConfig data = new ProductConfig();
+        if (!StringUtils.isBlank(device)) {
+            data.setDevice(device);
+        }
+
+        if (!StringUtils.isBlank(factory)) {
+            data.setFactory(factory);
+        }
+
+        if (productLine != null) {
+            data.setProductLine(productLine);
+        }
+
+        Example<ProductConfig> example = Example.of(data);
+
+        org.springframework.data.domain.Page<ProductConfig> configPage = productConfigRepository.findAll(Example.of(data), pageable);
+
+        table.setTotal(configPage.getNumberOfElements());
+        table.setRows(configPage.getContent());
+        return table;
+    }
+
     @RequestMapping(path = "/product" , method = RequestMethod.POST)
     public JsonResp add(@Valid  DeviceData deviceData) {
          return  deviceDataService.save(deviceData);
@@ -140,7 +180,8 @@ public class DeviceDataResource extends BaseResource {
 
         org.springframework.data.domain.Page<DeviceData> devicePage = deviceDataRepository.findAll(Example.of(data), pageable);
 
-        table.setTotal(devicePage.getNumberOfElements());
+        //table.setTotal(devicePage.getNumberOfElements());
+        table.setTotal(new Long(devicePage.getTotalElements()).intValue());
         table.setRows(devicePage.getContent());
         return table;
     }
