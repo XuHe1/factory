@@ -45,4 +45,5 @@ public final class ErrorCode {
     public static final String MISS_GYRO_Y = ERROR_CODE_PREFIX + "000020";
     public static final String MISS_GYRO_Z = ERROR_CODE_PREFIX + "000021";
     public static final String MISS_TEST_RESULT = ERROR_CODE_PREFIX + "000022";
+    public static final String MISS_SN = ERROR_CODE_PREFIX + "000023";
 }

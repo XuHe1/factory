@@ -66,6 +66,7 @@ public class DeviceDataServiceImpl implements DeviceDataService {
         }
 
         deviceData.setReceiveTime(new Date());
+        deviceData.setInvalid(0);
         deviceDataRepository.save(deviceData);
         return new Ok<>(deviceData);
     }

@@ -34,7 +34,8 @@ public enum ErrorEnum {
     MISS_GYRO_X(ErrorCode.MISS_GYRO_X , "gyroX不能为空"),
     MISS_GYRO_Y(ErrorCode.MISS_GYRO_Y , "gyroY不能为空"),
     MISS_GYRO_Z(ErrorCode.MISS_GYRO_Z , "gyroZ不能为空"),
-    MISS_TEST_RESULT(ErrorCode.MISS_TEST_RESULT , "testResult不能为空");
+    MISS_TEST_RESULT(ErrorCode.MISS_TEST_RESULT , "testResult不能为空"),
+    MISS_SN(ErrorCode.MISS_SN, "SN号不能为空");
 
     private String code;
     private String msg;
