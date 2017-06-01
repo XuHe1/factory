@@ -6,6 +6,7 @@ import com.kyx.factory.dal.repository.DeviceDataRepository;
 import com.kyx.factory.util.DateUtils;
 import com.kyx.factory.util.FillDataCallback;
 import com.kyx.factory.util.SimpleExcelUtil;
+import com.kyx.factory.util.VersionUtil;
 import com.kyx.factory.web.support.BaseController;
 import jxl.write.Label;
 import jxl.write.WritableSheet;
@@ -63,7 +64,7 @@ public class DeviceController extends BaseController {
         if (productLine != null) {
             data.setProductLine(productLine);
         }
-
+        data.setInvalid(0);
         Example<DeviceData> example = Example.of(data);
         List<DeviceData> datas = deviceDataRepository.findAll(Example.of(data));
 
@@ -71,10 +72,14 @@ public class DeviceController extends BaseController {
         String dateStr = DateUtils.toNormalDate(new Date());
         fileName += dateStr;
         String titles[] = ("设备, 工厂, 生产线, 硬件版本, 软件版本, 芯片号, 设备号, ICCID, GPS, FLASH, eeprom," +
-               " GPRS, 电压, 电流, 测试结果, 接收时间").split(",");
+               " GPRS, 电压, 电流, acceX, acceY, acceZ, gyroX, gyroY, gyroZ, 测试结果, 接收时间").split(",");
         this.generateExcel(datas, fileName, titles, response);
 
     }
+
+
+
+
 
 
 
@@ -89,17 +94,23 @@ public class DeviceController extends BaseController {
                 wsheet.addCell(new Label(k++, j, data.getDevice().toString()));
                 wsheet.addCell(new Label(k++, j, data.getFactory().toString()));
                 wsheet.addCell(new Label(k++, j, data.getProductLine().toString()));
-                wsheet.addCell(new Label(k++, j, data.getHwVersion().toString()));
-                wsheet.addCell(new Label(k++, j, data.getSwVersion().toString()));
+                wsheet.addCell(new Label(k++, j, VersionUtil.getVestion(data.getHwVersion()).toString()));
+                wsheet.addCell(new Label(k++, j, VersionUtil.getVestion(data.getSwVersion()).toString()));
                 wsheet.addCell(new Label(k++, j, data.getChipId().toString()));
                 wsheet.addCell(new Label(k++, j, data.getSn() == null ? appConfig.getDefaultSN() : data.getSn().toString()));
-                wsheet.addCell(new Label(k++, j, data.getIccid().toString()));
+                wsheet.addCell(new Label(k++, j, data.getIccid().replaceAll("ICCID:", "").toString()));
                 wsheet.addCell(new Label(k++, j, data.getGpsCount().toString()));
                 wsheet.addCell(new Label(k++, j, data.getFlash().toString()));
                 wsheet.addCell(new Label(k++, j, data.getEeprom().toString()));
                 wsheet.addCell(new Label(k++, j, data.getGprs().toString()));
-                wsheet.addCell(new Label(k++, j, data.getElectricCurrent().toString()));
                 wsheet.addCell(new Label(k++, j, data.getBatteryVoltage().toString()));
+                wsheet.addCell(new Label(k++, j, data.getElectricCurrent().toString()));
+                wsheet.addCell(new Label(k++, j, data.getAcceX().toString()));
+                wsheet.addCell(new Label(k++, j, data.getAcceY().toString()));
+                wsheet.addCell(new Label(k++, j, data.getAcceZ().toString()));
+                wsheet.addCell(new Label(k++, j, data.getGyroX().toString()));
+                wsheet.addCell(new Label(k++, j, data.getGyroY().toString()));
+                wsheet.addCell(new Label(k++, j, data.getGyroZ().toString()));
                 wsheet.addCell(new Label(k++, j, data.getTestResult() == 0 ? "通过" : "未通过"));
                 wsheet.addCell(new Label(k++, j, data.getReceiveTime().toString()));
 
