@@ -134,7 +134,7 @@ public class DeviceDataResource extends BaseResource {
 
         org.springframework.data.domain.Page<ProductConfig> configPage = productConfigRepository.findAll(Example.of(data), pageable);
 
-        table.setTotal(configPage.getNumberOfElements());
+        table.setTotal(new Long(configPage.getTotalElements()).intValue());
         table.setRows(configPage.getContent());
         return table;
     }
@@ -142,6 +142,20 @@ public class DeviceDataResource extends BaseResource {
     @RequestMapping(path = "/product" , method = RequestMethod.POST)
     public JsonResp add(@Valid  DeviceData deviceData) {
          return  deviceDataService.save(deviceData);
+
+    }
+
+    @RequestMapping(path = "/product" , method = RequestMethod.PUT)
+    public JsonResp update(@RequestParam Long id, @RequestParam Integer invalid) {
+        log.info("id: {}, invalid: {}", id, invalid);
+        if (id == null || invalid == null) {
+            log.error("{}", ErrorEnum.PARAM_INVALID);
+            throw new GeneralException(ErrorEnum.PARAM_INVALID);
+        }
+        DeviceData deviceData = new DeviceData();
+        deviceData.setId(id);
+        deviceData.setInvalid(invalid);
+        return  deviceDataService.update(deviceData);
 
     }
 

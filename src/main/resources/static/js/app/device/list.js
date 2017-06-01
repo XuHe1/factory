@@ -25,6 +25,7 @@
                 console.log("TODO 需要实现真实删除");
             });
 
+
 	$table.bootstrapTable({
 		'url': '/product/list',
 		'queryParams': function(params){
@@ -94,7 +95,7 @@
                 field: 'iccid',
                 title: 'ICCID',
                 formatter: function (value, row, index) {
-                    return value;
+                    return value.replace("ICCID:","");
                 }
             },
             {
@@ -153,6 +154,19 @@
                 formatter: function (value, row, index) {
                      return moment(value).format('YYYY-MM-DD HH:mm:ss');
                 }
+            },
+            {
+                field: 'invalid',
+                title: '备注',
+                formatter: function (value, row, index) {
+                      var html = '';
+                      if(value == 1){
+                        html = "<input type='checkbox' class = 'notes' checked='checked' value='" + row.id + "'/> 无效";
+                      }else {
+                        html = "<input type='checkbox' class = 'notes' value='" + row.id + "'/> 无效";
+                      }
+                      return html;
+                }
             }
 
         ]
@@ -179,4 +193,25 @@
     $save.click(function() {
         // TODO
     });
+
+
+    $(document).on('click', '.notes', function() {
+        if(this.checked) {
+            invalid = 1
+        }else {
+            invalid = 0;
+        }
+        var params = {"invalid": invalid, "id": this.value};
+        $.ajax({
+            url: '/product',
+            type: 'put',
+            data: params,
+            error: function(data) {
+                data = data.responseJSON;
+                alert(data.code + ":" + data.msg);
+            }
+        });
+
+    });
+
 })(jQuery);

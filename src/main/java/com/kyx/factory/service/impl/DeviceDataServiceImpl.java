@@ -69,4 +69,16 @@ public class DeviceDataServiceImpl implements DeviceDataService {
         deviceDataRepository.save(deviceData);
         return new Ok<>(deviceData);
     }
+
+    @Override
+    public JsonResp update(DeviceData deviceData) {
+        DeviceData data = deviceDataRepository.findOne(deviceData.getId());
+        if (data == null) {
+            log.error("{}", ErrorEnum.NOT_EXISTS);
+            throw new GeneralException(ErrorEnum.NOT_EXISTS);
+        }
+        data.setInvalid(deviceData.getInvalid());
+        deviceDataRepository.save(data);
+        return new Ok<>(data);
+    }
 }

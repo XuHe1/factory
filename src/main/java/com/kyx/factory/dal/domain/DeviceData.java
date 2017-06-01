@@ -126,4 +126,7 @@ public class DeviceData implements Serializable {
     @Column(name = "receive_time")
     private Date receiveTime;
 
+    @Column(name = "invalid", columnDefinition = "int default 0")
+    private Integer invalid;
+
 }

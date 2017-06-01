@@ -12,4 +12,6 @@ import com.kyx.factory.support.json.JsonResp;
 
 public interface DeviceDataService {
     JsonResp<?> save(DeviceData deviceData);
+
+    JsonResp update(DeviceData deviceData);
 }
