@@ -12,6 +12,7 @@ import com.kyx.factory.support.helper.DateConvertHelper;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -27,6 +28,7 @@ import java.util.TimeZone;
  * @create 2017-05-10 上午10:32
  **/
 @Configuration
+@ServletComponentScan(value = "com.kyx.factory.web")
 public class WebConfig {
     @Bean
     public Filter characterEncodingFilter() {
