@@ -73,9 +73,5 @@ public class VersionUtil {
 
     }
 
-    public static void main(String[] args) {
-        System.out.println(getVestion("256"));;
-    }
-
 
 }
