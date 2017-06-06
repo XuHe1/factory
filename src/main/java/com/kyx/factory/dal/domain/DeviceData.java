@@ -62,7 +62,6 @@ public class DeviceData implements Serializable {
     @Column(name = "chip_id")
     private String chipId;
 
-    @NotNull(message = ErrorCode.MISS_SN)
     @Size(min = 7, max = 7, message = ErrorCode.SN_LENGTH)
     @Pattern(regexp = "^[A-Z]{1}[0-9]{6}$", message = ErrorCode.SN_PATTER_ERROR)
     @Column(name = "sn", unique = true)
