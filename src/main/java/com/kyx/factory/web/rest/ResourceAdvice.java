@@ -30,10 +30,10 @@ public class ResourceAdvice extends ResponseEntityExceptionHandler {
     @ResponseBody
     JsonResp<?> handleApiControllerException(Exception ex, HttpServletRequest request) {
         if (ex instanceof GeneralException) {
-            log.debug("GeneralException : {}", ((GeneralException) ex).getErrorEnum());
+            log.warn("GeneralException : {}", ((GeneralException) ex).getErrorEnum());
             return Error.newError(((GeneralException) ex).getErrorEnum(), meta(request));
         } else {
-            log.debug("Unknown exception details", ex);
+            log.warn("Unknown exception details", ex);
             return Error.newError(ErrorEnum.UNKNOWN, meta(request));
         }
     }
