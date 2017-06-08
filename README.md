@@ -58,6 +58,10 @@
  - @error FA000020 gyroY不能为空
  - @error FA000021 gyroZ不能为空
  - @error FA000022 testResult不能为空
+ - @error FA000034 用户名错误
+ - @error FA000035 密码错误
+ - @error FA000036 订单已暂停
+ - @error FA000037 无可用sn,请新建订单
 
 
 ## 错误返回结构样列
@@ -72,3 +76,5 @@
 * [生产检测数据上报接口](https://git.1tianxia.net/h.xu/factory/blob/master/doc/POST.-product_data.md)
 
 * [生产计划配置接口](https://git.1tianxia.net/h.xu/factory/blob/master/doc/POST.-product_config.md)
+
+* [sn号段分配接口](https://git.1tianxia.net/h.xu/factory/blob/master/doc/POST.-sn_segment.md)
