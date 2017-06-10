@@ -1,7 +1,7 @@
 ### 分配sn号段
 客户端向服务器请求分配sn号段，每次请求的数目由订单预先设定。
 
-- POST /user/login
+- POST /sn_range/user
 
 	```
      @Param  required  user_name,String,用户名
