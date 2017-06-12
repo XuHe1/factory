@@ -1,0 +1,175 @@
+{% import "fragments/breadcrumb" %}
+{% extends "layout" %}
+
+{% block title %} 订单 {% endblock %}
+{% block content %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            订单
+            <small></small>
+        </h1>
+        {{ breadcrumb("briefcase", "订单", "列表", "查看") }}
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <!-- Default box -->
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">列表</h3>
+            </div>
+            <div class="box-body">
+                <div id="toolbar">
+                    设备：
+                    <select class="selectpicker" id="device" name="device">
+                        <option value="">所有</option>
+                        {% for device in devices %}
+                        <option value="{{device}}">{{device}}</option>
+                        {% endfor %}
+                    </select>
+                    工厂：
+                    <select class="selectpicker" id="factory" name="factory">
+                        <option value="">所有</option>
+                        {% for factory in factories %}
+                        <option value="{{factory}}">{{factory}}</option>
+                        {% endfor %}
+                    </select>
+                    订单状态：
+                    <select class="selectpicker" id="state" name="state">
+                        <option value="">所有</option>
+                        <option value="0">未开始</option>
+                        <option value="1">已开始</option>
+                        <option value="2">已暂停</option>
+                    </select>
+                    订单号：
+                    <input class="form-control" style="display: inline-block;width: 16%;" type="text" id="orderNo" name="orderNo">
+
+                    <button id="export" class="btn btn-primary">
+                        <i class="glyphicon glyphicon-export"></i> 导出
+                    </button>
+                    <!--<button id="remove" class="btn btn-danger" disabled>-->
+                        <!--<i class="glyphicon glyphicon-remove"></i> 删除-->
+                    <!--</button>-->
+                    <button id="add" class="btn btn-primary">
+                        <i class="glyphicon glyphicon-plus"></i> 新建
+                    </button>
+                </div>
+                <table class="table">
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+    </section>
+</div>
+<!-- Modal -->
+<div class="modal" id="packet-edit-modal" tabindex="-1" role="dialog" aria-labelledby="packet-edit-modal-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" id="cross">&times;</span></button>
+                <h4 class="modal-title" id="packet-edit-modal-label">新建订单</h4>
+            </div>
+            <div class="modal-body">
+                <form action="/order" id="orderForm" method="post">
+                    <div class="form-group">
+                        <label for="orderNoPrefix" class="control-label">订单号前缀</label>
+                        <input type="text" class="form-control" id="orderNoPrefix" name="orderNoPrefix">
+                        <input type="hidden" id="id" name="id"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">设备</label>
+                        <select class="form-control" id="form_device" name="device">
+                            {% for device in devices %}
+                            <option value="{{device}}">{{device}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">项目</label>
+                        <select class="form-control" id="project" name="project">
+                            <option value="">--请选择--</option>
+                            {% for project in projects %}
+                            <option value="{{project.id}}">{{project.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">固件版本号</label>
+                        <select class="form-control" id="fw_version" name="fwVersion">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">固件下载url</label>
+                        <input type="text" class="form-control" id="fw_download" name="fwDownload" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">硬件版本号</label>
+                        <input type="number" class="form-control" id="hwVersion" name="hwVersion">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">数量</label>
+                        <input type="number" class="form-control" id="quantity" name="quantity">
+                    </div>
+                    <div class="form-group">
+                        <label  class="control-label">工厂</label>
+                        <select class="form-control" id="form_factory" name="factory">
+                            {% for factory in factories %}
+                            <option value="{{factory}}">{{factory}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label  class="control-label">账号</label>
+                        <input type="text" class="form-control" id="username" name="username" onblur="isExist(this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label  class="control-label">密码</label>
+                        <input type="password" class="form-control" id="password" name="password">
+                    </div>
+                    <div class="form-group">
+                        <label  class="control-label">分配sn数/次</label>
+                        <input type="number" class="form-control" id="deliveryCount" name="deliveryCount">
+                    </div>
+                    <div class="form-group">
+                        <label  class="control-label">预计开始</label>
+                        <!--<input type="datetime-local" class="form-control" id="scheduleBeginStr" name="scheduleBeginStr">-->
+
+                        <input type="text"  id="scheduleBegin" name="scheduleBegin" class="form-control" readonly>
+
+
+                    </div>
+                    <div class="form-group">
+                        <label  class="control-label">预计结束</label>
+                        <!--<input type="datetime-local" class="form-control" id="scheduleFinishStr" name="scheduleFinishStr">-->
+                        <input type="text" id="scheduleFinish" name="scheduleFinish" class="form-control" readonly>
+                    </div>
+                    <input type="hidden" value="" id="attachmentId" name="attachmentId"/>
+                </form>
+                <form action="/web/order/upload" role="form" id="fileForm" enctype="multipart/form-data" method="post">
+                    <div class="form-group">
+                        <label  class="control-label">BOM文件</label>
+                                <input type="file" class="form-control" id="fileupload" name="file" placeholder="请选择excel文件">
+                                <button type="button" id="upload" class="btn btn-default">上传</button>
+                    </div>
+                </form>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="close">关闭</button>
+                <button id="save" type="button" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block body_script %}
+<script type="text/javascript" src="/js/bower_components/moment/min/moment-with-locales.min.js"></script>
+<script type="text/javascript" src="/js/bower_components/jquery/dist/jquery.form.js"></script>
+<script type="text/javascript" src="/js/bower_components/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+{% include "include/bootstrap-table" %}
+<script src="/js/app/order/list.js"></script>
+{% endblock %}

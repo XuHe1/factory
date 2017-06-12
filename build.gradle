@@ -1,5 +1,5 @@
 group = "com.kyx.factory"
-version = "1.0.1"
+version = "1.0.2"
 description = "factory"
 
 buildscript {
@@ -71,6 +71,7 @@ dependencies {
     compile("net.objecthunter:exp4j:0.4.8")
     compile('org.springframework.boot:spring-boot-starter-amqp')
     compile 'net.sourceforge.jexcelapi:jxl:2.6.12'
+    compile('commons-io:commons-io')
 
     // Web
     compile("org.springframework.boot:spring-boot-starter-web")

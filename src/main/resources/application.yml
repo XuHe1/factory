@@ -8,6 +8,9 @@ spring:
   application.name: factory
   profiles:
     active: dev
+  http:
+    multipart:
+      max-file-size: 5Mb
 
   devtools:
     livereload:
