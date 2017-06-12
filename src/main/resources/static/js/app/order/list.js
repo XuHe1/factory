@@ -85,7 +85,7 @@
                 field: 'order_no_prefix',
                 title: '订单号',
                 formatter: function (value, row, index) {
-                    return value + row.id;
+                       return value + (Array(6).join(0) + row.id).slice(-6);
                 }
             },
             {
@@ -98,6 +98,20 @@
             {
                 field: 'device',
                 title: '设备',
+                formatter: function (value, row, index) {
+                    return value;
+                }
+            },
+            {
+                field: 'fw_version',
+                title: '固件版本',
+                formatter: function (value, row, index) {
+                    return value;
+                }
+            },
+            {
+                field: 'fw_download',
+                title: '固件下载地址',
                 formatter: function (value, row, index) {
                     return value;
                 }
