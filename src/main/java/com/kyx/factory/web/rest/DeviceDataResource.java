@@ -1,9 +1,7 @@
 package com.kyx.factory.web.rest;
 
 import com.kyx.factory.dal.domain.DeviceData;
-import com.kyx.factory.dal.domain.ProductConfig;
 import com.kyx.factory.dal.repository.DeviceDataRepository;
-import com.kyx.factory.dal.repository.ProductConfigRepository;
 import com.kyx.factory.exception.ErrorEnum;
 import com.kyx.factory.exception.GeneralException;
 import com.kyx.factory.service.DeviceDataService;
@@ -18,15 +16,12 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.Date;
-import java.util.List;
 
 /**
  *
@@ -42,102 +37,7 @@ public class DeviceDataResource extends BaseResource {
     private DeviceDataRepository deviceDataRepository;
 
     @Autowired
-    private ProductConfigRepository productConfigRepository;
-
-    @Autowired
     private DeviceDataService deviceDataService;
-
-    @RequestMapping(path = "/product_config" , method = RequestMethod.POST)
-    public JsonResp add(@ModelAttribute ProductConfig productConfig) {
-        //数据验证
-        String startSn = productConfig.getStartSn();
-        Integer snCount = productConfig.getSnCount();
-        String numStr = startSn.substring(1,startSn.length());
-        Integer startSnNum = Integer.parseInt(numStr);
-        Integer endSnNum = startSnNum + snCount -1;
-        String factory = productConfig.getFactory();
-        Integer productLine = productConfig.getProductLine();
-        String device = productConfig.getDevice();
-
-
-        List<ProductConfig> productConfigList = productConfigRepository.getByDevice(device);
-
-        boolean isCreate = true;
-        if(productConfigList != null || productConfigList.size() > 0) {
-            Integer left, right;
-            for(ProductConfig config : productConfigList){
-                if(config.getFactory().equals(factory) && config.getDevice().equals(device) &&
-                        config.getProductLine().intValue() == productLine.intValue()) {
-                    productConfig.setId(config.getId());
-                    productConfig.setCreateTime(config.getCreateTime());
-                    productConfig.setUpdateTime(new Date());
-                    isCreate = false;
-                    continue;
-                }
-                left = config.getEndSn() - config.getSnCount() + 1;
-                right = config.getEndSn();
-                if((startSnNum <= right && startSnNum >= left) || (endSnNum <= right && endSnNum >= left) ||
-                        (endSnNum >= right && startSnNum <= left) ) {
-                    log.error("{}", ErrorEnum.SN_CONFLICT);
-                    throw new GeneralException(ErrorEnum.SN_CONFLICT);
-                }
-            }
-
-        }
-
-        if (isCreate) {
-            productConfig.setCreateTime(new Date());
-            productConfig.setUpdateTime(new Date());
-        }
-
-        productConfig.setEndSn(endSnNum);
-
-
-        productConfigRepository.saveAndFlush(productConfig);
-
-
-        return  ok(productConfig);
-    }
-
-    @GetMapping("/product_config/list")
-    BootstrapTableDTO<?> findPlanTable(@RequestParam(defaultValue = "10") Integer limit,
-                                         @RequestParam(defaultValue = "0") Integer offset,
-                                         @RequestParam String device,
-                                         @RequestParam String factory,
-                                         @RequestParam Integer productLine) {
-
-        BootstrapTableDTO<ProductConfig> table  = new BootstrapTableDTO<>();
-
-        Integer page = (int)Math.floor(offset / limit);
-        Pageable pageable = new PageRequest(page, limit);
-        if (StringUtils.isBlank(device) && StringUtils.isBlank(factory) &&  productLine == null) {
-            Page<ProductConfig> configPage = Page.newPage(productConfigRepository.findAll(pageable));
-            table.setTotal(configPage.getTotalCount());
-            table.setRows(configPage.getList());
-            return table;
-        }
-
-        ProductConfig data = new ProductConfig();
-        if (!StringUtils.isBlank(device)) {
-            data.setDevice(device);
-        }
-
-        if (!StringUtils.isBlank(factory)) {
-            data.setFactory(factory);
-        }
-
-        if (productLine != null) {
-            data.setProductLine(productLine);
-        }
-
-        Example<ProductConfig> example = Example.of(data);
-
-        org.springframework.data.domain.Page<ProductConfig> configPage = productConfigRepository.findAll(Example.of(data), pageable);
-
-        table.setTotal(new Long(configPage.getTotalElements()).intValue());
-        table.setRows(configPage.getContent());
-        return table;
-    }
 
     @RequestMapping(path = "/product" , method = RequestMethod.POST)
     public JsonResp add(@Valid  DeviceData deviceData) {
@@ -164,13 +64,13 @@ public class DeviceDataResource extends BaseResource {
                                          @RequestParam(defaultValue = "0") Integer offset,
                                          @RequestParam Integer testResult,
                                          @RequestParam String factory,
-                                         @RequestParam Integer productLine) {
+                                         @RequestParam String orderNo) {
 
         BootstrapTableDTO<DeviceData> table  = new BootstrapTableDTO<>();
 
         Integer page = (int)Math.floor(offset / limit);
         Pageable pageable = new PageRequest(page, limit);
-        if(testResult == null && StringUtils.isBlank(factory) &&  productLine == null) {
+        if(testResult == null && StringUtils.isBlank(factory) &&  StringUtils.isBlank(orderNo)) {
             Page<DeviceData> devicePage = Page.newPage(deviceDataRepository.findAll(pageable));
             table.setTotal(devicePage.getTotalCount());
             table.setRows(devicePage.getList());
@@ -179,22 +79,21 @@ public class DeviceDataResource extends BaseResource {
 
         DeviceData data = new DeviceData();
         if (testResult != null) {
-            data.setTestResult(testResult);
+            data.setTest_result(testResult);
         }
 
         if (!StringUtils.isBlank(factory)) {
             data.setFactory(factory);
         }
 
-        if (productLine != null) {
-            data.setProductLine(productLine);
+        if (!StringUtils.isBlank(orderNo)) {
+            data.setOrder_id(orderNo);
         }
 
         Example<DeviceData> example = Example.of(data);
 
         org.springframework.data.domain.Page<DeviceData> devicePage = deviceDataRepository.findAll(Example.of(data), pageable);
 
-        //table.setTotal(devicePage.getNumberOfElements());
         table.setTotal(new Long(devicePage.getTotalElements()).intValue());
         table.setRows(devicePage.getContent());
         return table;

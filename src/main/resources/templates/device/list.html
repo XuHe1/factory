@@ -30,12 +30,17 @@
                         <option value="1">未通过</option>
                     </select>
                     工厂：
-                    <input class="form-control" style="display: inline-block;width: 16%;" type="text" id="factory" name="factory">
-                    生产线：
-                    <input class="form-control" style="display: inline-block;width: 16%;" type="text" id="productLine" name="productLine">
+                    <select class="selectpicker" id="factory" name="factory">
+                        <option value="">所有</option>
+                        {% for factory in factories %}
+                        <option value="{{factory}}">{{factory}}</option>
+                        {% endfor %}
+                    </select>
+                    订单号：
+                    <input class="form-control" style="display: inline-block;width: 16%;" type="text" id="orderNo" name="orderNo">
 
                     <button id="export" class="btn btn-primary">
-                        <i class="glyphicon glyphicon-search"></i> 导出
+                        <i class="glyphicon glyphicon-export"></i> 导出
                     </button>
                     <!--<button id="remove" class="btn btn-danger" disabled>-->
                         <!--<i class="glyphicon glyphicon-remove"></i> 删除-->

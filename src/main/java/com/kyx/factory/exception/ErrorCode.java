@@ -21,7 +21,7 @@ public final class ErrorCode {
     public static final String FACTORY_NOT_EXISTS = ERROR_CODE_PREFIX + "130003";
     public static final String PRODUCT_LINE_NOT_EXISTS = ERROR_CODE_PREFIX + "130004";
     public static final String DEVICE_NOT_SUPPORT = ERROR_CODE_PREFIX + "130005";
-    public static final String SN_SUFFIX_ERROR = ERROR_CODE_PREFIX + "130006";
+    public static final String SN_PREFIX_ERROR = ERROR_CODE_PREFIX + "130006";
 
     public static final String MISS_DEVICE = ERROR_CODE_PREFIX + "000001";
     public static final String SN_PATTER_ERROR = ERROR_CODE_PREFIX + "000002";
@@ -46,4 +46,26 @@ public final class ErrorCode {
     public static final String MISS_GYRO_Z = ERROR_CODE_PREFIX + "000021";
     public static final String MISS_TEST_RESULT = ERROR_CODE_PREFIX + "000022";
     public static final String MISS_SN = ERROR_CODE_PREFIX + "000023";
+
+    public static final String MISS_ORDER_PREFIX = ERROR_CODE_PREFIX + "000024";
+    public static final String MISS_ORDER_QUANTITY = ERROR_CODE_PREFIX + "000025";
+    public static final String QUANTITY_MUST_NUM = ERROR_CODE_PREFIX + "000026";
+    public static final String MISS_DELIVERY_COUNT = ERROR_CODE_PREFIX + "000027";
+    public static final String DELIVERY_COUNT_MUST_NUM = ERROR_CODE_PREFIX + "000028";
+    public static final String MISS_USER_NAME = ERROR_CODE_PREFIX + "000029";
+    public static final String MISS_PASSWORD = ERROR_CODE_PREFIX + "000030";
+
+    public static final String USER_ALREADY_EXISTS = ERROR_CODE_PREFIX + "000031";
+    public static final String NO_START_SN = ERROR_CODE_PREFIX + "000032";
+    public static final String OPERATION_INVALID = ERROR_CODE_PREFIX + "000033";
+
+
+    public static final String USER_NAME_ERROR = ERROR_CODE_PREFIX + "000034";
+    public static final String PASSWORD_ERROR = ERROR_CODE_PREFIX + "000035";
+    public static final String ORDER_STOP = ERROR_CODE_PREFIX + "000036";
+    public static final String NO_SN_AVAILABLE = ERROR_CODE_PREFIX + "000037";
+
+    public static final String SN_ALREADY_INITIALIZED = ERROR_CODE_PREFIX + "000038";
+    public static final String MISS_START_SN = ERROR_CODE_PREFIX + "000039";
+    public static final String ORDER_PREFIX_ERROR = ERROR_CODE_PREFIX + "000040";
 }

@@ -11,10 +11,9 @@ public enum ErrorEnum {
     FACTORY_NOT_EXISTS(ErrorCode.FACTORY_NOT_EXISTS, "工厂不存在" ),
     PRODUCT_LINE_NOT_EXISTS(ErrorCode.PRODUCT_LINE_NOT_EXISTS, "生产线不存在"),
     DEVICE_NOT_SUPPORT(ErrorCode.DEVICE_NOT_SUPPORT, "暂不支持该种设备"),
-    SN_SUFFIX_ERROR(ErrorCode.SN_SUFFIX_ERROR, "SN号前缀错误"),
+    SN_PREFIX_ERROR(ErrorCode.SN_PREFIX_ERROR, "SN号前缀错误"),
     MISS_DEVICE(ErrorCode.MISS_DEVICE, "device不能为空"),
     SN_PATTER_ERROR(ErrorCode.SN_PATTER_ERROR, "SN号格式错误"),
-
     MISS_FACTORY(ErrorCode.MISS_FACTORY , "factory不能为空"),
     MISS_PRODUCT_LINE(ErrorCode.MISS_PRODUCT_LINE , "productLine不能为空"),
     MISS_HW_VERSION(ErrorCode.MISS_HW_VERSION , "hwVersion不能为空"),
@@ -35,7 +34,24 @@ public enum ErrorEnum {
     MISS_GYRO_Y(ErrorCode.MISS_GYRO_Y , "gyroY不能为空"),
     MISS_GYRO_Z(ErrorCode.MISS_GYRO_Z , "gyroZ不能为空"),
     MISS_TEST_RESULT(ErrorCode.MISS_TEST_RESULT , "testResult不能为空"),
-    MISS_SN(ErrorCode.MISS_SN, "SN号不能为空");
+    MISS_SN(ErrorCode.MISS_SN, "SN号不能为空"),
+    MISS_ORDER_PREFIX(ErrorCode.MISS_ORDER_PREFIX, "订单号前缀不能为空"),
+    MISS_ORDER_QUANTITY(ErrorCode.MISS_ORDER_QUANTITY, "设备总数不能为空"),
+    QUANTITY_MUST_NUM(ErrorCode.QUANTITY_MUST_NUM, "设备总数必须为数字"),
+    MISS_DELIVERY_COUNT(ErrorCode.MISS_DELIVERY_COUNT, "每次下发sn号数不能为空"),
+    DELIVERY_COUNT_MUST_NUM(ErrorCode.DELIVERY_COUNT_MUST_NUM, "每次下发sn号数必须为数字"),
+    MISS_USER_NAME(ErrorCode.MISS_USER_NAME, "账号不能为空"),
+    MISS_PASSWORD(ErrorCode.MISS_PASSWORD, "密码不能为空"),
+    USER_NAME_ERROR(ErrorCode.USER_NAME_ERROR, "账号错误"),
+    PASSWORD_ERROR(ErrorCode.PASSWORD_ERROR, "密码错误"),
+    USER_ALREADY_EXISTS(ErrorCode.USER_ALREADY_EXISTS, "用户名已存在"),
+    NO_START_SN(ErrorCode.NO_START_SN, "未指定起始SN"),
+    NO_SN_AVAILABLE(ErrorCode.NO_SN_AVAILABLE, "无可用SN号，请新建订单"),
+    ORDER_STOP(ErrorCode.ORDER_STOP, "订单已暂停"),
+    OPERATION_INVALID(ErrorCode.OPERATION_INVALID, "非法操作"),
+    SN_ALREADY_INITIALIZED(ErrorCode.SN_ALREADY_INITIALIZED, "该类设备sn已初始化"),
+    MISS_START_SN(ErrorCode.MISS_START_SN, "起始sn不能为空"),
+    ORDER_PREFIX_ERROR(ErrorCode.ORDER_PREFIX_ERROR, "订单前缀必须由大小写字母组成");
 
     private String code;
     private String msg;

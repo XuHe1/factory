@@ -32,17 +32,17 @@ public class DeviceDataServiceImpl implements DeviceDataService {
     @Override
     public JsonResp<?> save(DeviceData deviceData) {
         String factory = deviceData.getFactory();
-        Integer productLine = deviceData.getProductLine();
+        //Integer productLine = deviceData.getProductLine();
 
         if(!FactoryEnum.getAllFactory().contains(factory)) {
             log.error("{}", ErrorEnum.FACTORY_NOT_EXISTS);
             throw new GeneralException(ErrorEnum.FACTORY_NOT_EXISTS);
         }
 
-        if(productLine > FactoryEnum.getLineCountByFactory(factory) - 1) {
-            log.error("{}", ErrorEnum.PRODUCT_LINE_NOT_EXISTS);
-            throw new GeneralException(ErrorEnum.PRODUCT_LINE_NOT_EXISTS);
-        }
+//        if(productLine > FactoryEnum.getLineCountByFactory(factory) - 1) {
+//            log.error("{}", ErrorEnum.PRODUCT_LINE_NOT_EXISTS);
+//            throw new GeneralException(ErrorEnum.PRODUCT_LINE_NOT_EXISTS);
+//        }
 
         String device = deviceData.getDevice();
         if(!DeviceType.getAllType().contains(device)) {
@@ -51,22 +51,30 @@ public class DeviceDataServiceImpl implements DeviceDataService {
         }
 
         String sn = deviceData.getSn();
-        if(deviceData.getTestResult() == 0) {
+        String chipId = deviceData.getChip_id();
+        if(deviceData.getTest_result() == 0) {
             if(!DeviceType.getSnPrefix(device).equals(sn.substring(0,1))) {
-                log.error("{}", ErrorEnum.SN_SUFFIX_ERROR);
-                throw new GeneralException(ErrorEnum.SN_SUFFIX_ERROR);
+                log.error("{}", ErrorEnum.SN_PREFIX_ERROR);
+                throw new GeneralException(ErrorEnum.SN_PREFIX_ERROR);
             }
             List<DeviceData> deviceDataList = deviceDataRepository.getBySn(sn);
+
             if (deviceDataList != null  && deviceDataList.size() > 0) {
+                for (DeviceData data : deviceDataList) {
+                    if (chipId.equals(data.getChip_id())) {
+                        return new Ok<>(data);
+                    }
+                }
                 log.error("{}", ErrorEnum.ALREADY_EXISTS);
-                throw new GeneralException(ErrorEnum.ALREADY_EXISTS);
+                throw new GeneralException(ErrorEnum.SN_CONFLICT);
             }
         }else {
             deviceData.setSn(null);
         }
 
-        deviceData.setReceiveTime(new Date());
+        deviceData.setReceive_time(new Date());
         deviceData.setInvalid(0);
+        deviceData.setCheck_total(deviceData.getCheck_end() - deviceData.getLast_check_end());
         deviceDataRepository.save(deviceData);
         return new Ok<>(deviceData);
     }

@@ -8,6 +8,8 @@ import com.kyx.factory.util.FillDataCallback;
 import com.kyx.factory.util.SimpleExcelUtil;
 import com.kyx.factory.util.VersionUtil;
 import com.kyx.factory.web.support.BaseController;
+import com.kyx.factory.web.validation.DeviceType;
+import com.kyx.factory.web.validation.FactoryEnum;
 import jxl.write.Label;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,27 +45,31 @@ public class DeviceController extends BaseController {
     private DeviceDataRepository deviceDataRepository;
 
     @GetMapping
-    public String list() {
-        return "device/list";
+    public ModelAndView list() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("device/list");
+        mv.addObject("devices", DeviceType.getAllType());
+        mv.addObject("factories", FactoryEnum.getAllFactory());
+        return mv;
     }
 
     @RequestMapping("/export")
     public void export( @RequestParam Integer testResult,
                         @RequestParam String factory,
-                        @RequestParam Integer productLine,
+                        @RequestParam String orderNo,
                         HttpServletRequest request, HttpServletResponse response) {
 
         DeviceData data = new DeviceData();
         if (testResult != null) {
-            data.setTestResult(testResult);
+            data.setTest_result(testResult);
         }
 
         if (!StringUtils.isBlank(factory)) {
             data.setFactory(factory);
         }
 
-        if (productLine != null) {
-            data.setProductLine(productLine);
+        if (!StringUtils.isBlank(orderNo)) {
+            data.setOrder_id(orderNo);
         }
         data.setInvalid(0);
         Example<DeviceData> example = Example.of(data);
@@ -78,11 +85,6 @@ public class DeviceController extends BaseController {
     }
 
 
-
-
-
-
-
     private void generateExcel(List<DeviceData> datas, String fileName, String[] titles , HttpServletResponse response) {
 
         SimpleExcelUtil.createExcelWithSingleSheet(fileName, titles, response,
@@ -93,26 +95,26 @@ public class DeviceController extends BaseController {
                 DeviceData data = datas.get(i);
                 wsheet.addCell(new Label(k++, j, data.getDevice().toString()));
                 wsheet.addCell(new Label(k++, j, data.getFactory().toString()));
-                wsheet.addCell(new Label(k++, j, data.getProductLine().toString()));
-                wsheet.addCell(new Label(k++, j, VersionUtil.getVestion(data.getHwVersion()).toString()));
-                wsheet.addCell(new Label(k++, j, VersionUtil.getVestion(data.getSwVersion()).toString()));
-                wsheet.addCell(new Label(k++, j, data.getChipId().toString()));
+                wsheet.addCell(new Label(k++, j, data.getProduct_line().toString()));
+                wsheet.addCell(new Label(k++, j, VersionUtil.getVestion(data.getHw_version()).toString()));
+                wsheet.addCell(new Label(k++, j, VersionUtil.getVestion(data.getSw_version()).toString()));
+                wsheet.addCell(new Label(k++, j, data.getChip_id().toString()));
                 wsheet.addCell(new Label(k++, j, data.getSn() == null ? appConfig.getDefaultSN() : data.getSn().toString()));
                 wsheet.addCell(new Label(k++, j, data.getIccid().replaceAll("ICCID:", "").toString()));
-                wsheet.addCell(new Label(k++, j, data.getGpsCount().toString()));
+                wsheet.addCell(new Label(k++, j, data.getGps_count().toString()));
                 wsheet.addCell(new Label(k++, j, data.getFlash().toString()));
                 wsheet.addCell(new Label(k++, j, data.getEeprom().toString()));
                 wsheet.addCell(new Label(k++, j, data.getGprs().toString()));
-                wsheet.addCell(new Label(k++, j, data.getBatteryVoltage().toString()));
-                wsheet.addCell(new Label(k++, j, data.getElectricCurrent().toString()));
-                wsheet.addCell(new Label(k++, j, data.getAcceX().toString()));
-                wsheet.addCell(new Label(k++, j, data.getAcceY().toString()));
-                wsheet.addCell(new Label(k++, j, data.getAcceZ().toString()));
-                wsheet.addCell(new Label(k++, j, data.getGyroX().toString()));
-                wsheet.addCell(new Label(k++, j, data.getGyroY().toString()));
-                wsheet.addCell(new Label(k++, j, data.getGyroZ().toString()));
-                wsheet.addCell(new Label(k++, j, data.getTestResult() == 0 ? "通过" : "未通过"));
-                wsheet.addCell(new Label(k++, j, data.getReceiveTime().toString()));
+                wsheet.addCell(new Label(k++, j, data.getBattery_voltage().toString()));
+                wsheet.addCell(new Label(k++, j, data.getElectric_current().toString()));
+                wsheet.addCell(new Label(k++, j, data.getAcce_x().toString()));
+                wsheet.addCell(new Label(k++, j, data.getAcce_y().toString()));
+                wsheet.addCell(new Label(k++, j, data.getAcce_z().toString()));
+                wsheet.addCell(new Label(k++, j, data.getGyro_x().toString()));
+                wsheet.addCell(new Label(k++, j, data.getGyro_y().toString()));
+                wsheet.addCell(new Label(k++, j, data.getAcce_z().toString()));
+                wsheet.addCell(new Label(k++, j, data.getTest_result() == 0 ? "通过" : "未通过"));
+                wsheet.addCell(new Label(k++, j, data.getReceive_time().toString()));
 
                 }
 

@@ -31,7 +31,7 @@
 		'queryParams': function(params){
             var temp = {
                factory: $('#factory').val(),
-               productLine: $('#productLine').val(),
+               orderNo: $('#orderNo').val(),
                testResult: $('#testResult').val(),
                limit: params.limit, //页面大小
                offset: params.offset, //页码
@@ -42,6 +42,13 @@
 //            {
 //                checkbox: true
 //            },
+            {
+                field: 'order_id',
+                title: '订单号',
+                formatter: function (value, row, index) {
+                    return value;
+                }
+            },
             {
                 field: 'device',
                 title: '设备',
@@ -143,8 +150,23 @@
             {
                 field: 'test_result',
                 title: '测试结果',
+                cellStyle: function (value, row, index) {
+                      var color = value == 0? 'green': 'red';
+                      return {
+                            css: {
+                                "background-color": color
+                            }
+                        }
+                },
                 formatter: function (value, row, index) {
                     return value == 0? "通过": "未通过";
+                }
+            },
+            {
+                field: 'check_total',
+                title: '耗时(s)',
+                formatter: function (value, row, index) {
+                     return value;
                 }
             },
 
@@ -184,9 +206,9 @@
     $export.click(function() {
 
          var factory = $('#factory').val();
-         var productLine = $('#productLine').val();
+         var orderNo = $('#orderNo').val();
          var testResult = $('#testResult').val();
-         window.location.href="/web/devices/export?factory=" + factory + "&productLine=" + productLine + "&testResult=" + testResult;
+         window.location.href="/web/devices/export?factory=" + factory + "&orderNo=" + orderNo + "&testResult=" + testResult;
 
     });
 

@@ -38,6 +38,9 @@ public class DeviceData implements Serializable {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "order_id")
+    private String order_id;
+
     @NotNull(message = ErrorCode.MISS_DEVICE)
     @Column(name = "device")
     private String device;
@@ -48,19 +51,19 @@ public class DeviceData implements Serializable {
 
     @NotNull(message = ErrorCode.MISS_PRODUCT_LINE)
     @Column(name = "product_line")
-    private Integer productLine;
+    private String product_line;
 
     @NotNull(message = ErrorCode.MISS_HW_VERSION)
     @Column(name = "hw_version")
-    private String hwVersion;
+    private String hw_version;
 
     @NotNull(message = ErrorCode.MISS_SW_VERSION)
     @Column(name = "sw_version")
-    private String swVersion;
+    private String sw_version;
 
     @NotNull(message = ErrorCode.MISS_CHIP_ID)
     @Column(name = "chip_id")
-    private String chipId;
+    private String chip_id;
 
     @Size(min = 7, max = 7, message = ErrorCode.SN_LENGTH)
     @Pattern(regexp = "^[A-Z]{1}[0-9]{6}$", message = ErrorCode.SN_PATTER_ERROR)
@@ -73,7 +76,7 @@ public class DeviceData implements Serializable {
 
     @NotNull(message = ErrorCode.MISS_GPS)
     @Column(name = "gps_count")
-    private Integer gpsCount;
+    private Integer gps_count;
 
     @NotNull(message = ErrorCode.MISS_FLASH)
     @Column(name = "flash")
@@ -89,42 +92,57 @@ public class DeviceData implements Serializable {
 
     @NotNull(message = ErrorCode.MISS_BATTERY_VOLTAGE)
     @Column(name = "battery_voltage")
-    private Integer batteryVoltage;
+    private Integer battery_voltage;
 
     @NotNull(message = ErrorCode.MISS_ELECTRIC_CURRENT)
     @Column(name = "electric_current")
-    private Integer electricCurrent;
+    private Integer electric_current;
 
     @NotNull(message = ErrorCode.MISS_ACCE_X)
     @Column(name = "acce_x")
-    private String acceX;
+    private String acce_x;
 
     @NotNull(message = ErrorCode.MISS_ACCE_Y)
     @Column(name = "acce_y")
-    private String acceY;
+    private String acce_y;
 
     @NotNull(message = ErrorCode.MISS_ACCE_Z)
     @Column(name = "acce_z")
-    private String acceZ;
+    private String acce_z;
 
     @NotNull(message = ErrorCode.MISS_GYRO_X)
     @Column(name = "gyro_x")
-    private String gyroX;
+    private String gyro_x;
 
     @NotNull(message = ErrorCode.MISS_GYRO_Y)
     @Column(name = "gyro_y")
-    private String gyroY;
+    private String gyro_y;
 
     @NotNull(message = ErrorCode.MISS_GYRO_Z)
     @Column(name = "gyro_z")
-    private String gyroZ;
+    private String gyro_z;
 
     @NotNull(message = ErrorCode.MISS_TEST_RESULT)
     @Column(name = "test_result")
-    private Integer testResult;
+    private Integer test_result;
+
+    @Column(name = "last_check_end")
+    private Long last_check_end;
+
+    @Column(name = "download_start")
+    private Long download_start;
+
+    @Column(name = "check_start")
+    private Long check_start;
+
+    @Column(name = "check_end")
+    private Long check_end;
+
+    @Column(name = "check_total")
+    private Long check_total;
 
     @Column(name = "receive_time")
-    private Date receiveTime;
+    private Date receive_time;
 
     @Column(name = "invalid", columnDefinition = "int default 0")
     private Integer invalid;
