@@ -28,6 +28,12 @@ public class ProductPlanController extends BaseController {
         return mv;
     }
 
-
+    @GetMapping("/sn")
+    public ModelAndView snInitialize() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("config/sn-list");
+        mv.addObject("devices", DeviceType.getAllType());
+        return mv;
+    }
 
 }

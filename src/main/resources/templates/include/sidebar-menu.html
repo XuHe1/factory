@@ -22,7 +22,22 @@
             </span>
         </a>
         <ul class="treeview-menu">
-            <li><a href="/web/plan">生产计划</a></li>
+            <!--<li><a href="/web/plan">生产计划</a></li>-->
+            <li><a href="/web/plan/sn">sn号初始化</a></li>
+
         </ul>
     </li>
+
+    <li class="treeview {% if _sidebar_uri == 'packet'%}active{% endif %}">
+        <a href="#"><i class="fa fa-briefcase"></i> <span>订单</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li><a href="/web/order">订单列表</a></li>
+        </ul>
+    </li>
+
+
 </ul>
