@@ -51,7 +51,15 @@ public enum ErrorEnum {
     OPERATION_INVALID(ErrorCode.OPERATION_INVALID, "非法操作"),
     SN_ALREADY_INITIALIZED(ErrorCode.SN_ALREADY_INITIALIZED, "该类设备sn已初始化"),
     MISS_START_SN(ErrorCode.MISS_START_SN, "起始sn不能为空"),
-    ORDER_PREFIX_ERROR(ErrorCode.ORDER_PREFIX_ERROR, "订单前缀必须由大小写字母组成");
+    ORDER_PREFIX_ERROR(ErrorCode.ORDER_PREFIX_ERROR, "订单前缀必须由大小写字母组成"),
+    FIRMWARE_GET_ERROR(ErrorCode.FIRMWARE_GET_ERROR, "获取固件项目异常"),
+    FIRMWARE_VERSION_GET_ERROR(ErrorCode.FIRMWARE_VERSION_GET_ERROR, "获取固件版本所有版本异常"),
+    MISS_ORDER_ID(ErrorCode.MISS_ORDER_ID, "order_id不能为空"),
+    MISS_LAST_CHECK_END(ErrorCode.MISS_LAST_CHECK_END, "last_check_end不能为空"),
+    MISS_DOWNLOAD_START(ErrorCode.MISS_DOWNLOAD_START, "download_start不能为空"),
+    MISS_CHECK_START(ErrorCode.MISS_CHECK_START, "check_start不能为空"),
+    MISS_CHECK_END(ErrorCode.MISS_CHECK_END, "check_end不能为空");
+
 
     private String code;
     private String msg;

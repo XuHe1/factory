@@ -68,4 +68,11 @@ public final class ErrorCode {
     public static final String SN_ALREADY_INITIALIZED = ERROR_CODE_PREFIX + "000038";
     public static final String MISS_START_SN = ERROR_CODE_PREFIX + "000039";
     public static final String ORDER_PREFIX_ERROR = ERROR_CODE_PREFIX + "000040";
+    public static final String FIRMWARE_GET_ERROR = ERROR_CODE_PREFIX + "000041";
+    public static final String FIRMWARE_VERSION_GET_ERROR = ERROR_CODE_PREFIX + "000042";
+    public static final String MISS_ORDER_ID = ERROR_CODE_PREFIX + "000043";
+    public static final String MISS_LAST_CHECK_END = ERROR_CODE_PREFIX + "000044";
+    public static final String MISS_DOWNLOAD_START = ERROR_CODE_PREFIX + "000045";
+    public static final String MISS_CHECK_START = ERROR_CODE_PREFIX + "000046";
+    public static final String MISS_CHECK_END = ERROR_CODE_PREFIX + "000047";
 }
