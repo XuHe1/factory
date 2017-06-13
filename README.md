@@ -78,3 +78,6 @@
 * [生产计划配置接口](https://git.1tianxia.net/h.xu/factory/blob/master/doc/POST.-product_config.md)
 
 * [sn号段分配接口](https://git.1tianxia.net/h.xu/factory/blob/master/doc/POST.-sn_segment.md)
+
+
+* [获取订单基本信息接口](https://git.1tianxia.net/h.xu/factory/blob/master/doc/POST.-product_order.md)
