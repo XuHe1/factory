@@ -33,7 +33,7 @@ public class ResourceAdvice extends ResponseEntityExceptionHandler {
             log.warn("GeneralException : {}", ((GeneralException) ex).getErrorEnum());
             return Error.newError(((GeneralException) ex).getErrorEnum(), meta(request));
         } else {
-            log.warn("Unknown exception details", ex);
+            log.warn("Unknown exception details: {}", ex);
             return Error.newError(ErrorEnum.UNKNOWN, meta(request));
         }
     }
