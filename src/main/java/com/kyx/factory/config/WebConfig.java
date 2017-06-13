@@ -65,6 +65,8 @@ public class WebConfig {
     @Setter
     public static class AppConfig {
         private String defaultSN;
+        private String fwProjectUrl;
+        private String fwVersionUrl;
     }
 
 }

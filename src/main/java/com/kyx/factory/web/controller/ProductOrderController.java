@@ -1,5 +1,6 @@
 package com.kyx.factory.web.controller;
 
+import com.kyx.factory.config.WebConfig;
 import com.kyx.factory.dal.domain.Attachment;
 import com.kyx.factory.dal.domain.ProductOrder;
 import com.kyx.factory.dal.domain.Project;
@@ -70,20 +71,27 @@ public class ProductOrderController extends BaseController {
     @Autowired
     private SnInitializeRepository snInitializeRepository;
 
+    @Autowired
+    private WebConfig.AppConfig appConfig;
 
     @GetMapping
     public ModelAndView list() {
+
+        String url = appConfig.getFwProjectUrl();
+        RestTemplate template = new RestTemplate();
+        List<Project> projectList = null;
+        try {
+            projectList =  template.getForEntity(url, List.class).getBody();
+        } catch (Exception e) {
+            log.warn("{}", e);
+            throw new GeneralException(ErrorEnum.FIRMWARE_GET_ERROR);
+        }
+
         ModelAndView mv = new ModelAndView();
         mv.setViewName("order/list");
         mv.addObject("devices", DeviceType.getAllType());
         mv.addObject("factories", FactoryEnum.getAllFactory());
-
-        RestTemplate template = new RestTemplate();
-        List<Project> projectList =  template.getForEntity("http://nbfb.test.getqood.com/api/project/firmwares", List.class).getBody();
-        log.info("{}", projectList.size());
         mv.addObject("projects", projectList);
-        // http://nbfb.test.getqood.com/api/project/firmwares
-        // http://nbfb.test.getqood.com/api/app/5/all
         return mv;
     }
 
@@ -92,10 +100,15 @@ public class ProductOrderController extends BaseController {
         if (project_id == null) {
             throw new GeneralException(ErrorEnum.PARAM_INVALID);
         }
-        String url = "http://nbfb.test.getqood.com/api/app/" + project_id + "/all";
+        String url = appConfig.getFwVersionUrl().replace("project_id", String.valueOf(project_id));
         RestTemplate template = new RestTemplate();
-        String str = template.getForEntity(url, String.class).getBody();
-        List<ProjectVersion> versionList =  template.getForEntity(url, ReturnData.class).getBody().getData();
+        List<ProjectVersion> versionList = null;
+        try {
+            versionList =  template.getForEntity(url, ReturnData.class).getBody().getData();
+        } catch (Exception e) {
+            log.warn("{}", e);
+            throw new GeneralException(ErrorEnum.FIRMWARE_VERSION_GET_ERROR);
+        }
 
         return  new Ok<>(versionList);
     }
@@ -113,7 +126,6 @@ public class ProductOrderController extends BaseController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
         return  new Ok<>(attachment);
     }

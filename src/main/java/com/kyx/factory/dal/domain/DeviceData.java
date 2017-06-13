@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,6 +39,7 @@ public class DeviceData implements Serializable {
     @Column(name = "id")
     private Long id;
 
+    @NotBlank(message = ErrorCode.MISS_ORDER_ID)
     @Column(name = "order_id")
     private String order_id;
 
@@ -126,15 +128,19 @@ public class DeviceData implements Serializable {
     @Column(name = "test_result")
     private Integer test_result;
 
+    @NotNull(message = ErrorCode.MISS_LAST_CHECK_END)
     @Column(name = "last_check_end")
     private Long last_check_end;
 
+    @NotNull(message = ErrorCode.MISS_DOWNLOAD_START)
     @Column(name = "download_start")
     private Long download_start;
 
+    @NotNull(message = ErrorCode.MISS_CHECK_START)
     @Column(name = "check_start")
     private Long check_start;
 
+    @NotNull(message = ErrorCode.MISS_CHECK_END)
     @Column(name = "check_end")
     private Long check_end;
 
