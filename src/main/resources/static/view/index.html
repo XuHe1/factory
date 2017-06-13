@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf8">
+<title>产测统计</title>
+</head>
+<body>
+    <div class="title">生产资料</div>
+    <div class="progressData" style="margin-bottom: 30px;">
+        <div>生产工厂：<span>随便工厂</span></div>
+        <div>订单单号：<span>12938477384923784</span></div><br>
+        <div>订单日期：<span>2017-12-01</span></div>
+        <div>验收日期：<span>2017-12-15</span></div>
+        <div>生产产品：<span>HDX</span></div>
+    </div>
+    <div class="title">生产进度</div>
+    <div class="progress">
+        <div class="progressData">
+            <div>总计生产数量：<span>800个</span></div>
+            <div>计划用时：<span>10小时</span></div><br>
+            <div>已完成数量：<span>500个</span></div>
+            <div>失败数量：<span>21个</span></div>
+            <div>已用时：<span>4小时</span></div><br>
+            <div>还需完成数量：<span>300个</span></div>
+            <div>剩余时间：<span>6小时</span></div>
+            <div>还需用时(估算)：<span>2.4小时</span></div>
+        </div>
+        <div class="bar">
+          <div class="numData" style="width: 500px">
+            <span>62.5%</span>
+          </div>
+        </div>
+    </div>
+    <div class="title">GPS信号分布</div>
+    <div id="canvas-holder" style="width:40%">
+        <canvas id="pie-gps" />
+    </div>
+    <div class="progressData" style="display: inline-block; float: right;width: 40%;margin-top: 80px;">
+        <div>1：<span>12</span></div>
+        <div>2：<span>34</span></div><br>
+        <div>3：<span>35</span></div>
+        <div>4：<span>19</span></div><br>
+        <div>5：<span>32</span></div>
+        <div>6：<span>43</span></div><br>
+        <div>7：<span>9</span></div>
+        <div>8：<span>1</span></div><br>
+        <div>9：<span>12</span></div>
+        <div>10：<span>15</span></div><br>
+        <div>11：<span>51</span></div>
+        <div>12：<span>12</span></div><br>
+        <div>总计：<span>379</span></div>
+        <div>失败率：<span>33.23%</span></div><br>
+        <div></div>
+        <div style="width: 100%"><span>注：信号大于等于3为成功</span></div>
+    </div>
+    <div class="title">电压曲线图</div>
+    <div class="progressData">
+        <div>总计：<span>125</span></div>
+        <div>范围内值：<span>34</span></div>
+        <div>范围内值占比：<span>35%</span></div>
+    </div>
+    <div id="canvas-holder" style="width:100%">
+        <canvas id="line-vol" />
+    </div>
+    <div class="title">模块失败率</div>
+    <div id="canvas-holder" style="width:30%">
+        <canvas id="success-gps" />
+    </div>
+    <div id="canvas-holder" style="width:30%">
+        <canvas id="success-six" />
+    </div>
+    <div class="title">六轴曲线图</div>
+    <div id="canvas-holder" style="width:100%">
+        <canvas id="line-six" />
+    </div>
+<script src="js/jquery-2.1.3.min.js"></script>
+<script src="js/jquery.tmpl.js"></script>
+<script src="./js/chartjs/Chart.bundle.js"></script>
+<script src="./js/chartjs/utils.js"></script>
+
+<script id="myTmpl" type="text/x-jquery-tmpl">
+</script>
+<script>
+    var lineChartList = [
+        randomScalingFactor(),
+        randomScalingFactor(),
+        randomScalingFactor(),
+        randomScalingFactor(),
+        randomScalingFactor(),
+    ];
+    var randomScalingFactor = function() {
+        return Math.round(Math.random() * 100);
+    };
+    var configPieGps = {
+        type: 'pie',
+        data: {
+            datasets: [{
+                data: [
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                ],
+                backgroundColor: [
+                    window.chartColors.red,
+                    window.chartColors.orange,
+                    window.chartColors.yellow,
+                    window.chartColors.green,
+                    window.chartColors.blue,
+                ],
+                label: 'Dataset 1'
+            }],
+            labels: [
+                "1",
+                "2",
+                "3",
+                "4",
+                "5"
+            ]
+        },
+        options: {
+            responsive: true
+        }
+    };
+    var configSuccessGps = {
+        type: 'pie',
+        data: {
+            datasets: [{
+                data: [
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                ],
+                backgroundColor: [
+                    window.chartColors.red,
+                    window.chartColors.green,
+                ],
+                label: 'Dataset 1'
+            }],
+            labels: [
+                "GPS失败",
+                "GPS成功",
+            ]
+        },
+        options: {
+            responsive: true
+        }
+    };
+    var configSuccessSix = {
+        type: 'pie',
+        data: {
+            datasets: [{
+                data: [
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                ],
+                backgroundColor: [
+                    window.chartColors.red,
+                    window.chartColors.green,
+                ],
+                label: 'Dataset 1'
+            }],
+            labels: [
+                "六轴失败",
+                "六轴成功",
+            ]
+        },
+        options: {
+            responsive: true
+        }
+    };
+    var configLineVol = {
+        type: 'line',
+        data: {
+            labels: [ , , , , , , ,],
+            datasets: [{
+                label: "电压",
+                backgroundColor: window.chartColors.red,
+                borderColor: window.chartColors.red,
+                data: [
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor()
+                ],
+                fill: false,
+            }, {
+                label: "30",
+                backgroundColor: window.chartColors.blue,
+                borderColor: window.chartColors.blue,
+                data: [30, 30, 30, 30, 30, 30, 30],
+                pointRadius: 0,
+                fill: false,
+                borderDash: [20, 5],
+            }, {
+                label: "70",
+                backgroundColor: window.chartColors.blue,
+                borderColor: window.chartColors.blue,
+                data: [70, 70, 70, 70, 70, 70, 70],
+                pointRadius: 0,
+                fill: false,
+                borderDash: [20, 5],
+            }]
+        },
+        options: {
+            responsive: true,
+            title:{
+                display:true,
+                text:'电压曲线图'
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false,
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: '电压'
+                    }
+                }]
+            }
+        }
+    };
+    var configLineSix = {
+        type: 'line',
+        data: {
+            labels: [ , , , , , , ,],
+            datasets: [{
+                label: "1",
+                backgroundColor: window.chartColors.red,
+                borderColor: window.chartColors.red,
+                data: [
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor()
+                ],
+                fill: false,
+                pointRadius: 0,
+            }, {
+                label: "2",
+                backgroundColor: window.chartColors.orange,
+                borderColor: window.chartColors.orange,
+                data: [
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor()
+                ],
+                fill: false,
+                pointRadius: 0,
+            }, {
+                label: "3",
+                backgroundColor: window.chartColors.yellow,
+                borderColor: window.chartColors.yellow,
+                data: [
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor()
+                ],
+                fill: false,
+                pointRadius: 0,
+            }, {
+                label: "4",
+                backgroundColor: window.chartColors.green,
+                borderColor: window.chartColors.green,
+                data: [
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor()
+                ],
+                fill: false,
+                pointRadius: 0,
+            }, {
+                label: "5",
+                backgroundColor: window.chartColors.blue,
+                borderColor: window.chartColors.blue,
+                data: [
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor()
+                ],
+                fill: false,
+                pointRadius: 0,
+            }, {
+                label: "6",
+                backgroundColor: window.chartColors.purple,
+                borderColor: window.chartColors.purple,
+                data: [
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor()
+                ],
+                fill: false,
+                pointRadius: 0,
+            }]
+        },
+        options: {
+            responsive: true,
+            title:{
+                display:true,
+                text:'六轴曲线图'
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false,
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        // labelString: '电压'
+                    }
+                }]
+            }
+        }
+    };
+     window.onload = function() {
+        var ctx1 = document.getElementById("pie-gps").getContext("2d");
+        var ctx2 = document.getElementById("success-gps").getContext("2d");
+        var ctx3 = document.getElementById("success-six").getContext("2d");
+        var ctx4 = document.getElementById("line-vol").getContext("2d");
+        var ctx5 = document.getElementById("line-six").getContext("2d");
+        window.pieGps = new Chart(ctx1, configPieGps);
+        window.successGps = new Chart(ctx2, configSuccessGps);
+        window.successSix = new Chart(ctx3, configSuccessSix);
+        window.lineVol = new Chart(ctx4, configLineVol);
+        window.lineSix = new Chart(ctx5, configLineSix);
+    };
+</script>
+<style type="text/css">
+    html,body {
+        max-width:1000px;
+        padding: 24px;
+    }
+    html,body {
+        margin:0 auto;
+        width:100%;
+        height:100%;
+        padding-top: 30px;
+    }
+    body {
+        -webkit-text-size-adjust:100%;
+        -ms-text-size-adjust:100%;
+        text-size-adjust:100%;
+        font-family:"arial";
+        padding:0;
+        margin:0;
+    }
+    .clear {
+        clear: both;
+    }
+    #canvas-holder {
+        display: inline-block;
+        margin-bottom: 30px;
+    }
+    .title {
+        border-bottom: 2px solid #dfe6ec;
+        line-height: 36px;
+        margin-bottom: 24px;
+        padding-left: 12px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    .progress {
+        margin-bottom: 30px;
+    }
+    .bar {
+        width: 800px;
+        height: 40px;
+        background: #dcdbd7;
+        margin: 20px auto 3px;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: inset -1px 2px #cacac5;
+    }
+    .numData {
+      height: 100%;
+      background: -webkit-gradient(linear,0 0,500 0,from(#ff0000), color-stop(0.25, #ffa92a), color-stop(0.5, #FFEB3B), color-stop(0.75, #b1ea35), to(#21ea2a));
+      border-radius: 20px;
+      line-height: 40px;
+      color: #fff;
+    }
+    .numData > span {
+        margin-left: 20px;
+        width: 100px;
+        display: inline-block;
+    }
+    .line {
+      height: 40px;
+      border-left: 2px solid black;
+      left: 500px;
+      display: inline-block;
+      position: relative;
+      top: -40px;
+    }
+    .progressData {
+        padding-left: 10%;
+    }
+    .progressData > div {
+        display: inline-block;
+        width: 30%;
+        line-height: 30px;
+        /*text-align: center;*/
+    }
+    .progressData > div > span {
+        color: #999;
+    }
+</style>
+</body>
+</html>
