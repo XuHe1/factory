@@ -248,6 +248,9 @@
         $('#id').val('');
         $('#orderNoPrefix').val('');
 //        $('#form_device').val('');
+        $('#project').val('');
+        $('#fw_version').val('');
+        $('#fw_download').val('');
         $('#hwVersion').val('');
         $('#quantity').val('');
 //        $('#form_factory').val('');
@@ -326,6 +329,10 @@
                 $('#id').val(data.id);
                 $('#orderNoPrefix').val(data.order_no_prefix);
                 $('#form_device').val(data.device);
+                $('#project').val(data.project);
+                $('#project').change();
+                $('#fw_version').val(data.fw_version);
+                $('#fw_download').val(data.fw_download);
                 $('#hwVersion').val(data.hw_version);
                 $('#quantity').val(data.quantity);
                 $('#form_factory').val(data.factory);
@@ -411,6 +418,7 @@
           $.ajax({
               url: '/web/order/fm_versions/' + $(this).val(),
               type: 'get',
+              async: false,
               success:function(data) {
                   var versionArray = data.data;
                   if(versionArray != null) {
