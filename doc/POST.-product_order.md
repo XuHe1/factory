@@ -12,7 +12,7 @@
 	* api_key
   
 
-	  * 构建url：http://factory.ms.getqood.com/order/login?username=xxx&passsword=xxx
+	  * 构建url：http://factory.ms.getqood.com/user/login?username=xxx&passsword=xxx
 	  * 对url使用HmacSHA1(密钥：4bbf90\_SnRequestAPI\_50a7abf)加密
  
 - 返回数据结构
@@ -30,9 +30,9 @@
 	    "sn_index": 501,
 	    "end_sn": 700,
 	    "project": "13",
-	    "fw_version": "1.50B",
+	    "fw_version": "513",
 	    "fw_download": "http://nbfb.test.getqood.com/upload/13/1.50B/BT_150_B.bin",
-	    "hw_version": "1.0",
+	    "hw_version": "256",
 	    "factory": "JinXin",
 	    "username": "kyx04",
 	    "delivery_count": 30,
@@ -61,8 +61,8 @@
 		    "sn_index": 501,
 		    "end_sn": sn号段数,
 		    "project": "13",
-		    "fw_version": 固件版本,
-		    "fw_download": 固件下载地址,
+		    "fw_version": 固件版本(uint16),
+		    "fw_download": 固件下载地址(uint16),
 		    "hw_version": 硬件版本,
 		    "factory": 工厂,
 		    "username": 账号,
