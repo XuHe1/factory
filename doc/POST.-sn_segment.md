@@ -13,7 +13,7 @@
 	* api_key
   
 
-	  * 构建url：http://factory.ms.getqood.com/order/login?username=xxx&passsword=xxx
+	  * 构建url：http://factory.ms.getqood.com/user/login?username=xxx&passsword=xxx
 	  * 对url使用HmacSHA1(密钥：4bbf90\_SnRequestAPI\_50a7abf)加密
  
 - 返回数据结构

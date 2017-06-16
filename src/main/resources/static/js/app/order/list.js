@@ -333,7 +333,8 @@
                 $('#project').change();
                 $('#fw_version').val(data.fw_version);
                 $('#fw_download').val(data.fw_download);
-                $('#hwVersion').val(data.hw_version);
+                $('#hwVersion').val(data.hw_version.split('.')[0]);
+                $('#hwVersion1').val(data.hw_version.split('.')[1]);
                 $('#quantity').val(data.quantity);
                 $('#form_factory').val(data.factory);
                 $('#username').val(data.username);
