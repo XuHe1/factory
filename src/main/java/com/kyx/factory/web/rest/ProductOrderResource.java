@@ -16,6 +16,7 @@ import com.kyx.factory.support.db.Page;
 import com.kyx.factory.support.json.JsonResp;
 import com.kyx.factory.support.json.Ok;
 import com.kyx.factory.util.EncryptUtil;
+import com.kyx.factory.util.VersionUtil;
 import com.kyx.factory.web.model.BootstrapTableDTO;
 import com.kyx.factory.web.support.BaseResource;
 import lombok.extern.slf4j.Slf4j;
@@ -71,35 +72,54 @@ public class ProductOrderResource extends BaseResource {
          * 2. 订单表为空，查询全局start_sn表
          * 3. start_sn表为空，抛异常
          */
-
         Integer startSn = 0;
-        ProductOrder latestOrder = productOrderRepository.findTopByDevice(order.getDevice(), new Sort(Sort.Direction.DESC, "id"));
-        if (latestOrder == null) {
-            List<SnInitialize> snInitializeList = snInitializeRepository.getByDevice(order.getDevice());
-            if (snInitializeList == null || snInitializeList.size() < 1) {
-                throw new GeneralException(ErrorEnum.NO_START_SN);
+        Date now = new Date();
+        if (order.getId() == null) {
+            ProductOrder latestOrder = productOrderRepository.findTopByDevice(order.getDevice(), new Sort(Sort.Direction.DESC, "id"));
+            if (latestOrder == null) {
+                List<SnInitialize> snInitializeList = snInitializeRepository.getByDevice(order.getDevice());
+                if (snInitializeList == null || snInitializeList.size() < 1) {
+                    throw new GeneralException(ErrorEnum.NO_START_SN);
+                }
+                SnInitialize snInitialize = snInitializeList.get(0);
+                startSn = snInitialize.getStartSn();
+
+            } else {
+                startSn = latestOrder.getEndSn() + 1;
             }
-            SnInitialize snInitialize = snInitializeList.get(0);
-            startSn = snInitialize.getStartSn();
+
+            order.setCreateTime(now);
 
         } else {
-            startSn = latestOrder.getEndSn() + 1;
+            ProductOrder oldOrder = productOrderRepository.findOne(order.getId());
+            if (oldOrder == null) {
+                throw new GeneralException(ErrorEnum.NO_ORDER);
+            }
+
+            int orderState = oldOrder.getState();
+            if (Constant.PO_CREATED != orderState) {
+                throw new GeneralException(ErrorEnum.OPERATION_INVALID);
+            }
+
+            if (oldOrder.getQuantity() < order.getQuantity()) {
+                throw new GeneralException(ErrorEnum.QUANTITY_CAN_NOT_INCREASE);
+            }
+            order.setCreateTime(oldOrder.getCreateTime());
+            startSn = oldOrder.getStartSn();
+
         }
+
         order.setStartSn(startSn);
         order.setSnIndex(startSn);
         order.setEndSn(startSn + order.getQuantity() - 1);
-//        String password = order.getPassword();
-//        String encryptPwd = EncryptUtil.hmacSHA1Encrypt(password, EncryptUtil.SECRET_KEY);
-//        order.setPassword(encryptPwd);
-        Date now = new Date();
-        if (order.getId() == null) {
-            order.setCreateTime(now);
-        }
-
         order.setUpdateTime(now);
         order.setState(Constant.PO_CREATED);
+        String hwVersion = order.getHwVersion().replace(",", ".");
+        order.setHwVersion(hwVersion);
         productOrderRepository.save(order);
         return new Ok(order);
+
+
 
     }
 
@@ -136,16 +156,17 @@ public class ProductOrderResource extends BaseResource {
         }
         ProductOrder order = productOrderRepository.findOne(id[0]);
         if (order == null) {
-            throw new GeneralException(ErrorEnum.NOT_EXISTS);
+            throw new GeneralException(ErrorEnum.NO_ORDER);
         }
         int orderState = order.getState();
-        if (orderState == Constant.PO_CREATED && state == Constant.PO_DELETED) {
-            order.setState(state);
-            productOrderRepository.saveAndFlush(order);
-            return Ok.newOk(order);
+        if (state == orderState) {
+            throw new GeneralException(ErrorEnum.OPERATION_INVALID);
         }
+        order.setState(state);
+        order.setUpdateTime(new Date());
+        productOrderRepository.saveAndFlush(order);
+        return Ok.newOk(order);
 
-        throw new GeneralException(ErrorEnum.OPERATION_INVALID);
 
 
     }
@@ -225,6 +246,10 @@ public class ProductOrderResource extends BaseResource {
         }
         sb.append(orderIdStr);
         order.setOrderNo(sb.toString());
+        // 版本号转换， 1.0 ＝> 0x0100  => 256
+        order.setHwVersion(VersionUtil.transformVestion(order.getHwVersion()));
+        order.setFwVersion(VersionUtil.transformVestion(order.getFwVersion()));
+
         return new Ok(order);
     }
 
@@ -252,7 +277,7 @@ public class ProductOrderResource extends BaseResource {
         }
 
         //重发
-        String requestId = request.getHeader("requestId");
+        String requestId = request.getHeader("request_id");
         SnRange snRangeTemp = snRangeRepository.findOne(requestId);
         if (snRangeTemp != null) {
             return new Ok(snRangeTemp);

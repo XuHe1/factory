@@ -75,4 +75,7 @@ public final class ErrorCode {
     public static final String MISS_DOWNLOAD_START = ERROR_CODE_PREFIX + "000045";
     public static final String MISS_CHECK_START = ERROR_CODE_PREFIX + "000046";
     public static final String MISS_CHECK_END = ERROR_CODE_PREFIX + "000047";
+    public static final String NO_STATISTIC =  ERROR_CODE_PREFIX + "000048";
+    public static final String NO_ORDER =  ERROR_CODE_PREFIX + "000049";
+    public static final String QUANTITY_CAN_NOT_INCREASE = ERROR_CODE_PREFIX + "000050";
 }

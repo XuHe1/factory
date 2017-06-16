@@ -62,6 +62,7 @@ public class VersionUtil {
         return null;
     }
 
+    // 256 -> 0x0100 -> 1.0
     public static String getVestion(String versionStr) {
         int version = Integer.parseInt(versionStr);
         String hexStr1 = ByteConvert.bytes2HexString(ints2bytes(version));
@@ -72,6 +73,32 @@ public class VersionUtil {
         return hexString2DecimalString(mainVersionStr) + "." + hexString2DecimalString(branchVersionStr);
 
     }
+
+    // 1.0 -> 0x0100 -> 256
+    public static String transformVestion(String versionStr) {
+        String a[] = versionStr.split("\\.");
+        String mainVersionStr = versionStr.split("\\.")[0];
+        String branchVersionStr = versionStr.split("\\.")[1];
+
+        int mainVersion = Integer.parseInt(mainVersionStr);
+        String mainVersionHex = EncryptUtil.encodeHex(ints2bytes(mainVersion));
+        int mainLength = mainVersionHex.length();
+        mainVersionHex = mainVersionHex.substring(mainLength - 2, mainLength);
+
+        int branchVersion = Integer.parseInt(branchVersionStr);
+        String branchVersionHex = EncryptUtil.encodeHex(ints2bytes(branchVersion));
+        int branchLength = branchVersionHex.length();
+        branchVersionHex = branchVersionHex.substring(branchLength - 2, branchLength);
+
+
+
+        return hexString2DecimalString(mainVersionHex + branchVersionHex);
+    }
+
+//    public static void main(String[] args) {
+//        //System.out.println(hexString2DecimalString("1"));
+//        System.out.println(transformVestion("1.61"));
+//    }
 
 
 }
