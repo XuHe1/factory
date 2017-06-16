@@ -40,39 +40,42 @@
     <div id="canvas-holder" style="width:40%">
         <canvas id="pie-gps" />
     </div>
-    <div class="progressData" style="display: inline-block;width: 40%;margin-top: 80px;vertical-align: top;">
-        <div>1：<span>12</span></div>
-        <div>2：<span>34</span></div><br>
-        <div>3：<span>35</span></div>
-        <div>4：<span>19</span></div><br>
-        <div>5：<span>32</span></div>
-        <div>6：<span>43</span></div><br>
-        <div>7：<span>9</span></div>
-        <div>8：<span>1</span></div><br>
-        <div>9：<span>12</span></div>
-        <div>10：<span>15</span></div><br>
-        <div>11：<span>51</span></div>
-        <div>12：<span>12</span></div><br>
-        <div>总计：<span>379</span></div>
-        <div>失败率：<span>33.23%</span></div><br>
-        <div></div>
-        <div style="width: 100%"><span>注：信号大于等于3为成功</span></div>
+    <div class="progressData" id="data3">
+        
     </div>
     <div class="title">电压曲线图</div>
-    <div class="progressData">
-        <div>总计：<span>125</span></div>
-        <div>范围内值：<span>34</span></div>
-        <div>范围内值占比：<span>35%</span></div>
+    <div class="progressData" id="data4">
+        <div>平均值：<span></span></div>
+        <div>范围内值数量：<span></span></div>
+        <div>范围内值占比：<span></span></div>
     </div>
     <div id="canvas-holder" style="width:100%">
         <canvas id="line-vol" />
     </div>
     <div class="title">模块失败率</div>
-    <div id="canvas-holder" style="width:30%">
-        <canvas id="success-gps" />
+    <div id="canvas-holder" style="width:24%">
+        <canvas id="failed-A" />
     </div>
-    <div id="canvas-holder" style="width:30%">
-        <canvas id="success-six" />
+    <div id="canvas-holder" style="width:24%">
+        <canvas id="failed-G" />
+    </div>
+    <div id="canvas-holder" style="width:24%">
+        <canvas id="failed-V" />
+    </div>
+    <div id="canvas-holder" style="width:24%">
+        <canvas id="failed-gps" />
+    </div>
+    <div id="canvas-holder" style="width:25%">
+        <canvas id="failed-F" />
+    </div>
+    <div id="canvas-holder" style="width:25%">
+        <canvas id="failed-E" />
+    </div>
+    <div id="canvas-holder" style="width:25%">
+        <canvas id="failed-gprs" />
+    </div>
+    <div id="canvas-holder" style="width:25%">
+        <canvas id="failed-All" />
     </div>
     <div class="title">六轴曲线图</div>
     <div id="canvas-holder" style="width:100%">
@@ -90,8 +93,6 @@
 <script>
     function searchInfo() {
         const url = `/analyse/order?orderNo=${$('.search>input')[0].value}`;
-        const url2 = `/analyse/progress/order?orderNo=${$('.search>input')[0].value}`;
-        console.log($('#data1>div>span')[0]);
         $.ajax({
             url: url,
             type: 'get',
@@ -112,324 +113,576 @@
                     $('#data1>div>span')[5].innerHTML = moment(d.schedule_finish).format('YYYY-MM-DD HH:mm:ss');
                     $('#data2>div>span')[0].innerHTML = d.quantity;
                 }
-                console.log(data);
             },
             error: (e) => {
                 console.log(e);
             }
         })
+        const url2 = `/analyse/progress/order?orderNo=${$('.search>input')[0].value}`;
         $.ajax({
             url: url2,
             type: 'get',
             success: (data) => {
                 const d = data.data;
                 if (data.data) {
+                    searchChart(d.finished_count, d.failed_count)
                     $('#data2>div>span')[2].innerHTML = d.finished_count;
                     $('#data2>div>span')[3].innerHTML = d.failed_count;
                     $('#data2>div>span')[4].innerHTML = d.cost_time;
-                    // $('#data2>div>span')[5].innerHTML = $('#data2>div>span')[0].innerHTML - d.failed_count;
                 }
-                console.log(data);
             },
             error: (e) => {
                 console.log(e);
             }
         })
     }
-    var lineChartList = [
-        randomScalingFactor(),
-        randomScalingFactor(),
-        randomScalingFactor(),
-        randomScalingFactor(),
-        randomScalingFactor(),
-    ];
+    function searchChart(finished, failed) {
+        const url3 = `/analyse/gps/order?orderNo=${$('.search>input')[0].value}`;
+        $.ajax({
+            url: url3,
+            type: 'get',
+            success: (data) => {
+                const d = data.data;
+                if (data.data) {
+                    // $("#myTmpl").tmpl(data.data).appendTo("#data3");
+                    const arr1 = ['0~2', '3~10', '11~20', '21~50'];
+                    let arr2 = [0, 0, 0, 0];
+                    data.data.map((d) => {
+                        if (d[0] >= 0 && d[0] <= 2) {
+                            arr2[0] += d[1];
+                        } else if (d[0] >= 3 && d[0] <= 10) {
+                            arr2[1] += d[1];
+                        } else if (d[0] >= 11 && d[0] <= 20) {
+                            arr2[2] += d[1];
+                        } else if (d[0] >= 21 && d[0] <= 50) {
+                            arr2[3] += d[1];
+                        }
+                        $(`<div>${d[0]}：<span>${d[1]}</span></div>`).appendTo("#data3");
+                        return arr2;
+                    })
+                    $(`<div>失败数量：<span>${arr2[0]}</span></div>`).appendTo("#data3");
+                    const f = arr2[0] * 100 / (Number(finished) + Number(failed));
+                    $(`<div>失败率：<span>${f}%</span></div>`).appendTo("#data3");
+                    $(`<div style="width: 100%;margin-top: 20px;"><span>注：信号大于等于3为成功</span></div>`).appendTo("#data3");
+                    drawPieGps(arr1, arr2);
+                    drawFailedGps(finished, failed, arr2[0]);
+                }
+            },
+            error: (e) => {
+                console.log(e);
+            }
+        })
+        const url4 = `/analyse/battery_voltage/order?orderNo=${$('.search>input')[0].value}`;
+        $.ajax({
+            url: url4,
+            type: 'get',
+            success: (data) => {
+                const d = data.data;
+                if (data.data) {
+                    let average = 0;
+                    let num = 0;
+                    let numV = 0;
+                    const arr1 = [];
+                    const arr3 = [];
+                    data.data.map((d) => {
+                        average += d / (data.data.length);
+                        arr1.push('');
+                    })
+                    data.data.map((d) => {
+                        arr3.push(average);
+                        if (d >= (average * 0.95) && d <= (average * 1.05)) {
+                            num += 1;
+                        }
+                        if (d > 15000 || d < 13000) {
+                            numV += 1;
+                        }
+                        return num;
+                    })
+                    $('#data4>div>span')[0].innerHTML = average;
+                    $('#data4>div>span')[1].innerHTML = num;
+                    $('#data4>div>span')[2].innerHTML = num * 100 / (Number(finished) + Number(failed)) + '%';
+
+                    drawLineVol(arr1, data.data, arr3);
+                    drawFailedV(Number(finished) + Number(failed) - numV, numV);
+                }
+            },
+            error: (e) => {
+                console.log(e);
+            }
+        })
+        const url5 = `/analyse/flash/order?orderNo=${$('.search>input')[0].value}`;
+        $.ajax({
+            url: url5,
+            type: 'get',
+            success: (data) => {
+                const d = data.data;
+                if (data.data) {
+                    data.data.map((d) => {
+                        let numF = 0;
+                        if (d !== 1) {
+                            numF += 1;
+                        }
+                    })
+                    drawFailedF(Number(finished) + Number(failed) - numF, numF);
+                }
+            },
+            error: (e) => {
+                console.log(e);
+            }
+        })
+        const url6 = `/analyse/eeprom/order?orderNo=${$('.search>input')[0].value}`;
+        $.ajax({
+            url: url6,
+            type: 'get',
+            success: (data) => {
+                const d = data.data;
+                if (data.data) {
+                    data.data.map((d) => {
+                        let numE = 0;
+                        if (d !== 1) {
+                            numE += 1;
+                        }
+                    })
+                    drawFailedE(Number(finished) + Number(failed) - numE, numE);
+                }
+            },
+            error: (e) => {
+                console.log(e);
+            }
+        })
+        const url7 = `/analyse/gprs/order?orderNo=${$('.search>input')[0].value}`;
+        $.ajax({
+            url: url7,
+            type: 'get',
+            success: (data) => {
+                const d = data.data;
+                if (data.data) {
+                    data.data.map((d) => {
+                        let numG = 0;
+                        if (d !== 1) {
+                            numG += 1;
+                        }
+                    })
+                    drawFailedGprs(Number(finished) + Number(failed) - numG, numG);
+                }
+            },
+            error: (e) => {
+                console.log(e);
+            }
+        })
+        searchLineSixA(finished, failed);
+    }
+    function searchLineSixA(finished, failed) {
+        const url5 = `/analyse/accelerator/order?orderNo=${$('.search>input')[0].value}`;
+        const arr1 = [];
+        const arr2 = [];
+        const arr3 = [];
+        const arr4 = [];
+        $.ajax({
+            url: url5,
+            type: 'get',
+            success: (data) => {
+                const d = data.data;
+                if (data.data) {
+                    data.data.map((d) => {
+                        arr1.push('');
+                        arr2.push(d[0]);
+                        arr3.push(d[1]);
+                        arr4.push(d[2]);
+                        return arr4;
+                    })
+                    searchLineSixG(arr1, arr2, arr3, arr4, finished, failed);
+                }
+            },
+            error: (e) => {
+                console.log(e);
+            }
+        })
+    }
+    function searchLineSixG(arr1, arr2, arr3, arr4, finished,failed) {
+        const url6 = `/analyse/gyroscope/order?orderNo=${$('.search>input')[0].value}`;
+        const arr5 = [];
+        const arr6 = [];
+        const arr7 = [];
+        $.ajax({
+            url: url6,
+            type: 'get',
+            success: (data) => {
+                const d = data.data;
+                if (data.data) {
+                    data.data.map((d) => {
+                        arr5.push(d[0]);
+                        arr6.push(d[1]);
+                        arr7.push(d[2]);
+                        return arr7;
+                    })
+                    drawLineSix(arr1, arr2, arr3, arr4, arr5, arr6, arr7, finished, failed);
+                }
+            },
+            error: (e) => {
+                console.log(e);
+            }
+        })
+    }
     var randomScalingFactor = function() {
         return Math.round(Math.random() * 100);
     };
-    var configPieGps = {
-        type: 'pie',
-        data: {
-            datasets: [{
-                data: [
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                ],
-                backgroundColor: [
-                    window.chartColors.red,
-                    window.chartColors.orange,
-                    window.chartColors.yellow,
-                    window.chartColors.green,
-                    window.chartColors.blue,
-                ],
-                label: 'Dataset 1'
-            }],
-            labels: [
-                "1",
-                "2",
-                "3",
-                "4",
-                "5"
-            ]
-        },
-        options: {
-            responsive: true
-        }
-    };
-    var configSuccessGps = {
-        type: 'pie',
-        data: {
-            datasets: [{
-                data: [
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                ],
-                backgroundColor: [
-                    window.chartColors.red,
-                    window.chartColors.green,
-                ],
-                label: 'Dataset 1'
-            }],
-            labels: [
-                "GPS失败",
-                "GPS成功",
-            ]
-        },
-        options: {
-            responsive: true
-        }
-    };
-    var configSuccessSix = {
-        type: 'pie',
-        data: {
-            datasets: [{
-                data: [
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                ],
-                backgroundColor: [
-                    window.chartColors.red,
-                    window.chartColors.green,
-                ],
-                label: 'Dataset 1'
-            }],
-            labels: [
-                "六轴失败",
-                "六轴成功",
-            ]
-        },
-        options: {
-            responsive: true
-        }
-    };
-    var configLineVol = {
-        type: 'line',
-        data: {
-            labels: [ , , , , , , ,],
-            datasets: [{
-                label: "电压",
-                backgroundColor: window.chartColors.red,
-                borderColor: window.chartColors.red,
-                data: [
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor()
-                ],
-                fill: false,
-            }, {
-                label: "30",
-                backgroundColor: window.chartColors.blue,
-                borderColor: window.chartColors.blue,
-                data: [30, 30, 30, 30, 30, 30, 30],
-                pointRadius: 0,
-                fill: false,
-                borderDash: [20, 5],
-            }, {
-                label: "70",
-                backgroundColor: window.chartColors.blue,
-                borderColor: window.chartColors.blue,
-                data: [70, 70, 70, 70, 70, 70, 70],
-                pointRadius: 0,
-                fill: false,
-                borderDash: [20, 5],
-            }]
-        },
-        options: {
-            responsive: true,
-            title:{
-                display:true,
-                text:'电压曲线图'
-            },
-            tooltips: {
-                mode: 'index',
-                intersect: false,
-            },
-            hover: {
-                mode: 'nearest',
-                intersect: true
-            },
-            scales: {
-                xAxes: [{
-                    display: true,
-                    scaleLabel: {
-                        display: true,
-                    }
+    function drawPieGps(arr1, arr2) {
+        var configPieGps = {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: arr2,
+                    backgroundColor: [
+                        '#f44336',
+                        '#ccea37',
+                        '#9dea33',
+                        '#21ea2a',
+                    ],
+                    label: 'Dataset 1'
                 }],
-                yAxes: [{
-                    display: true,
-                    scaleLabel: {
-                        display: true,
-                        labelString: '电压'
-                    }
-                }]
+                labels: arr1,
+            },
+            options: {
+                responsive: true
             }
-        }
-    };
-    var configLineSix = {
-        type: 'line',
-        data: {
-            labels: [ , , , , , , ,],
-            datasets: [{
-                label: "1",
-                backgroundColor: window.chartColors.red,
-                borderColor: window.chartColors.red,
-                data: [
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor()
-                ],
-                fill: false,
-                pointRadius: 0,
-            }, {
-                label: "2",
-                backgroundColor: window.chartColors.orange,
-                borderColor: window.chartColors.orange,
-                data: [
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor()
-                ],
-                fill: false,
-                pointRadius: 0,
-            }, {
-                label: "3",
-                backgroundColor: window.chartColors.yellow,
-                borderColor: window.chartColors.yellow,
-                data: [
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor()
-                ],
-                fill: false,
-                pointRadius: 0,
-            }, {
-                label: "4",
-                backgroundColor: window.chartColors.green,
-                borderColor: window.chartColors.green,
-                data: [
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor()
-                ],
-                fill: false,
-                pointRadius: 0,
-            }, {
-                label: "5",
-                backgroundColor: window.chartColors.blue,
-                borderColor: window.chartColors.blue,
-                data: [
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor()
-                ],
-                fill: false,
-                pointRadius: 0,
-            }, {
-                label: "6",
-                backgroundColor: window.chartColors.purple,
-                borderColor: window.chartColors.purple,
-                data: [
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor(), 
-                    randomScalingFactor()
-                ],
-                fill: false,
-                pointRadius: 0,
-            }]
-        },
-        options: {
-            responsive: true,
-            title:{
-                display:true,
-                text:'六轴曲线图'
-            },
-            tooltips: {
-                mode: 'index',
-                intersect: false,
-            },
-            hover: {
-                mode: 'nearest',
-                intersect: true
-            },
-            scales: {
-                xAxes: [{
-                    display: true,
-                    scaleLabel: {
-                        display: true,
-                    }
-                }],
-                yAxes: [{
-                    display: true,
-                    scaleLabel: {
-                        display: true,
-                        // labelString: '电压'
-                    }
-                }]
-            }
-        }
-    };
-     window.onload = function() {
+        };
         var ctx1 = document.getElementById("pie-gps").getContext("2d");
-        var ctx2 = document.getElementById("success-gps").getContext("2d");
-        var ctx3 = document.getElementById("success-six").getContext("2d");
-        var ctx4 = document.getElementById("line-vol").getContext("2d");
-        var ctx5 = document.getElementById("line-six").getContext("2d");
         window.pieGps = new Chart(ctx1, configPieGps);
-        window.successGps = new Chart(ctx2, configSuccessGps);
-        window.successSix = new Chart(ctx3, configSuccessSix);
+    }
+    function drawLineVol(arr1, arr2, arr3) {  
+        var configLineVol = {
+            type: 'line',
+            data: {
+                labels: arr1,
+                datasets: [{
+                    label: "电压",
+                    backgroundColor: window.chartColors.red,
+                    borderColor: window.chartColors.red,
+                    data: arr2,
+                    fill: false,
+                }, {
+                    label: "平均值",
+                    backgroundColor: window.chartColors.blue,
+                    borderColor: window.chartColors.blue,
+                    data: arr3,
+                    pointRadius: 0,
+                    fill: false,
+                    borderDash: [20, 5],
+                }]
+            },
+            options: {
+                responsive: true,
+                title:{
+                    display:true,
+                    text:'电压曲线图'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: '电压（mV）'
+                        }
+                    }]
+                }
+            }
+        };
+        var ctx4 = document.getElementById("line-vol").getContext("2d");
         window.lineVol = new Chart(ctx4, configLineVol);
+    } 
+    function drawLineSix(arr1, arr2, arr3, arr4, arr5, arr6, arr7, finished, failed) {
+        const total = Number(finished) + Number(failed);
+        let numA = 0;
+        let numG = 0;
+        for (let i = 0; i < arr1.length; i += 1) {
+            if (arr2[i] > 100 || arr2[i] < -100 || arr3[i] > 100 || arr3[i] < -100 || arr4[i] > 100 || arr4[i] < -100) {
+                numA += 1;
+            }
+            if (arr5[i] > 100 || arr5[i] < -100 || arr6[i] > 100 || arr6[i] < -100 || arr7[i] > 100 || arr7[i] < -100) {
+                numG += 1;
+            }
+        }
+        drawFailedA(total - numA, numA);
+        drawFailedG(total - numG, numG);
+        var configLineSix = {
+            type: 'line',
+            data: {
+                labels: arr1,
+                datasets: [{
+                    label: "加速度计x轴",
+                    backgroundColor: window.chartColors.red,
+                    borderColor: window.chartColors.red,
+                    data: arr2,
+                    fill: false,
+                    pointRadius: 0,
+                }, {
+                    label: "加速度计y轴",
+                    backgroundColor: window.chartColors.orange,
+                    borderColor: window.chartColors.orange,
+                    data: arr3,
+                    fill: false,
+                    pointRadius: 0,
+                }, {
+                    label: "加速度计z轴",
+                    backgroundColor: window.chartColors.yellow,
+                    borderColor: window.chartColors.yellow,
+                    data: arr4,
+                    fill: false,
+                    pointRadius: 0,
+                }, {
+                    label: "陀螺仪x轴",
+                    backgroundColor: window.chartColors.green,
+                    borderColor: window.chartColors.green,
+                    data: arr5,
+                    fill: false,
+                    pointRadius: 0,
+                }, {
+                    label: "陀螺仪y轴",
+                    backgroundColor: window.chartColors.blue,
+                    borderColor: window.chartColors.blue,
+                    data: arr6,
+                    fill: false,
+                    pointRadius: 0,
+                }, {
+                    label: "陀螺仪z轴",
+                    backgroundColor: window.chartColors.purple,
+                    borderColor: window.chartColors.purple,
+                    data: arr7,
+                    fill: false,
+                    pointRadius: 0,
+                }]
+            },
+            options: {
+                responsive: true,
+                title:{
+                    display:true,
+                    text:'六轴曲线图'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            // labelString: '电压'
+                        }
+                    }]
+                }
+            }
+        };
+        var ctx5 = document.getElementById("line-six").getContext("2d");
         window.lineSix = new Chart(ctx5, configLineSix);
-    };
+    }
+    function drawFailedGps(finished, failed, num) {
+        var configFailedGps = {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: [
+                        num,
+                        Number(finished) + Number(failed) - Number(num),
+                    ],
+                    backgroundColor: [
+                        window.chartColors.red,
+                        window.chartColors.green,
+                    ],
+                }],
+                labels: [
+                    "GPS失败",
+                    "成功",
+                ]
+            },
+            options: {
+                responsive: true
+            }
+        };
+        var ctx2 = document.getElementById("failed-gps").getContext("2d");
+        window.failedGps = new Chart(ctx2, configFailedGps);
+    }
+    function drawFailedA(finished, failed) {
+        var configFailedA = {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: [
+                        failed,
+                        finished,
+                    ],
+                    backgroundColor: [
+                        window.chartColors.red,
+                        window.chartColors.green,
+                    ],
+                }],
+                labels: [
+                    "加速度计失败",
+                    "成功",
+                ]
+            },
+            options: {
+                responsive: true
+            }
+        };
+        var ctx2 = document.getElementById("failed-A").getContext("2d");
+        window.failedA = new Chart(ctx2, configFailedA);
+    }
+    function drawFailedG(finished, failed) {
+        var configFailedG = {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: [
+                        failed,
+                        finished,
+                    ],
+                    backgroundColor: [
+                        window.chartColors.red,
+                        window.chartColors.green,
+                    ],
+                }],
+                labels: [
+                    "陀螺仪失败",
+                    "成功",
+                ]
+            },
+            options: {
+                responsive: true
+            }
+        };
+        var ctx2 = document.getElementById("failed-G").getContext("2d");
+        window.failedG = new Chart(ctx2, configFailedG);
+    }   
+    function drawFailedV(finished, failed) {
+        var configFailedV = {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: [
+                        failed,
+                        finished,
+                    ],
+                    backgroundColor: [
+                        window.chartColors.red,
+                        window.chartColors.green,
+                    ],
+                }],
+                labels: [
+                    "电压失败",
+                    "成功",
+                ]
+            },
+            options: {
+                responsive: true
+            }
+        };
+        var ctx2 = document.getElementById("failed-V").getContext("2d");
+        window.failedV = new Chart(ctx2, configFailedV);
+    } 
+    function drawFailedF(finished, failed) {
+        var configFailedF = {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: [
+                        failed,
+                        finished,
+                    ],
+                    backgroundColor: [
+                        window.chartColors.red,
+                        window.chartColors.green,
+                    ],
+                }],
+                labels: [
+                    "flash失败",
+                    "成功",
+                ]
+            },
+            options: {
+                responsive: true
+            }
+        };
+        var ctx2 = document.getElementById("failed-F").getContext("2d");
+        window.failedF = new Chart(ctx2, configFailedF);
+    }
+    function drawFailedE(finished, failed) {
+        var configFailedE = {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: [
+                        failed,
+                        finished,
+                    ],
+                    backgroundColor: [
+                        window.chartColors.red,
+                        window.chartColors.green,
+                    ],
+                }],
+                labels: [
+                    "eeprom失败",
+                    "成功",
+                ]
+            },
+            options: {
+                responsive: true
+            }
+        };
+        var ctx2 = document.getElementById("failed-E").getContext("2d");
+        window.failedE = new Chart(ctx2, configFailedE);
+    }
+    function drawFailedGprs(finished, failed) {
+        var configFailedGprs = {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: [
+                        failed,
+                        finished,
+                    ],
+                    backgroundColor: [
+                        window.chartColors.red,
+                        window.chartColors.green,
+                    ],
+                }],
+                labels: [
+                    "gprs失败",
+                    "成功",
+                ]
+            },
+            options: {
+                responsive: true
+            }
+        };
+        var ctx2 = document.getElementById("failed-gprs").getContext("2d");
+        window.failedGprs = new Chart(ctx2, configFailedGprs);
+    }
 </script>
 <style type="text/css">
     body {
@@ -537,6 +790,16 @@
     }
     .progressData > div > span {
         color: #999;
+    }
+    #data3 {
+        display: inline-block;
+        width: 40%;
+        margin-top: 80px;
+        vertical-align: top;
+    }
+    #data3 > div {
+        float: left;
+        width: 40%;
     }
 </style>
 </body>
