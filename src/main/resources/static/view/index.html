@@ -22,17 +22,15 @@
     <div class="progress">
         <div class="progressData" id="data2">
             <div>总计生产数量：<span></span></div>
-            <div>计划用时：<span></span></div><br>
-            <div>已完成数量：<span></span></div>
-            <div>失败数量：<span></span></div>
-            <div>已用时：<span></span></div><br>
+            <div>完成良品数量：<span></span></div>
+            <div>完成失败数量：<span></span></div><br>
+            <div>已用时：<span></span></div>
             <div>还需完成数量：<span></span></div>
-            <div>剩余时间：<span></span></div>
-            <div>还需用时(估算)：<span></span></div>
+            <div>剩余良品用时（估算）：<span></span></div>
         </div>
         <div class="bar">
-          <div class="numData" style="width: 500px">
-            <span>62.5%</span>
+          <div class="numData" style="width: 0;">
+            <span></span>
           </div>
         </div>
     </div>
@@ -53,7 +51,7 @@
         <canvas id="line-vol" />
     </div>
     <div class="title">模块失败率</div>
-    <div id="canvas-holder" style="width:24%">
+    <div id="canvas-holder" style="width:24%; margin-left: 1%;">
         <canvas id="failed-A" />
     </div>
     <div id="canvas-holder" style="width:24%">
@@ -65,16 +63,16 @@
     <div id="canvas-holder" style="width:24%">
         <canvas id="failed-gps" />
     </div>
-    <div id="canvas-holder" style="width:25%">
+    <div id="canvas-holder" style="width:24%; margin-left: 1%;">
         <canvas id="failed-F" />
     </div>
-    <div id="canvas-holder" style="width:25%">
+    <div id="canvas-holder" style="width:24%">
         <canvas id="failed-E" />
     </div>
-    <div id="canvas-holder" style="width:25%">
+    <div id="canvas-holder" style="width:24%">
         <canvas id="failed-gprs" />
     </div>
-    <div id="canvas-holder" style="width:25%">
+    <div id="canvas-holder" style="width:24%">
         <canvas id="failed-All" />
     </div>
     <div class="title">六轴曲线图</div>
@@ -96,6 +94,7 @@
         $.ajax({
             url: url,
             type: 'get',
+            async: true,
             success: (data) => {
                 const d = data.data;
                 if (data.data) {
@@ -112,12 +111,15 @@
                     $('#data1>div>span')[4].innerHTML = moment(d.schedule_begin).format('YYYY-MM-DD HH:mm:ss');
                     $('#data1>div>span')[5].innerHTML = moment(d.schedule_finish).format('YYYY-MM-DD HH:mm:ss');
                     $('#data2>div>span')[0].innerHTML = d.quantity;
+                    searchInfo2(d.quantity);
                 }
             },
             error: (e) => {
                 console.log(e);
             }
         })
+    }
+    function searchInfo2(q) {
         const url2 = `/analyse/progress/order?orderNo=${$('.search>input')[0].value}`;
         $.ajax({
             url: url2,
@@ -125,10 +127,20 @@
             success: (data) => {
                 const d = data.data;
                 if (data.data) {
-                    searchChart(d.finished_count, d.failed_count)
-                    $('#data2>div>span')[2].innerHTML = d.finished_count;
-                    $('#data2>div>span')[3].innerHTML = d.failed_count;
-                    $('#data2>div>span')[4].innerHTML = d.cost_time;
+                    searchChart(d.finished_count, d.failed_count);
+                    drawFailedAll(d.finished_count, d.failed_count);
+                    $('#data2>div>span')[1].innerHTML = d.finished_count;
+                    $('#data2>div>span')[2].innerHTML = d.failed_count;
+                    $('#data2>div>span')[3].innerHTML = d.cost_time + 's';
+                    const surplus = Number(q) - Number(d.finished_count);
+                    const speed = d.cost_time / d.finished_count;
+                    const time = (surplus * speed / 3600).toFixed(2, 10);
+                    const percent = (d.finished_count * 100 / q).toFixed(2, 10);
+                    const width = 0.8 * percent;
+                    $('#data2>div>span')[4].innerHTML = surplus;
+                    $('#data2>div>span')[5].innerHTML = time + 'h';
+                    $('.numData').css('width', width);
+                    $('.numData > span').html(percent + '%');
                 }
             },
             error: (e) => {
@@ -144,7 +156,6 @@
             success: (data) => {
                 const d = data.data;
                 if (data.data) {
-                    // $("#myTmpl").tmpl(data.data).appendTo("#data3");
                     const arr1 = ['0~2', '3~10', '11~20', '21~50'];
                     let arr2 = [0, 0, 0, 0];
                     data.data.map((d) => {
@@ -217,8 +228,8 @@
             success: (data) => {
                 const d = data.data;
                 if (data.data) {
+                    let numF = 0;
                     data.data.map((d) => {
-                        let numF = 0;
                         if (d !== 1) {
                             numF += 1;
                         }
@@ -237,8 +248,8 @@
             success: (data) => {
                 const d = data.data;
                 if (data.data) {
+                    let numE = 0;
                     data.data.map((d) => {
-                        let numE = 0;
                         if (d !== 1) {
                             numE += 1;
                         }
@@ -257,8 +268,8 @@
             success: (data) => {
                 const d = data.data;
                 if (data.data) {
+                    let numG = 0;
                     data.data.map((d) => {
-                        let numG = 0;
                         if (d !== 1) {
                             numG += 1;
                         }
@@ -682,6 +693,32 @@
         };
         var ctx2 = document.getElementById("failed-gprs").getContext("2d");
         window.failedGprs = new Chart(ctx2, configFailedGprs);
+    }
+    function drawFailedAll(finished, failed) {
+        var configFailedAll = {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: [
+                        failed,
+                        finished,
+                    ],
+                    backgroundColor: [
+                        window.chartColors.red,
+                        window.chartColors.green,
+                    ],
+                }],
+                labels: [
+                    "总计失败",
+                    "成功",
+                ]
+            },
+            options: {
+                responsive: true
+            }
+        };
+        var ctx2 = document.getElementById("failed-All").getContext("2d");
+        window.failedAll = new Chart(ctx2, configFailedAll);
     }
 </script>
 <style type="text/css">
