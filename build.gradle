@@ -1,5 +1,5 @@
 group = "com.kyx.factory"
-version = "1.0.2"
+version = "1.0.1"
 description = "factory"
 
 buildscript {
