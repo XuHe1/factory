@@ -34,6 +34,10 @@
           </div>
         </div>
     </div>
+    <div class="title">每日生产统计</div>
+    <div id="canvas-holder" style="width:100%">
+        <canvas id="bar-daily" />
+    </div>
     <div class="title">GPS信号分布</div>
     <div id="canvas-holder" style="width:40%">
         <canvas id="pie-gps" />
@@ -275,6 +279,42 @@
                         }
                     })
                     drawFailedGprs(Number(finished) + Number(failed) - numG, numG);
+                }
+            },
+            error: (e) => {
+                console.log(e);
+            }
+        })
+        const url8 = `/analyse/daily_stat/order?orderNo=${$('.search>input')[0].value}`;
+        $.ajax({
+            url: url8,
+            type: 'get',
+            success: (data) => {
+                const d = data.data;
+                if (data.data) {
+                    const arr1 = [];
+                    const success = [];
+                    const failed = [];
+                    for (let i = 0; i < data.data.length; i += 1) {
+                        if (arr1[0] && arr1[arr1.length - 1] === moment(data.data[i][0]).format('YYYY-MM-DD')){
+                            if (data.data[i][1] === 1) {
+                                success[success.length - 1] += data.data[i][2];
+                            } else if (data.data[i][1] === 0) {
+                                failed[failed.length - 1] += data.data[i][2];
+                            }
+                        } else {
+                            let time = moment(data.data[i][0]).format('YYYY-MM-DD');
+                            arr1.push(time);
+                            if (data.data[i][1] === 1) {
+                                success.push(data.data[i][2]);
+                                failed.push(0);
+                            } else if (data.data[i][1] === 0) {
+                                failed.push(data.data[i][2]);
+                                success.push(0);
+                            }
+                        }
+                    }
+                    drawBarDaily(arr1, success, failed);
                 }
             },
             error: (e) => {
@@ -719,6 +759,54 @@
         };
         var ctx2 = document.getElementById("failed-All").getContext("2d");
         window.failedAll = new Chart(ctx2, configFailedAll);
+    }
+    function drawBarDaily(lab, suc, fal) {
+        var configBarDaily = {
+            type: 'bar',
+                data: {
+                    labels: lab,
+                    datasets: [{
+                        label: '成功数量',
+                        backgroundColor: window.chartColors.green,
+                        borderWidth: 1,
+                        data: suc,
+                    }, {
+                        label: '失败数量',
+                        backgroundColor: window.chartColors.red,
+                        borderWidth: 1,
+                        data: fal,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                    },
+                    scales: {
+                        xAxes: [{
+                            gridLines: {
+                                display: true,
+                            },
+                            ticks: {
+                                beginAtZero: true,
+                            },
+                            stacked: true,
+                            barPercentage: 0.3,
+                        }],
+                        yAxes: [{
+                            gridLines: {
+                                display: true,
+                            },
+                        stacked: true,
+                      }],
+                    },
+                }
+        };
+        var ctx2 = document.getElementById("bar-daily").getContext("2d");
+        window.barDaily = new Chart(ctx2, configBarDaily);
     }
 </script>
 <style type="text/css">
