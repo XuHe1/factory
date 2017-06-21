@@ -277,7 +277,8 @@ public class ProductOrderResource extends BaseResource {
         }
 
         //重发
-        String requestId = request.getHeader("request_id");
+        String requestId = request.getHeader("request-id");
+
         log.info("requestId: {}", requestId);
         if (requestId == null || "".equals(requestId)) {
             List<SnRange> snRangeList = snRangeRepository.findAll();
