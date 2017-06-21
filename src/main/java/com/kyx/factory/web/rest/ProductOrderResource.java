@@ -278,6 +278,12 @@ public class ProductOrderResource extends BaseResource {
 
         //重发
         String requestId = request.getHeader("request_id");
+        log.info("requestId: {}", requestId);
+        if (requestId == null || "".equals(requestId)) {
+            List<SnRange> snRangeList = snRangeRepository.findAll();
+            return new Ok(snRangeList);
+        }
+
         SnRange snRangeTemp = snRangeRepository.findOne(requestId);
         if (snRangeTemp != null) {
             return new Ok(snRangeTemp);
