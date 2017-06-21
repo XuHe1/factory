@@ -22,19 +22,21 @@
     <div class="progress">
         <div class="progressData" id="data2">
             <div>总计生产数量：<span></span></div>
-            <div>计划用时：<span></span></div><br>
-            <div>已完成数量：<span></span></div>
-            <div>失败数量：<span></span></div>
-            <div>已用时：<span></span></div><br>
+            <div>完成良品数量：<span></span></div>
+            <div>完成失败数量：<span></span></div><br>
+            <div>已用时：<span></span></div>
             <div>还需完成数量：<span></span></div>
-            <div>剩余时间：<span></span></div>
-            <div>还需用时(估算)：<span></span></div>
+            <div>剩余良品用时（估算）：<span></span></div>
         </div>
         <div class="bar">
-          <div class="numData" style="width: 500px">
-            <span>62.5%</span>
+          <div class="numData" style="width: 0;">
+            <span></span>
           </div>
         </div>
+    </div>
+    <div class="title">每日生产统计</div>
+    <div id="canvas-holder" style="width:100%">
+        <canvas id="bar-daily" />
     </div>
     <div class="title">GPS信号分布</div>
     <div id="canvas-holder" style="width:40%">
@@ -53,7 +55,7 @@
         <canvas id="line-vol" />
     </div>
     <div class="title">模块失败率</div>
-    <div id="canvas-holder" style="width:24%">
+    <div id="canvas-holder" style="width:24%; margin-left: 1%;">
         <canvas id="failed-A" />
     </div>
     <div id="canvas-holder" style="width:24%">
@@ -65,16 +67,16 @@
     <div id="canvas-holder" style="width:24%">
         <canvas id="failed-gps" />
     </div>
-    <div id="canvas-holder" style="width:25%">
+    <div id="canvas-holder" style="width:24%; margin-left: 1%;">
         <canvas id="failed-F" />
     </div>
-    <div id="canvas-holder" style="width:25%">
+    <div id="canvas-holder" style="width:24%">
         <canvas id="failed-E" />
     </div>
-    <div id="canvas-holder" style="width:25%">
+    <div id="canvas-holder" style="width:24%">
         <canvas id="failed-gprs" />
     </div>
-    <div id="canvas-holder" style="width:25%">
+    <div id="canvas-holder" style="width:24%">
         <canvas id="failed-All" />
     </div>
     <div class="title">六轴曲线图</div>
@@ -96,6 +98,7 @@
         $.ajax({
             url: url,
             type: 'get',
+            async: true,
             success: (data) => {
                 const d = data.data;
                 if (data.data) {
@@ -112,12 +115,15 @@
                     $('#data1>div>span')[4].innerHTML = moment(d.schedule_begin).format('YYYY-MM-DD HH:mm:ss');
                     $('#data1>div>span')[5].innerHTML = moment(d.schedule_finish).format('YYYY-MM-DD HH:mm:ss');
                     $('#data2>div>span')[0].innerHTML = d.quantity;
+                    searchInfo2(d.quantity);
                 }
             },
             error: (e) => {
                 console.log(e);
             }
         })
+    }
+    function searchInfo2(q) {
         const url2 = `/analyse/progress/order?orderNo=${$('.search>input')[0].value}`;
         $.ajax({
             url: url2,
@@ -125,10 +131,20 @@
             success: (data) => {
                 const d = data.data;
                 if (data.data) {
-                    searchChart(d.finished_count, d.failed_count)
-                    $('#data2>div>span')[2].innerHTML = d.finished_count;
-                    $('#data2>div>span')[3].innerHTML = d.failed_count;
-                    $('#data2>div>span')[4].innerHTML = d.cost_time;
+                    searchChart(d.finished_count, d.failed_count);
+                    drawFailedAll(d.finished_count, d.failed_count);
+                    $('#data2>div>span')[1].innerHTML = d.finished_count;
+                    $('#data2>div>span')[2].innerHTML = d.failed_count;
+                    $('#data2>div>span')[3].innerHTML = d.cost_time + 's';
+                    const surplus = Number(q) - Number(d.finished_count);
+                    const speed = d.cost_time / d.finished_count;
+                    const time = (surplus * speed / 3600).toFixed(2, 10);
+                    const percent = (d.finished_count * 100 / q).toFixed(2, 10);
+                    const width = 0.8 * percent;
+                    $('#data2>div>span')[4].innerHTML = surplus;
+                    $('#data2>div>span')[5].innerHTML = time + 'h';
+                    $('.numData').css('width', width);
+                    $('.numData > span').html(percent + '%');
                 }
             },
             error: (e) => {
@@ -144,7 +160,6 @@
             success: (data) => {
                 const d = data.data;
                 if (data.data) {
-                    // $("#myTmpl").tmpl(data.data).appendTo("#data3");
                     const arr1 = ['0~2', '3~10', '11~20', '21~50'];
                     let arr2 = [0, 0, 0, 0];
                     data.data.map((d) => {
@@ -217,8 +232,8 @@
             success: (data) => {
                 const d = data.data;
                 if (data.data) {
+                    let numF = 0;
                     data.data.map((d) => {
-                        let numF = 0;
                         if (d !== 1) {
                             numF += 1;
                         }
@@ -237,8 +252,8 @@
             success: (data) => {
                 const d = data.data;
                 if (data.data) {
+                    let numE = 0;
                     data.data.map((d) => {
-                        let numE = 0;
                         if (d !== 1) {
                             numE += 1;
                         }
@@ -257,13 +272,49 @@
             success: (data) => {
                 const d = data.data;
                 if (data.data) {
+                    let numG = 0;
                     data.data.map((d) => {
-                        let numG = 0;
                         if (d !== 1) {
                             numG += 1;
                         }
                     })
                     drawFailedGprs(Number(finished) + Number(failed) - numG, numG);
+                }
+            },
+            error: (e) => {
+                console.log(e);
+            }
+        })
+        const url8 = `/analyse/daily_stat/order?orderNo=${$('.search>input')[0].value}`;
+        $.ajax({
+            url: url8,
+            type: 'get',
+            success: (data) => {
+                const d = data.data;
+                if (data.data) {
+                    const arr1 = [];
+                    const success = [];
+                    const failed = [];
+                    for (let i = 0; i < data.data.length; i += 1) {
+                        if (arr1[0] && arr1[arr1.length - 1] === moment(data.data[i][0]).format('YYYY-MM-DD')){
+                            if (data.data[i][1] === 1) {
+                                success[success.length - 1] += data.data[i][2];
+                            } else if (data.data[i][1] === 0) {
+                                failed[failed.length - 1] += data.data[i][2];
+                            }
+                        } else {
+                            let time = moment(data.data[i][0]).format('YYYY-MM-DD');
+                            arr1.push(time);
+                            if (data.data[i][1] === 1) {
+                                success.push(data.data[i][2]);
+                                failed.push(0);
+                            } else if (data.data[i][1] === 0) {
+                                failed.push(data.data[i][2]);
+                                success.push(0);
+                            }
+                        }
+                    }
+                    drawBarDaily(arr1, success, failed);
                 }
             },
             error: (e) => {
@@ -682,6 +733,80 @@
         };
         var ctx2 = document.getElementById("failed-gprs").getContext("2d");
         window.failedGprs = new Chart(ctx2, configFailedGprs);
+    }
+    function drawFailedAll(finished, failed) {
+        var configFailedAll = {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: [
+                        failed,
+                        finished,
+                    ],
+                    backgroundColor: [
+                        window.chartColors.red,
+                        window.chartColors.green,
+                    ],
+                }],
+                labels: [
+                    "总计失败",
+                    "成功",
+                ]
+            },
+            options: {
+                responsive: true
+            }
+        };
+        var ctx2 = document.getElementById("failed-All").getContext("2d");
+        window.failedAll = new Chart(ctx2, configFailedAll);
+    }
+    function drawBarDaily(lab, suc, fal) {
+        var configBarDaily = {
+            type: 'bar',
+                data: {
+                    labels: lab,
+                    datasets: [{
+                        label: '成功数量',
+                        backgroundColor: window.chartColors.green,
+                        borderWidth: 1,
+                        data: suc,
+                    }, {
+                        label: '失败数量',
+                        backgroundColor: window.chartColors.red,
+                        borderWidth: 1,
+                        data: fal,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                    },
+                    scales: {
+                        xAxes: [{
+                            gridLines: {
+                                display: true,
+                            },
+                            ticks: {
+                                beginAtZero: true,
+                            },
+                            stacked: true,
+                            barPercentage: 0.3,
+                        }],
+                        yAxes: [{
+                            gridLines: {
+                                display: true,
+                            },
+                        stacked: true,
+                      }],
+                    },
+                }
+        };
+        var ctx2 = document.getElementById("bar-daily").getContext("2d");
+        window.barDaily = new Chart(ctx2, configBarDaily);
     }
 </script>
 <style type="text/css">
