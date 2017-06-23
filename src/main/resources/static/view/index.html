@@ -5,10 +5,13 @@
 </head>
 <body>
 <div id="container">
-    <div class="title">生产资料</div>
+    <div class="title">订单信息</div>
     <div class="search">
         <input type="text" placeholder="请输入订单号">
-        <div onclick="searchInfo()">GO</div>
+        <div onclick="startInterval()">GO</div>
+    </div>
+    <div style="display: inline-block;width: 25%; margin-bottom: 20px;">
+        <canvas id="success-All" />
     </div>
     <div class="progressData" id="data1" style="margin-bottom: 30px;">
         <div>订单单号：<span></span></div>
@@ -17,33 +20,28 @@
         <div>订单状态：<span></span></div>
         <div>订单日期：<span></span></div>
         <div>验收日期：<span></span></div>
-    </div>
-    <div class="title">生产进度</div>
-    <div class="progress">
-        <div class="progressData" id="data2">
-            <div>总计生产数量：<span></span></div>
-            <div>完成良品数量：<span></span></div>
-            <div>完成失败数量：<span></span></div><br>
-            <div>已用时：<span></span></div>
-            <div>还需完成数量：<span></span></div>
-            <div>剩余良品用时（估算）：<span></span></div>
-        </div>
+        <div>总计生产数量：<span></span></div>
+        <div>完成良品数量：<span></span></div>
+        <div>完成失败数量：<span></span></div><br>
+        <div>已用时：<span></span></div>
+        <div>还需完成数量：<span></span></div>
+        <div>剩余良品用时（估算）：<span></span></div>
         <div class="bar">
           <div class="numData" style="width: 0;">
             <span></span>
           </div>
         </div>
     </div>
+    <div class="clear"></div>
     <div class="title">每日生产统计</div>
-    <div id="canvas-holder" style="width:100%">
-        <canvas id="bar-daily" />
+    <div id="canvas-holder" style="width: 100%">
+        <canvas id="bar-daily" style="height: 350px;width: 100%; margin-top: -35px;"/>
     </div>
     <div class="title">GPS信号分布</div>
-    <div id="canvas-holder" style="width:40%">
+    <div id="canvas-holder" style="width:30%; margin-left: 10%;">
         <canvas id="pie-gps" />
     </div>
     <div class="progressData" id="data3">
-        
     </div>
     <div class="title">电压曲线图</div>
     <div class="progressData" id="data4">
@@ -93,6 +91,12 @@
 <script id="myTmpl" type="text/x-jquery-tmpl">
 </script>
 <script>
+    var timer;
+    function startInterval() {
+        clearInterval(timer);
+        timer = setInterval(searchInfo, 600000);
+        searchInfo();
+    }
     function searchInfo() {
         const url = `/analyse/order?orderNo=${$('.search>input')[0].value}`;
         $.ajax({
@@ -114,7 +118,7 @@
                     $('#data1>div>span')[2].innerHTML = d.device;
                     $('#data1>div>span')[4].innerHTML = moment(d.schedule_begin).format('YYYY-MM-DD HH:mm:ss');
                     $('#data1>div>span')[5].innerHTML = moment(d.schedule_finish).format('YYYY-MM-DD HH:mm:ss');
-                    $('#data2>div>span')[0].innerHTML = d.quantity;
+                    $('#data1>div>span')[6].innerHTML = d.quantity;
                     searchInfo2(d.quantity);
                 }
             },
@@ -133,16 +137,17 @@
                 if (data.data) {
                     searchChart(d.finished_count, d.failed_count);
                     drawFailedAll(d.finished_count, d.failed_count);
-                    $('#data2>div>span')[1].innerHTML = d.finished_count;
-                    $('#data2>div>span')[2].innerHTML = d.failed_count;
-                    $('#data2>div>span')[3].innerHTML = d.cost_time + 's';
+                    $('#data1>div>span')[7].innerHTML = d.finished_count;
+                    $('#data1>div>span')[8].innerHTML = d.failed_count;
+                    const costTime = (d.cost_time / 3600).toFixed(2, 10);
+                    $('#data1>div>span')[9].innerHTML = costTime + 'h';
                     const surplus = Number(q) - Number(d.finished_count);
                     const speed = d.cost_time / d.finished_count;
                     const time = (surplus * speed / 3600).toFixed(2, 10);
                     const percent = (d.finished_count * 100 / q).toFixed(2, 10);
-                    const width = 0.8 * percent;
-                    $('#data2>div>span')[4].innerHTML = surplus;
-                    $('#data2>div>span')[5].innerHTML = time + 'h';
+                    const width = 8 * percent;
+                    $('#data1>div>span')[10].innerHTML = surplus;
+                    $('#data1>div>span')[11].innerHTML = time + 'h';
                     $('.numData').css('width', width);
                     $('.numData > span').html(percent + '%');
                 }
@@ -162,6 +167,7 @@
                 if (data.data) {
                     const arr1 = ['0~2', '3~10', '11~20', '21~50'];
                     let arr2 = [0, 0, 0, 0];
+                    $('#data3').empty();
                     data.data.map((d) => {
                         if (d[0] >= 0 && d[0] <= 2) {
                             arr2[0] += d[1];
@@ -176,7 +182,7 @@
                         return arr2;
                     })
                     $(`<div>失败数量：<span>${arr2[0]}</span></div>`).appendTo("#data3");
-                    const f = arr2[0] * 100 / (Number(finished) + Number(failed));
+                    const f = (arr2[0] * 100 / (Number(finished) + Number(failed))).toFixed(2, 10);
                     $(`<div>失败率：<span>${f}%</span></div>`).appendTo("#data3");
                     $(`<div style="width: 100%;margin-top: 20px;"><span>注：信号大于等于3为成功</span></div>`).appendTo("#data3");
                     drawPieGps(arr1, arr2);
@@ -298,19 +304,25 @@
                     for (let i = 0; i < data.data.length; i += 1) {
                         if (arr1[0] && arr1[arr1.length - 1] === moment(data.data[i][0]).format('YYYY-MM-DD')){
                             if (data.data[i][1] === 1) {
-                                success[success.length - 1] += data.data[i][2];
-                            } else if (data.data[i][1] === 0) {
                                 failed[failed.length - 1] += data.data[i][2];
+                            } else if (data.data[i][1] === 0) {
+                                success[success.length - 1] += data.data[i][2];
                             }
                         } else {
                             let time = moment(data.data[i][0]).format('YYYY-MM-DD');
+                            // console.log(time);
+                            if (arr1[0] && moment(arr1[arr1.length - 1]).add(1, "days").format('YYYY-MM-DD') !== time ) {
+                                console.log('1');
+                            } else {
+                                console.log('2');
+                            }
                             arr1.push(time);
                             if (data.data[i][1] === 1) {
-                                success.push(data.data[i][2]);
-                                failed.push(0);
-                            } else if (data.data[i][1] === 0) {
                                 failed.push(data.data[i][2]);
                                 success.push(0);
+                            } else if (data.data[i][1] === 0) {
+                                success.push(data.data[i][2]);
+                                failed.push(0);
                             }
                         }
                     }
@@ -386,7 +398,7 @@
                     data: arr2,
                     backgroundColor: [
                         '#f44336',
-                        '#ccea37',
+                        '#ffeb3b',
                         '#9dea33',
                         '#21ea2a',
                     ],
@@ -411,6 +423,7 @@
                     backgroundColor: window.chartColors.red,
                     borderColor: window.chartColors.red,
                     data: arr2,
+                    borderWidth: null,
                     fill: false,
                 }, {
                     label: "平均值",
@@ -735,6 +748,7 @@
         window.failedGprs = new Chart(ctx2, configFailedGprs);
     }
     function drawFailedAll(finished, failed) {
+        const num = (Number(finished) * 100 / (Number(finished) + Number(failed))).toFixed(2, 10);
         var configFailedAll = {
             type: 'pie',
             data: {
@@ -750,14 +764,16 @@
                 }],
                 labels: [
                     "总计失败",
-                    "成功",
+                    "良品率：" + num + "%",
                 ]
             },
             options: {
                 responsive: true
             }
         };
+        var ctx1 = document.getElementById("success-All").getContext("2d");
         var ctx2 = document.getElementById("failed-All").getContext("2d");
+        window.successAll = new Chart(ctx1, configFailedAll);
         window.failedAll = new Chart(ctx2, configFailedAll);
     }
     function drawBarDaily(lab, suc, fal) {
@@ -820,7 +836,7 @@
     }
     #container {
         position: relative;
-        max-width:1000px;
+        max-width:1200px;
         padding: 24px;
         margin:24px auto;
         width:100%;
@@ -875,11 +891,36 @@
     .progress {
         margin-bottom: 30px;
     }
-    .bar {
+    .line {
+      height: 40px;
+      border-left: 2px solid black;
+      left: 500px;
+      display: inline-block;
+      position: relative;
+      top: -40px;
+    }
+    .progressData {
+        font-size: 14px;
+    }
+    .progressData > div {
+        display: inline-block;
+        width: 30%;
+        line-height: 30px;
+        /*text-align: center;*/
+    }
+    .progressData > div > span {
+        color: #999;
+    }
+    #data1 {
+        width: 70%;
+        float: right;
+        margin-top: 4%;
+    }
+    #data1 > .bar {
         width: 800px;
         height: 40px;
         background: #dcdbd7;
-        margin: 20px auto 3px;
+        margin: 30px auto 3px;
         border-radius: 20px;
         overflow: hidden;
         box-shadow: inset -1px 2px #cacac5;
@@ -896,35 +937,19 @@
         width: 100px;
         display: inline-block;
     }
-    .line {
-      height: 40px;
-      border-left: 2px solid black;
-      left: 500px;
-      display: inline-block;
-      position: relative;
-      top: -40px;
-    }
-    .progressData {
-        padding-left: 10%;
-    }
-    .progressData > div {
-        display: inline-block;
-        width: 30%;
-        line-height: 30px;
-        /*text-align: center;*/
-    }
-    .progressData > div > span {
-        color: #999;
-    }
     #data3 {
         display: inline-block;
         width: 40%;
         margin-top: 80px;
+        padding-left: 10%;
         vertical-align: top;
     }
     #data3 > div {
         float: left;
         width: 40%;
+    }
+    #data4 {
+        padding-left: 10%;
     }
 </style>
 </body>
