@@ -181,6 +181,11 @@ public class ProductConfigResource extends BaseResource {
         return table;
     }
 
+    @RequestMapping(path = "/sn_initialize" , method = RequestMethod.DELETE)
+    public void deleteAll() {
+        snInitializeRepository.deleteAll();
+    }
+
 
 }
 

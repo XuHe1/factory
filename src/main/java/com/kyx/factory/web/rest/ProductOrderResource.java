@@ -276,7 +276,7 @@ public class ProductOrderResource extends BaseResource {
             throw new GeneralException(ErrorEnum.ORDER_STOP);
         }
 
-        //重发
+        //重发 nginx do not support "request_id"
         String requestId = request.getHeader("request-id");
 
         log.info("requestId: {}", requestId);
@@ -302,6 +302,12 @@ public class ProductOrderResource extends BaseResource {
         Attachment attachment = attachmentRepository.findOne(attachment_id);
         return new Ok(attachment);
     }
+
+    @RequestMapping(path = "/order", method = RequestMethod.DELETE)
+    public void deleteAll() {
+        productOrderRepository.deleteAll();
+    }
+
 
 }
 
