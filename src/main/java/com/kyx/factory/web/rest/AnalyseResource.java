@@ -72,7 +72,7 @@ public class AnalyseResource extends BaseResource {
         Long failedCount = deviceDataRepository.count(example);
 
         Long costTime = 0L;
-        if (finishedCount > 0 || failedCount > 0) {
+        if (finishedCount > 0 && failedCount > 0) {
             costTime =  deviceDataRepository.findTotalCostTime(orderNo);
         }
         ProgressVO progressVO = new ProgressVO();
@@ -199,6 +199,21 @@ public class AnalyseResource extends BaseResource {
 
         return ok(gprsArray);
 
+    }
+
+    @GetMapping("/daily_stat/order")
+    public JsonResp getDailyStat(@RequestParam String orderNo) {
+        if (StringUtils.isBlank(orderNo)) {
+            throw new GeneralException(ErrorEnum.MISS_ORDER_ID);
+        }
+
+        List<Object[]> dailyStats = deviceDataRepository.getDailyStat(orderNo);
+
+        if (dailyStats == null || dailyStats.size() < 1) {
+            throw new GeneralException(ErrorEnum.NO_STATISTIC);
+        }
+
+        return ok(dailyStats);
     }
 
 

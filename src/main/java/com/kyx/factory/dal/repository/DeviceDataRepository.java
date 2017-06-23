@@ -43,5 +43,8 @@ public interface DeviceDataRepository extends JpaRepository<DeviceData, Long> {
     @Query(value = "select d.eeprom from DeviceData d where d.order_id = ?1")
     Integer[] getEeprom(String orderNo);
 
+    @Query(value = "select  date(receive_time), test_result, count(id) from device_data where order_id = ?1 group by DATE(receive_time), test_result", nativeQuery = true)
+    List<Object[]> getDailyStat(String orderNo);
+
 
 }

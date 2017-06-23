@@ -276,8 +276,15 @@ public class ProductOrderResource extends BaseResource {
             throw new GeneralException(ErrorEnum.ORDER_STOP);
         }
 
-        //重发
-        String requestId = request.getHeader("request_id");
+        //重发 nginx do not support "request_id"
+        String requestId = request.getHeader("request-id");
+
+        log.info("requestId: {}", requestId);
+        if (requestId == null || "".equals(requestId)) {
+            List<SnRange> snRangeList = snRangeRepository.findAll();
+            return new Ok(snRangeList);
+        }
+
         SnRange snRangeTemp = snRangeRepository.findOne(requestId);
         if (snRangeTemp != null) {
             return new Ok(snRangeTemp);
@@ -295,6 +302,12 @@ public class ProductOrderResource extends BaseResource {
         Attachment attachment = attachmentRepository.findOne(attachment_id);
         return new Ok(attachment);
     }
+
+    @RequestMapping(path = "/order", method = RequestMethod.DELETE)
+    public void deleteAll() {
+        productOrderRepository.deleteAll();
+    }
+
 
 }
 

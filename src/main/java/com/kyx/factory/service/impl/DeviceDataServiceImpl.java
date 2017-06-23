@@ -10,6 +10,7 @@ import com.kyx.factory.support.json.Ok;
 import com.kyx.factory.web.validation.DeviceType;
 import com.kyx.factory.web.validation.FactoryEnum;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -87,6 +88,17 @@ public class DeviceDataServiceImpl implements DeviceDataService {
             throw new GeneralException(ErrorEnum.NOT_EXISTS);
         }
         data.setInvalid(deviceData.getInvalid());
+
+        // 兼容老版本数据
+        String orderId = data.getOrder_id();
+        if (StringUtils.isBlank(orderId)) {
+            data.setOrder_id("-");
+            data.setLast_check_end(0L);
+            data.setDownload_start(0L);
+            data.setCheck_start(0L);
+            data.setCheck_end(0L);
+        }
+
         deviceDataRepository.save(data);
         return new Ok<>(data);
     }
