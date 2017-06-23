@@ -1,0 +1,1 @@
+alter table device_data change column product_line product_line varchar(255);

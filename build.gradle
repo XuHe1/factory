@@ -91,6 +91,8 @@ dependencies {
         exclude module: "slf4j-rest"
     }
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    // flyway
+    compile "org.flywaydb:flyway-core"
     // Test
     testCompile("org.springframework.boot:spring-boot-starter-test")
 }

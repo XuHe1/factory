@@ -4,7 +4,7 @@ app:
   fwVersionUrl: http://nbfb.test.getqood.com/api/app/project_id/all
 
 server:
-  port: 8080
+  port: 8081
 
 spring:
   application.name: factory
@@ -47,6 +47,8 @@ pebble:
   cache: false
   suffix: .html
 
+flyway:
+  baseline-on-migrate: true
 
 
 
