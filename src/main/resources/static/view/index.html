@@ -221,7 +221,7 @@
                     })
                     $('#data4>div>span')[0].innerHTML = average;
                     $('#data4>div>span')[1].innerHTML = num;
-                    $('#data4>div>span')[2].innerHTML = num * 100 / (Number(finished) + Number(failed)) + '%';
+                    $('#data4>div>span')[2].innerHTML = (num * 100 / (Number(finished) + Number(failed))).toFixed(2, 10) + '%';
 
                     drawLineVol(arr1, data.data, arr3);
                     drawFailedV(Number(finished) + Number(failed) - numV, numV);
@@ -312,9 +312,14 @@
                             let time = moment(data.data[i][0]).format('YYYY-MM-DD');
                             // console.log(time);
                             if (arr1[0] && moment(arr1[arr1.length - 1]).add(1, "days").format('YYYY-MM-DD') !== time ) {
-                                console.log('1');
-                            } else {
-                                console.log('2');
+                                for (let i = 0; i < 30; i += 1) {
+                                    arr1.push(moment(arr1[arr1.length - 1]).add(1, "days").format('YYYY-MM-DD'));
+                                    success.push('');
+                                    failed.push('');
+                                    if (moment(arr1[arr1.length - 1]).add(1, "days").format('YYYY-MM-DD') === time) {
+                                        break;
+                                    }
+                                }
                             }
                             arr1.push(time);
                             if (data.data[i][1] === 1) {
@@ -810,7 +815,7 @@
                                 beginAtZero: true,
                             },
                             stacked: true,
-                            barPercentage: 0.3,
+                            barPercentage: 1,
                         }],
                         yAxes: [{
                             gridLines: {
@@ -927,7 +932,7 @@
     }
     .numData {
       height: 100%;
-      background: -webkit-gradient(linear,0 0,500 0,from(#ff0000), color-stop(0.25, #ffa92a), color-stop(0.5, #FFEB3B), color-stop(0.75, #b1ea35), to(#21ea2a));
+      background: -webkit-gradient(linear,0 0,800 0,from(#ff0000), color-stop(0.25, #ffa92a), color-stop(0.5, #FFEB3B), color-stop(0.75, #b1ea35), to(#21ea2a));
       border-radius: 20px;
       line-height: 40px;
       color: #fff;
