@@ -10,7 +10,7 @@
         <input type="text" placeholder="请输入订单号">
         <div onclick="startInterval()">GO</div>
     </div>
-    <div style="display: inline-block;width: 25%; margin-bottom: 20px;">
+    <div style="display: inline-block;width: 22%; margin-bottom: 20px;">
         <canvas id="success-All" />
     </div>
     <div class="progressData" id="data1" style="margin-bottom: 30px;">
@@ -35,23 +35,33 @@
     <div class="clear"></div>
     <div class="title">每日生产统计</div>
     <div id="canvas-holder" style="width: 100%">
-        <canvas id="bar-daily" style="height: 350px;width: 100%; margin-top: -35px;"/>
+        <canvas id="bar-daily" style="height: 320px; width: 100%; margin-top: -35px;"/>
     </div>
-    <div class="title">GPS信号分布</div>
-    <div id="canvas-holder" style="width:30%; margin-left: 10%;">
+    <div class="title" style="width: 49%; display: inline-block">GPS信号分布</div>
+    <div class="title" style="width: 48%; display: inline-block;margin-left: 7px;">生产速度统计</div>
+    <div id="canvas-holder" style="width:22%; margin-bottom: 15px; float: left;">
         <canvas id="pie-gps" />
     </div>
     <div class="progressData" id="data3">
     </div>
-    <div class="title">电压曲线图</div>
-    <div class="progressData" id="data4">
+    <div id="canvas-holder" style="width: 49%; float: right;">
+        <canvas id="line-time" style="width: 100%; height: 320px; margin-top: -30px; margin-bottom: -25px;"/>
+    </div>
+    <div class="clear"></div>
+    <div class="title" style="width: 49%; display: inline-block">电压曲线图</div>
+    <div class="title" style="width: 48%; display: inline-block;margin-left: 7px;">六轴曲线图</div>
+    <div class="progressData" id="data4" style="width: 50%; display: inline-block; float: left">
         <div>平均值：<span></span></div>
         <div>范围内值数量：<span></span></div>
         <div>范围内值占比：<span></span></div>
     </div>
-    <div id="canvas-holder" style="width:100%">
-        <canvas id="line-vol" />
+    <div id="canvas-holder" style="width:48%; display: inline-block; float: left">
+        <canvas id="line-vol" style="width: 100%; height: 320px; margin-top: -35px; margin-bottom: -20px;"/>
     </div>
+    <div id="canvas-holder" style="width:48%; display: inline-block; margin-left: 2%; float: right">
+        <canvas id="line-six" style="height: 350px; width: 100%; margin-top: -65px; margin-bottom: -20px;"/>
+    </div>
+    <div class="clear"></div>
     <div class="title">模块失败率</div>
     <div id="canvas-holder" style="width:24%; margin-left: 1%;">
         <canvas id="failed-A" />
@@ -76,10 +86,6 @@
     </div>
     <div id="canvas-holder" style="width:24%">
         <canvas id="failed-All" />
-    </div>
-    <div class="title">六轴曲线图</div>
-    <div id="canvas-holder" style="width:100%">
-        <canvas id="line-six" />
     </div>
 </div>
 <script src="./js/jquery-2.1.3.min.js"></script>
@@ -219,7 +225,7 @@
                         }
                         return num;
                     })
-                    $('#data4>div>span')[0].innerHTML = average;
+                    $('#data4>div>span')[0].innerHTML = (average).toFixed(2, 10);
                     $('#data4>div>span')[1].innerHTML = num;
                     $('#data4>div>span')[2].innerHTML = (num * 100 / (Number(finished) + Number(failed))).toFixed(2, 10) + '%';
 
@@ -338,6 +344,30 @@
                 console.log(e);
             }
         })
+        const url9 = `/analyse/device_time/order?orderNo=${$('.search>input')[0].value}`;
+        $.ajax({
+            url: url9,
+            type: 'get',
+            success: (data) => {
+                if (data.data) {
+                    // console.log(data.data);
+                    const arr1 = [];
+                    const arr2 = [];
+                    let num = 0;
+                    data.data.map((d) => {
+                        arr1.push('');
+                        num += (d / data.data.length);
+                    })
+                    data.data.map((d) => {
+                        arr2.push(num.toFixed(2, 10));
+                    })
+                    drawLineTime(arr1, data.data, arr2);
+                }
+            },
+            error: (e) => {
+                console.log(e);
+            }
+        })
         searchLineSixA(finished, failed);
     }
     function searchLineSixA(finished, failed) {
@@ -444,7 +474,6 @@
                 responsive: true,
                 title:{
                     display:true,
-                    text:'电压曲线图'
                 },
                 tooltips: {
                     mode: 'index',
@@ -459,7 +488,10 @@
                         display: true,
                         scaleLabel: {
                             display: true,
-                        }
+                        },
+                        gridLines: {
+                            display: false,
+                        },
                     }],
                     yAxes: [{
                         display: true,
@@ -473,7 +505,65 @@
         };
         var ctx4 = document.getElementById("line-vol").getContext("2d");
         window.lineVol = new Chart(ctx4, configLineVol);
-    } 
+    }
+    function drawLineTime(arr1, arr2, arr3) {  
+        var configLineTime = {
+            type: 'line',
+            data: {
+                labels: arr1,
+                datasets: [{
+                    label: "速度",
+                    backgroundColor: window.chartColors.red,
+                    borderColor: window.chartColors.red,
+                    data: arr2,
+                    borderWidth: null,
+                    fill: false,
+                }, {
+                    label: "平均值：" + arr3[0],
+                    backgroundColor: window.chartColors.blue,
+                    borderColor: window.chartColors.blue,
+                    data: arr3,
+                    pointRadius: 0,
+                    fill: false,
+                    borderDash: [20, 5],
+                }]
+            },
+            options: {
+                responsive: true,
+                title:{
+                    display:true,
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                        },
+                        gridLines: {
+                            display: false,
+                        },
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: '速度（s/个）'
+                        }
+                    }]
+                }
+            }
+        };
+        var ctx4 = document.getElementById("line-time").getContext("2d");
+        window.lineTime = new Chart(ctx4, configLineTime);
+    }
     function drawLineSix(arr1, arr2, arr3, arr4, arr5, arr6, arr7, finished, failed) {
         const total = Number(finished) + Number(failed);
         let numA = 0;
@@ -540,7 +630,6 @@
                 responsive: true,
                 title:{
                     display:true,
-                    text:'六轴曲线图'
                 },
                 tooltips: {
                     mode: 'index',
@@ -555,7 +644,10 @@
                         display: true,
                         scaleLabel: {
                             display: true,
-                        }
+                        },
+                        gridLines: {
+                            display: false,
+                        },
                     }],
                     yAxes: [{
                         display: true,
@@ -883,7 +975,7 @@
     }
     #canvas-holder {
         display: inline-block;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
     }
     .title {
         border-bottom: 2px solid #dfe6ec;
@@ -944,17 +1036,18 @@
     }
     #data3 {
         display: inline-block;
-        width: 40%;
-        margin-top: 80px;
-        padding-left: 10%;
+        width: 25%;
+        margin-top: 12px;
+        padding-left: 2%;
         vertical-align: top;
+        float: left;
     }
     #data3 > div {
         float: left;
         width: 40%;
     }
     #data4 {
-        padding-left: 10%;
+        padding-left: 3%;
     }
 </style>
 </body>
