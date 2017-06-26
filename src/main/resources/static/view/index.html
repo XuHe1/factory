@@ -11,7 +11,7 @@
         <a href="#f2">分布</a>
         <a href="#f3">概率</a>
     </div>
-    <div class="title" id="f1">订单信息</div>
+    <div class="title" id="f1">订单信息 <span></span></div>
     <div class="search">
         <input type="text" placeholder="请输入订单号">
         <div onclick="startInterval()">GO</div>
@@ -20,18 +20,18 @@
         <canvas id="success-All" />
     </div>
     <div class="progressData" id="data1" style="margin-bottom: 30px;">
-        <div>订单单号：<span></span></div>
         <div>生产工厂：<span></span></div>
-        <div>生产设备：<span></span></div><br>
+        <div>生产设备：<span></span></div>
         <div>订单状态：<span></span></div>
-        <div>订单日期：<span></span></div>
+        <div>生产数量：<span></span></div>
+        <div>下单日期：<span></span></div>
         <div>验收日期：<span></span></div>
-        <div>总计生产数量：<span></span></div>
         <div>完成良品数量：<span></span></div>
-        <div>完成失败数量：<span></span></div><br>
+        <div>完成失败数量：<span></span></div>
         <div>已用时：<span></span></div>
         <div>还需完成数量：<span></span></div>
         <div>剩余良品用时（估算）：<span></span></div>
+        <div>预计完成日期：<span></span></div>
         <div class="bar">
           <div class="numData" style="width: 0;">
             <span></span>
@@ -116,22 +116,22 @@
             type: 'get',
             async: true,
             success: (data) => {
+                $('#f1 > span')[0].innerHTML = $('.search>input')[0].value;
                 const d = data.data;
                 if (data.data) {
                     if (d.state === 0) {
-                        $('#data1>div>span')[3].innerHTML = '新建';
+                        $('#data1>div>span')[2].innerHTML = '新建';
                     } else if (d.state === 1) {
-                        $('#data1>div>span')[3].innerHTML = '生产中';
+                        $('#data1>div>span')[2].innerHTML = '生产中';
                     } else if (d.state === 2) {
-                        $('#data1>div>span')[3].innerHTML = '暂停';
+                        $('#data1>div>span')[2].innerHTML = '暂停';
                     }
-                    $('#data1>div>span')[0].innerHTML = $('.search>input')[0].value;
-                    $('#data1>div>span')[1].innerHTML = d.factory;
-                    $('#data1>div>span')[2].innerHTML = d.device;
+                    $('#data1>div>span')[0].innerHTML = d.factory;
+                    $('#data1>div>span')[1].innerHTML = d.device;
+                    $('#data1>div>span')[3].innerHTML = d.quantity;
                     $('#data1>div>span')[4].innerHTML = moment(d.schedule_begin).format('YYYY-MM-DD HH:mm:ss');
                     $('#data1>div>span')[5].innerHTML = moment(d.schedule_finish).format('YYYY-MM-DD HH:mm:ss');
-                    $('#data1>div>span')[6].innerHTML = d.quantity;
-                    searchInfo2(d.quantity);
+                    searchInfo2(d.quantity, moment(d.schedule_finish).format('YYYY-MM-DD HH:mm:ss'));
                 }
             },
             error: (e) => {
@@ -139,7 +139,7 @@
             }
         })
     }
-    function searchInfo2(q) {
+    function searchInfo2(q, finished) {
         const url2 = `/analyse/progress/order?orderNo=${$('.search>input')[0].value}`;
         $.ajax({
             url: url2,
@@ -149,19 +149,36 @@
                 if (data.data) {
                     searchChart(d.finished_count, d.failed_count);
                     drawFailedAll(d.finished_count, d.failed_count);
-                    $('#data1>div>span')[7].innerHTML = d.finished_count;
-                    $('#data1>div>span')[8].innerHTML = d.failed_count;
+                    $('#data1>div>span')[6].innerHTML = d.finished_count;
+                    $('#data1>div>span')[7].innerHTML = d.failed_count;
                     const costTime = (d.cost_time / 3600).toFixed(2, 10);
-                    $('#data1>div>span')[9].innerHTML = costTime + 'h';
+                    $('#data1>div>span')[8].innerHTML = costTime + 'h';
                     const surplus = Number(q) - Number(d.finished_count);
                     const speed = d.cost_time / d.finished_count;
                     const time = (surplus * speed / 3600).toFixed(2, 10);
                     const percent = (d.finished_count * 100 / q).toFixed(2, 10);
                     const width = 8 * percent;
-                    $('#data1>div>span')[10].innerHTML = surplus;
-                    $('#data1>div>span')[11].innerHTML = time + 'h';
+                    $('#data1>div>span')[9].innerHTML = surplus;
+                    $('#data1>div>span')[10].innerHTML = time + 'h';
                     $('.numData').css('width', width);
                     $('.numData > span').html(percent + '%');
+                    $($('#data1>div')[11]).removeClass('colorRed');
+                    if (time > 10) {
+                        const days = Math.round(time / 10);
+                        const finishedDay = moment(finished).format('YYYY-MM-DD');
+                        const actualDay = moment().add(days, 'days').format('YYYY-MM-DD');
+                        $('#data1>div>span')[11].innerHTML = actualDay;
+                        if (moment(actualDay) > moment(finished)) {
+                            $($('#data1>div')[11]).addClass('colorRed');
+                        }
+                    } else {
+                        const finishedDay = moment(finished).format('YYYY-MM-DD');
+                        const actualDay = moment().add(1, 'days').format('YYYY-MM-DD');
+                        $('#data1>div>span')[11].innerHTML = actualDay;
+                        if (moment(actualDay) > moment(finished)) {
+                            $($('#data1>div')[11]).addClass('colorRed');
+                        }
+                    }
                 }
             },
             error: (e) => {
@@ -951,6 +968,10 @@
         box-shadow: 0 7px 12px rgba(0,0,0,.2);
         border: 1px solid #f5f5f5;
     }
+    #f1 > span {
+        color: #999;
+        font-weight: normal;
+    }
     .floor {
         position: fixed;
         right: 0;
@@ -1075,6 +1096,9 @@
     }
     #data4 {
         padding-left: 3%;
+    }
+    .colorRed {
+        color: #ff5722;
     }
 </style>
 </body>
