@@ -113,7 +113,7 @@ public class AnalyseResource extends BaseResource {
         }
 
         Integer[] batteryVoltages= deviceDataRepository.getBatteryVoltage(orderNo);
-        if (batteryVoltages.length == 0) {
+        if (batteryVoltages == null || batteryVoltages.length == 0) {
             throw new GeneralException(ErrorEnum.NO_STATISTIC);
         }
 
@@ -161,7 +161,7 @@ public class AnalyseResource extends BaseResource {
         }
 
        Integer[] flashes= deviceDataRepository.getFlash(orderNo);
-        if (flashes.length == 0) {
+        if (flashes == null || flashes.length == 0) {
             throw new GeneralException(ErrorEnum.NO_STATISTIC);
         }
 
@@ -177,7 +177,7 @@ public class AnalyseResource extends BaseResource {
         }
 
         Integer[] eeproms= deviceDataRepository.getEeprom(orderNo);
-        if (eeproms.length == 0) {
+        if (eeproms == null || eeproms.length == 0) {
             throw new GeneralException(ErrorEnum.NO_STATISTIC);
         }
 
@@ -193,7 +193,7 @@ public class AnalyseResource extends BaseResource {
         }
 
         Integer[] gprsArray= deviceDataRepository.getGprs(orderNo);
-        if (gprsArray.length == 0) {
+        if (gprsArray == null || gprsArray.length == 0) {
             throw new GeneralException(ErrorEnum.NO_STATISTIC);
         }
 
@@ -216,6 +216,19 @@ public class AnalyseResource extends BaseResource {
         return ok(dailyStats);
     }
 
+    @GetMapping("/device_time/order")
+    public JsonResp getEveryDeviceTime(@RequestParam String orderNo) {
+        if (StringUtils.isBlank(orderNo)) {
+            throw new GeneralException(ErrorEnum.MISS_ORDER_ID);
+        }
+        Long[] deviceCostTimes = deviceDataRepository.findEveryDeviceTime(orderNo);
+        if (deviceCostTimes == null || deviceCostTimes.length == 0) {
+            throw new GeneralException(ErrorEnum.NO_STATISTIC);
+        }
+
+        return ok(deviceCostTimes);
+
+    }
 
 }
 

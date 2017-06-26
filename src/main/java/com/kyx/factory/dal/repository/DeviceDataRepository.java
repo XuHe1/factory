@@ -46,5 +46,9 @@ public interface DeviceDataRepository extends JpaRepository<DeviceData, Long> {
     @Query(value = "select  date(receive_time), test_result, count(id) from device_data where order_id = ?1 group by DATE(receive_time), test_result", nativeQuery = true)
     List<Object[]> getDailyStat(String orderNo);
 
+    @Query("select check_total from DeviceData d where d.order_id = ?1 order by d.receive_time asc")
+    Long[] findEveryDeviceTime(String orderId);
+
+
 
 }
