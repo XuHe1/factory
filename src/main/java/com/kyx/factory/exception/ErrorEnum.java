@@ -61,7 +61,9 @@ public enum ErrorEnum {
     MISS_CHECK_END(ErrorCode.MISS_CHECK_END, "check_end不能为空"),
     NO_STATISTIC(ErrorCode.NO_STATISTIC, "无统计数据"),
     NO_ORDER(ErrorCode.NO_ORDER, "无此订单"),
-    QUANTITY_CAN_NOT_INCREASE(ErrorCode.QUANTITY_CAN_NOT_INCREASE, "订单总数暂不支持增加");
+    QUANTITY_CAN_NOT_INCREASE(ErrorCode.QUANTITY_CAN_NOT_INCREASE, "订单总数暂不支持增加"),
+    TIMESTAMP_INVALID(ErrorCode.TIMESTAMP_INVALID, "请求时间戳无效"),
+    DELIVERY_COUNT_OVER(ErrorCode.DELIVERY_COUNT_OVER, "单次分配sn数不能超过订单总数");
 
 
     private String code;

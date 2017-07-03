@@ -292,12 +292,20 @@
        });
 
      $save.click(function() { 
+        var quantity = $('#quantity').val();
+        var deliveryCount = $('#deliveryCount').val();
+        if (quantity < deliveryCount) {
+            alert("单次分配sn数不能超过订单总数");
+            return;
+        }
 
-//        var content = $("#scheduleBeginStr").val().replace('T', ' ');
-//        $("#scheduleBegin").val(content);
-//
-//        var content = $("#scheduleFinishStr").val().replace('T', ' ');
-//        $("#scheduleFinish").val(content);
+        var hwVersion = $('#hwVersion').val();
+        var hwVersion1 = $('#hwVersion1').val();
+        if (hwVersion > 255 || hwVersion1 > 255) {
+          alert("硬件版本号错误");
+          return;
+        }
+
 
         $("#orderForm").ajaxSubmit({
 

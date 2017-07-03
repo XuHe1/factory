@@ -72,6 +72,10 @@ public class ProductOrderResource extends BaseResource {
          * 2. 订单表为空，查询全局start_sn表
          * 3. start_sn表为空，抛异常
          */
+        if (order.getQuantity() < order.getDeliveryCount()) {
+            throw new GeneralException(ErrorEnum.DELIVERY_COUNT_OVER);
+        }
+
         Integer startSn = 0;
         Date now = new Date();
         if (order.getId() == null) {

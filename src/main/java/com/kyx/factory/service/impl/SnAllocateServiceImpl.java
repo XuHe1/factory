@@ -46,12 +46,12 @@ public class SnAllocateServiceImpl implements SnAllocateService {
         snRange.setEnd_sn(snPrefix + (newSnIndex - 1));
 
         snRange.setEnd_sn(snPrefix + (order.getSnIndex() - 1));
-        if (snIndex + deliveryCount - 1 > snEnd) {
-            order.setSnIndex(snEnd);
+        if (snIndex + deliveryCount - 1 >= snEnd) {
+            //order.setSnIndex(snEnd);
             snRange.setEnd_sn(snPrefix + snEnd);
         }
 
-        if (snIndex >= snEnd){
+        if (snIndex > snEnd){
             throw new GeneralException(ErrorEnum.NO_SN_AVAILABLE);
         }
 
