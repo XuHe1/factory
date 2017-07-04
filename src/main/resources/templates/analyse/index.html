@@ -94,15 +94,20 @@
         <canvas id="failed-All" />
     </div>
 </div>
-<script src="./js/jquery-2.1.3.min.js"></script>
-<script src="./js/jquery.tmpl.js"></script>
-<script src="./js/chartjs/Chart.bundle.js"></script>
-<script src="./js/chartjs/utils.js"></script>
-<script src="./js/moment.js"></script>
+<script src="/js/app/analyse/jquery-2.1.3.min.js"></script>
+<script src="/js/app/analyse/jquery.tmpl.js"></script>
+<script src="/js/app/analyse/chartjs/Chart.bundle.js"></script>
+<script src="/js/app/analyse/chartjs/utils.js"></script>
+<script src="/js/app/analyse/moment.js"></script>
 
 <script id="myTmpl" type="text/x-jquery-tmpl">
 </script>
 <script>
+
+    var orderNo = "{{orderNo}}";
+    $('.search>input')[0].value = orderNo;
+    searchInfo();
+
     var timer;
     function startInterval() {
         clearInterval(timer);
