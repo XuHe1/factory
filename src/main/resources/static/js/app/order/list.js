@@ -85,7 +85,8 @@
                 field: 'order_no_prefix',
                 title: '订单号',
                 formatter: function (value, row, index) {
-                       return value + (Array(6).join(0) + row.id).slice(-6);
+                        var orderNo = value + (Array(6).join(0) + row.id).slice(-6);
+                       return "<a href='/analyse/order/" + orderNo + "'>" + orderNo + "</a>" ;
                 }
             },
             {
@@ -292,15 +293,16 @@
        });
 
      $save.click(function() { 
-        var quantity = $('#quantity').val();
-        var deliveryCount = $('#deliveryCount').val();
+
+        var quantity = new Number($('#quantity').val());
+        var deliveryCount = new Number($('#deliveryCount').val());
         if (quantity < deliveryCount) {
             alert("单次分配sn数不能超过订单总数");
             return;
         }
 
-        var hwVersion = $('#hwVersion').val();
-        var hwVersion1 = $('#hwVersion1').val();
+        var hwVersion = new Number($('#hwVersion').val());
+        var hwVersion1 = new Number($('#hwVersion1').val());
         if (hwVersion > 255 || hwVersion1 > 255) {
           alert("硬件版本号错误");
           return;
