@@ -23,6 +23,13 @@
             </div>
             <div class="box-body">
                 <div id="toolbar">
+                    设备：
+                    <select class="selectpicker" id="device" name="device">
+                        <option value="">所有</option>
+                        {% for device in devices %}
+                        <option value="{{device}}">{{device}}</option>
+                        {% endfor %}
+                    </select>
                     测试结果：
                     <select class="selectpicker" id="testResult" name="testResult">
                         <option value="">所有</option>
