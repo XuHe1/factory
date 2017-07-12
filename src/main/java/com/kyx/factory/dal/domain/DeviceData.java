@@ -92,7 +92,7 @@ public class DeviceData implements Serializable {
     @Column(name = "gprs")
     private Integer gprs;
 
-    @NotNull(message = ErrorCode.MISS_BATTERY_VOLTAGE)
+    //@NotNull(message = ErrorCode.MISS_BATTERY_VOLTAGE)
     @Column(name = "battery_voltage")
     private Integer battery_voltage;
 
@@ -152,5 +152,11 @@ public class DeviceData implements Serializable {
 
     @Column(name = "invalid", columnDefinition = "int default 0")
     private Integer invalid;
+
+    @Column(name = "can")
+    private Integer can;
+
+    @Column(name = "kline")
+    private Integer kline;
 
 }

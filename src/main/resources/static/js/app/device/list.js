@@ -30,6 +30,7 @@
 		'url': '/product/list',
 		'queryParams': function(params){
             var temp = {
+               device: $('#device').val(),
                factory: $('#factory').val(),
                orderNo: $('#orderNo').val(),
                testResult: $('#testResult').val(),
@@ -134,6 +135,20 @@
                 }
             },
             {
+                field: 'can',
+                title: 'CAN',
+                formatter: function (value, row, index) {
+                    return value;
+                }
+            },
+            {
+                field: 'kline',
+                title: 'K-Line',
+                formatter: function (value, row, index) {
+                    return value;
+                }
+            },
+            {
                  field: 'battery_voltage',
                  title: '电压',
                  formatter: function (value, row, index) {
@@ -159,7 +174,13 @@
                         }
                 },
                 formatter: function (value, row, index) {
-                    return value == 0? "通过": "未通过";
+                     // look 第7位是1    6轴校准未通过
+                     var binary = value.toString(2);
+                     if(row.device = 'look' && binary.length == 8) {
+                        return "6轴校准未通过";
+                     }
+
+                     return value == 0? "通过": "未通过";
                 }
             },
             {

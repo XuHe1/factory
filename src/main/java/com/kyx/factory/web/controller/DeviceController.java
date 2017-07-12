@@ -79,7 +79,7 @@ public class DeviceController extends BaseController {
         String dateStr = DateUtils.toNormalDate(new Date());
         fileName += dateStr;
         String titles[] = ("设备, 工厂, 生产线, 硬件版本, 软件版本, 芯片号, 设备号, ICCID, GPS, FLASH, eeprom," +
-               " GPRS, 电压, 电流, acceX, acceY, acceZ, gyroX, gyroY, gyroZ, 测试结果, 接收时间").split(",");
+               " GPRS, CAN, K-Line, 电压, 电流, acceX, acceY, acceZ, gyroX, gyroY, gyroZ, 测试结果, 接收时间").split(",");
         this.generateExcel(datas, fileName, titles, response);
 
     }
@@ -105,7 +105,11 @@ public class DeviceController extends BaseController {
                 wsheet.addCell(new Label(k++, j, data.getFlash().toString()));
                 wsheet.addCell(new Label(k++, j, data.getEeprom().toString()));
                 wsheet.addCell(new Label(k++, j, data.getGprs().toString()));
-                wsheet.addCell(new Label(k++, j, data.getBattery_voltage().toString()));
+                // hdx 专有
+                wsheet.addCell(new Label(k++, j, data.getCan() == null ? "" : data.getCan().toString()));
+                wsheet.addCell(new Label(k++, j, data.getKline() == null ? "" : data.getKline().toString()));
+                wsheet.addCell(new Label(k++, j, data.getBattery_voltage() == null ? "" : data.getBattery_voltage().toString()));
+
                 wsheet.addCell(new Label(k++, j, data.getElectric_current().toString()));
                 wsheet.addCell(new Label(k++, j, data.getAcce_x().toString()));
                 wsheet.addCell(new Label(k++, j, data.getAcce_y().toString()));
@@ -113,7 +117,15 @@ public class DeviceController extends BaseController {
                 wsheet.addCell(new Label(k++, j, data.getGyro_x().toString()));
                 wsheet.addCell(new Label(k++, j, data.getGyro_y().toString()));
                 wsheet.addCell(new Label(k++, j, data.getAcce_z().toString()));
-                wsheet.addCell(new Label(k++, j, data.getTest_result() == 0 ? "通过" : "未通过"));
+
+                // look 6轴校准
+                String binaryResult = Integer.toBinaryString(data.getTest_result());
+                if (binaryResult.length() == 8 && DeviceType.look.getDeviceName().equals(data.getDevice())) {
+                    wsheet.addCell(new Label(k++, j, "6轴校准未通过"));
+                } else {
+                    wsheet.addCell(new Label(k++, j, data.getTest_result() == 0 ? "通过" : "未通过"));
+                }
+
                 wsheet.addCell(new Label(k++, j, data.getReceive_time().toString()));
 
                 }

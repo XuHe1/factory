@@ -1,5 +1,7 @@
 package com.kyx.factory.web.validation;
 
+import lombok.Getter;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -10,6 +12,7 @@ import java.util.Set;
  * @author h.xu
  * @create 2017-05-12 下午4:12
  **/
+@Getter
 public enum  DeviceType {
     look("look", "L"),
     hdx("hdx", "Y");

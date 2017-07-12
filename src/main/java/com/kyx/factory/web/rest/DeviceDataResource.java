@@ -62,6 +62,7 @@ public class DeviceDataResource extends BaseResource {
     @GetMapping("/product/list")
     BootstrapTableDTO<?> findDeviceTable(@RequestParam(defaultValue = "10") Integer limit,
                                          @RequestParam(defaultValue = "0") Integer offset,
+                                         @RequestParam String device,
                                          @RequestParam Integer testResult,
                                          @RequestParam String factory,
                                          @RequestParam String orderNo) {
@@ -70,7 +71,7 @@ public class DeviceDataResource extends BaseResource {
 
         Integer page = (int)Math.floor(offset / limit);
         Pageable pageable = new PageRequest(page, limit);
-        if(testResult == null && StringUtils.isBlank(factory) &&  StringUtils.isBlank(orderNo)) {
+        if(testResult == null && StringUtils.isBlank(factory) &&  StringUtils.isBlank(orderNo) && StringUtils.isBlank(device)) {
             Page<DeviceData> devicePage = Page.newPage(deviceDataRepository.findAll(pageable));
             table.setTotal(devicePage.getTotalCount());
             table.setRows(devicePage.getList());
@@ -78,6 +79,11 @@ public class DeviceDataResource extends BaseResource {
         }
 
         DeviceData data = new DeviceData();
+
+        if (!StringUtils.isBlank(device)) {
+            data.setDevice(device);
+        }
+
         if (testResult != null) {
             data.setTest_result(testResult);
         }
