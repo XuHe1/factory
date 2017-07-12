@@ -93,6 +93,20 @@
     <div id="canvas-holder" style="width:24%">
         <canvas id="failed-All" />
     </div>
+    <!-- new -->
+    <div id="canvas-holder" style="width:24%">
+        <canvas id="failed-can" />
+    </div>
+    <div id="canvas-holder" style="width:24%">
+        <canvas id="failed-kline" />
+    </div>
+    <div id="canvas-holder" style="width:24%">
+        <canvas id="failed-ec" />
+    </div>
+    <div id="canvas-holder" style="width:24%">
+        <canvas id="failed-six" />
+    </div>
+    <!-- new -->
 </div>
 <script src="/js/jquery-2.1.3.min.js"></script>
 <script src="/js/jquery.tmpl.js"></script>
@@ -136,7 +150,7 @@
                     $('#data1>div>span')[3].innerHTML = d.quantity;
                     $('#data1>div>span')[4].innerHTML = moment(d.schedule_begin).format('YYYY-MM-DD HH:mm:ss');
                     $('#data1>div>span')[5].innerHTML = moment(d.schedule_finish).format('YYYY-MM-DD HH:mm:ss');
-                    searchInfo2(d.quantity, moment(d.schedule_finish).format('YYYY-MM-DD HH:mm:ss'));
+                    searchInfo2(d.quantity, moment(d.schedule_finish).format('YYYY-MM-DD HH:mm:ss'), d.device);
                 }
             },
             error: (e) => {
@@ -144,7 +158,7 @@
             }
         })
     }
-    function searchInfo2(q, finished) {
+    function searchInfo2(q, finished, device) {
         const url2 = `/analyse/progress/order?orderNo=${$('.search>input')[0].value}`;
         $.ajax({
             url: url2,
@@ -152,7 +166,16 @@
             success: (data) => {
                 const d = data.data;
                 if (data.data) {
-                    searchChart(d.finished_count, d.failed_count);
+                    if (device === 'look' && data.data.failed_result) {
+                        let numSix = 0;
+                        data.data.failed_result.map((d) => {
+                            if (d > 128 && d.toString(2)[7] === '1') {
+                                numSix += 1;
+                            }
+                        })
+                        drawFailedSix(Number(data.data.failed_result.length) - numSix, numSix);
+                    }
+                    searchChart(d.finished_count, d.failed_count, device);
                     drawFailedAll(d.finished_count, d.failed_count);
                     $('#data1>div>span')[6].innerHTML = d.finished_count;
                     $('#data1>div>span')[7].innerHTML = d.failed_count;
@@ -191,7 +214,69 @@
             }
         })
     }
-    function searchChart(finished, failed) {
+    function searchChart(finished, failed, device) {
+        if (device === 'hdx') {
+            const url0 = `/analyse/can/order?orderNo=${$('.search>input')[0].value}`;
+            $.ajax({
+                url: url0,
+                type: 'get',
+                success: (data) => {
+                    const d = data.data;
+                    if (data.data) {
+                        let numCan = 0;
+                        data.data.map((d) => {
+                            if (d !== 1) {
+                                numCan += 1;
+                            }
+                        })
+                        drawFailedCan(Number(finished) + Number(failed) - numCan, numCan);
+                    }
+                },
+                error: (e) => {
+                    console.log(e);
+                }
+            })
+            const url1 = `/analyse/kline/order?orderNo=${$('.search>input')[0].value}`;
+            $.ajax({
+                url: url0,
+                type: 'get',
+                success: (data) => {
+                    const d = data.data;
+                    if (data.data) {
+                        let numK = 0;
+                        data.data.map((d) => {
+                            if (d !== 1) {
+                                numK += 1;
+                            }
+                        })
+                        drawFailedKline(Number(finished) + Number(failed) - numK, numK);
+                    }
+                },
+                error: (e) => {
+                    console.log(e);
+                }
+            })
+            const url2 = `/analyse/electric_current/order?orderNo=${$('.search>input')[0].value}`;
+            $.ajax({
+                url: url2,
+                type: 'get',
+                success: (data) => {
+                    const d = data.data;
+                    if (data.data) {
+                        let numEC = 0;
+                        data.data.map((d) => {
+                            if (d < 30 || d > 100) {
+                                numEC += 1;
+                            }
+                        })
+                        drawFailedEC(Number(finished) + Number(failed) - numEC, numEC);
+                    }
+                },
+                error: (e) => {
+                    console.log(e);
+                }
+            })
+        }
         const url3 = `/analyse/gps/order?orderNo=${$('.search>input')[0].value}`;
         $.ajax({
             url: url3,
@@ -396,9 +481,9 @@
                 console.log(e);
             }
         })
-        searchLineSixA(finished, failed);
+        searchLineSixA(finished, failed, device);
     }
-    function searchLineSixA(finished, failed) {
+    function searchLineSixA(finished, failed, device) {
         const url5 = `/analyse/accelerator/order?orderNo=${$('.search>input')[0].value}`;
         const arr1 = [];
         const arr2 = [];
@@ -417,7 +502,7 @@
                         arr4.push(d[2]);
                         return arr4;
                     })
-                    searchLineSixG(arr1, arr2, arr3, arr4, finished, failed);
+                    searchLineSixG(arr1, arr2, arr3, arr4, finished, failed, device);
                 }
             },
             error: (e) => {
@@ -425,7 +510,7 @@
             }
         })
     }
-    function searchLineSixG(arr1, arr2, arr3, arr4, finished,failed) {
+    function searchLineSixG(arr1, arr2, arr3, arr4, finished,failed, device) {
         const url6 = `/analyse/gyroscope/order?orderNo=${$('.search>input')[0].value}`;
         const arr5 = [];
         const arr6 = [];
@@ -442,7 +527,7 @@
                         arr7.push(d[2]);
                         return arr7;
                     })
-                    drawLineSix(arr1, arr2, arr3, arr4, arr5, arr6, arr7, finished, failed);
+                    drawLineSix(arr1, arr2, arr3, arr4, arr5, arr6, arr7, finished, failed, device);
                 }
             },
             error: (e) => {
@@ -594,16 +679,28 @@
         var ctx4 = document.getElementById("line-time").getContext("2d");
         window.lineTime = new Chart(ctx4, configLineTime);
     }
-    function drawLineSix(arr1, arr2, arr3, arr4, arr5, arr6, arr7, finished, failed) {
+    function drawLineSix(arr1, arr2, arr3, arr4, arr5, arr6, arr7, finished, failed, device) {
         const total = Number(finished) + Number(failed);
         let numA = 0;
         let numG = 0;
-        for (let i = 0; i < arr1.length; i += 1) {
-            if (arr2[i] > 100 || arr2[i] < -100 || arr3[i] > 100 || arr3[i] < -100 || arr4[i] > 100 || arr4[i] < -100) {
-                numA += 1;
+        if (device === 'look') {
+            for (let i = 0; i < arr1.length; i += 1) {
+                if (arr2[i] > 100 || arr2[i] < -100 || arr3[i] > 100 || arr3[i] < -100 || arr4[i] > 100 || arr4[i] < -100) {
+                    numA += 1;
+                }
+                if (arr5[i] > 100 || arr5[i] < -100 || arr6[i] > 100 || arr6[i] < -100 || arr7[i] > 100 || arr7[i] < -100) {
+                    numG += 1;
+                }
             }
-            if (arr5[i] > 100 || arr5[i] < -100 || arr6[i] > 100 || arr6[i] < -100 || arr7[i] > 100 || arr7[i] < -100) {
-                numG += 1;
+        } else if (device === 'hdx') {
+            console.log('1');
+            for (let i = 0; i < arr1.length; i += 1) {
+                if (arr2[i] > 1000 || arr2[i] < -1000 || arr3[i] > 1000 || arr3[i] < -1000 || arr4[i] > -6500 || arr4[i] < -10000) {
+                    numA += 1;
+                }
+                if (arr5[i] > 500 || arr5[i] < -500 || arr6[i] > 500 || arr6[i] < -500 || arr7[i] > 500 || arr7[i] < -500) {
+                    numG += 1;
+                }
             }
         }
         drawFailedA(total - numA, numA);
@@ -908,6 +1005,110 @@
         var ctx2 = document.getElementById("failed-All").getContext("2d");
         window.successAll = new Chart(ctx1, configFailedAll);
         window.failedAll = new Chart(ctx2, configFailedAll);
+    }
+    function drawFailedCan(finished, failed) {
+        var config = {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: [
+                        failed,
+                        finished,
+                    ],
+                    backgroundColor: [
+                        window.chartColors.red,
+                        window.chartColors.green,
+                    ],
+                }],
+                labels: [
+                    "can失败",
+                    "成功",
+                ]
+            },
+            options: {
+                responsive: true
+            }
+        };
+        var ctx2 = document.getElementById("failed-can").getContext("2d");
+        window.failedCan = new Chart(ctx2, config);
+    }
+    function drawFailedKline(finished, failed) {
+        var config = {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: [
+                        failed,
+                        finished,
+                    ],
+                    backgroundColor: [
+                        window.chartColors.red,
+                        window.chartColors.green,
+                    ],
+                }],
+                labels: [
+                    "kline失败",
+                    "成功",
+                ]
+            },
+            options: {
+                responsive: true
+            }
+        };
+        var ctx2 = document.getElementById("failed-kline").getContext("2d");
+        window.failedKline = new Chart(ctx2, config);
+    }
+    function drawFailedEC(finished, failed) {
+        var config = {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: [
+                        failed,
+                        finished,
+                    ],
+                    backgroundColor: [
+                        window.chartColors.red,
+                        window.chartColors.green,
+                    ],
+                }],
+                labels: [
+                    "电流失败",
+                    "成功",
+                ]
+            },
+            options: {
+                responsive: true
+            }
+        };
+        var ctx2 = document.getElementById("failed-ec").getContext("2d");
+        window.failedEC = new Chart(ctx2, config);
+    }
+    function drawFailedSix(finished, failed) {
+        var config = {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: [
+                        failed,
+                        finished,
+                    ],
+                    backgroundColor: [
+                        window.chartColors.red,
+                        window.chartColors.green,
+                    ],
+                }],
+                labels: [
+                    "六轴校准失败",
+                    "成功",
+                ]
+            },
+            options: {
+                responsive: true
+            }
+        };
+        var ctx2 = document.getElementById("failed-six").getContext("2d");
+        window.failedSix = new Chart(ctx2, config);
     }
     function drawBarDaily(lab, suc, fal) {
         var configBarDaily = {
