@@ -16,5 +16,6 @@ import java.io.Serializable;
 public class ProgressVO implements Serializable {
     private Long finishedCount;
     private Long failedCount;
+    private Integer[] failedResult;
     private Long costTime;
 }

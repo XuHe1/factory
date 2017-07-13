@@ -69,7 +69,7 @@ public class AnalyseResource extends BaseResource {
     }
 
     @GetMapping("/progress/order")
-    public JsonResp getProgressByOrder(@RequestParam String orderNo) {
+    public JsonResp getTestResultByOrder(@RequestParam String orderNo) {
         if (StringUtils.isBlank(orderNo)) {
             throw new GeneralException(ErrorEnum.MISS_ORDER_ID);
         }
@@ -82,15 +82,17 @@ public class AnalyseResource extends BaseResource {
 
         deviceData.setTest_result(1); //失败
 
-        Long failedCount = deviceDataRepository.count(example);
+        Integer[] failedResults = deviceDataRepository.getFaildResult(orderNo);
+
 
         Long costTime = 0L;
-        if (finishedCount > 0 && failedCount > 0) {
+        if (finishedCount > 0 || failedResults.length > 0) {
             costTime =  deviceDataRepository.findTotalCostTime(orderNo);
         }
         ProgressVO progressVO = new ProgressVO();
         progressVO.setFinishedCount(finishedCount);
-        progressVO.setFailedCount(failedCount);
+        progressVO.setFailedCount((long) failedResults.length);
+        progressVO.setFailedResult(failedResults);
         progressVO.setCostTime(costTime);
 
         return ok(progressVO);
@@ -211,6 +213,53 @@ public class AnalyseResource extends BaseResource {
         }
 
         return ok(gprsArray);
+
+    }
+
+    @GetMapping(path = "/can/order")
+    public JsonResp getCanStatistic(@RequestParam String orderNo) {
+        //数据验证
+        if (StringUtils.isBlank(orderNo)) {
+            throw new GeneralException(ErrorEnum.MISS_ORDER_ID);
+        }
+
+        Integer[] cans= deviceDataRepository.getCans(orderNo);
+        if (cans == null || cans.length < 1) {
+            throw new GeneralException(ErrorEnum.NO_STATISTIC);
+        }
+
+        return ok(cans);
+
+    }
+
+    @GetMapping(path = "/kline/order")
+    public JsonResp getKlineStatistic(@RequestParam String orderNo) {
+        //数据验证
+        if (StringUtils.isBlank(orderNo)) {
+            throw new GeneralException(ErrorEnum.MISS_ORDER_ID);
+        }
+
+        Integer[] klines= deviceDataRepository.getKlines(orderNo);
+        if (klines == null || klines.length < 1) {
+            throw new GeneralException(ErrorEnum.NO_STATISTIC);
+        }
+
+        return ok(klines);
+    }
+
+    @GetMapping(path = "/electric_current/order")
+    public JsonResp getElectriccurrentStatistic(@RequestParam String orderNo) {
+        //数据验证
+        if (StringUtils.isBlank(orderNo)) {
+            throw new GeneralException(ErrorEnum.MISS_ORDER_ID);
+        }
+
+        Integer[] electricCurrents= deviceDataRepository.getElectriccurrents(orderNo);
+        if (electricCurrents == null || electricCurrents.length == 0) {
+            throw new GeneralException(ErrorEnum.NO_STATISTIC);
+        }
+
+        return ok(electricCurrents);
 
     }
 
