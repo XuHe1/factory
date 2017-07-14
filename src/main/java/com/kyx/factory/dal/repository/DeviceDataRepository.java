@@ -49,6 +49,15 @@ public interface DeviceDataRepository extends JpaRepository<DeviceData, Long> {
     @Query("select check_total from DeviceData d where d.order_id = ?1 order by d.receive_time asc")
     Long[] findEveryDeviceTime(String orderId);
 
+    @Query(value = "select  test_result from device_data d where d.order_id = ?1 and test_result > 0", nativeQuery = true)
+    Integer[] getFaildResult(String orderId);
 
+    @Query(value = "select d.can from DeviceData d where d.order_id = ?1")
+    Integer[] getCans(String orderNo);
 
+    @Query(value = "select d.kline from DeviceData d where d.order_id = ?1")
+    Integer[] getKlines(String orderNo);
+
+    @Query(value = "select d.electric_current from DeviceData d where d.order_id = ?1")
+    Integer[] getElectriccurrents(String orderNo);
 }

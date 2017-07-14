@@ -9,7 +9,7 @@
      @Param required  device,String,设备名
      @Param required  factory,String,工厂名
      @Param required  product_line,int,生产线号
-     @Param required  test_result,int,测试结果，0：测试通过 1：测试未通过
+     @Param required  test_result,int,测试结果，0：测试通过 >=1：测试未通过
      @Param required  hw_version,String,硬件版本号
      @Param required  sw_version,String,软件版本号
      @Param required  chip_id,String, 芯片ID
@@ -19,7 +19,7 @@
      @Param required  flash,int
      @Param required  eeprom,int
      @Param required  gprs,int
-     @Param required  battery_voltage,int,电压
+     @Param optional  battery_voltage,int,电压
      @Param required  electric_current,int,电流
      @Param required  acce_x,String
      @Param required  acce_y,String
@@ -31,6 +31,8 @@
      @Param required  download_start, long,烧录开始时间
      @Param required  check_start, long,产测开始时间（烧录完成时间）
      @Param required  check_end, long,产测结束时间
+     @Param optional  can, int  1:成功 0:失败
+     @Param optional  kline, int 1:成功 0:失败
      
 	```
  
@@ -68,7 +70,9 @@
 	    "check_end": "1496993109",
 	    "check_total": "500",
 	    "receive_time": "2017-06-10T10:19:04.749+0800",
-	    "invalid": 0
+	    "invalid": 0,
+	    "can": 1,
+	    "kline": 1
 	  }
 	}
 ```
