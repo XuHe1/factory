@@ -1,6 +1,7 @@
 package com.kyx.factory.util;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 软硬件版本号转换工具
@@ -64,6 +65,9 @@ public class VersionUtil {
 
     // 256 -> 0x0100 -> 1.0
     public static String getVestion(String versionStr) {
+        if (StringUtils.isBlank(versionStr)) {
+            return "";
+        }
         int version = Integer.parseInt(versionStr);
         String hexStr1 = ByteConvert.bytes2HexString(ints2bytes(version));
 
