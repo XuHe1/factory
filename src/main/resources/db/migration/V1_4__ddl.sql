@@ -1,0 +1,11 @@
+alter table device_data add unique index sn(sn);
+alter table device_data add index order_id(order_id);
+alter table device_data add index test_result(test_result);
+alter table device_data add index factory(factory);
+alter table device_data add index device(device);
+alter table device_data add index invalid(invalid);
+alter table device_data add index receive_time(receive_time);
+alter table product_order add index factory(factory);
+alter table product_order add index device(device);
+alter table product_order add index state(state);
+alter table product_order add index username(username);

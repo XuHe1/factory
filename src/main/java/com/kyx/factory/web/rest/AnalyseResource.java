@@ -80,10 +80,11 @@ public class AnalyseResource extends BaseResource {
         Example example = Example.of(deviceData);
         Long finishedCount = deviceDataRepository.count(example);
 
-        deviceData.setTest_result(1); //失败
+        // 失败数量
+        Long failedCount = deviceDataRepository.getFaildCount(orderNo);
 
+        // 失败次数
         Integer[] failedResults = deviceDataRepository.getFaildResult(orderNo);
-
 
         Long costTime = 0L;
         if (finishedCount > 0 || failedResults.length > 0) {
@@ -91,7 +92,7 @@ public class AnalyseResource extends BaseResource {
         }
         ProgressVO progressVO = new ProgressVO();
         progressVO.setFinishedCount(finishedCount);
-        progressVO.setFailedCount((long) failedResults.length);
+        progressVO.setFailedCount(failedCount);
         progressVO.setFailedResult(failedResults);
         progressVO.setCostTime(costTime);
 

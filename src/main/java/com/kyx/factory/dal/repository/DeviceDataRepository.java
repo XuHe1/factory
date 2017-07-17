@@ -53,6 +53,9 @@ public interface DeviceDataRepository extends JpaRepository<DeviceData, Long> , 
     @Query(value = "select  test_result from device_data d where d.order_id = ?1 and test_result > 0", nativeQuery = true)
     Integer[] getFaildResult(String orderId);
 
+    @Query(value = "select count(distinct(chip_id)) from device_data d where d.order_id = ?1 and d.test_result > 0 and d.chip_id not IN(select  chip_id  from device_data  where order_id = ?1 and test_result = 0) ", nativeQuery = true)
+    Long getFaildCount(String orderId);
+
     @Query(value = "select d.can from DeviceData d where d.order_id = ?1")
     Integer[] getCans(String orderNo);
 
