@@ -4,6 +4,7 @@ import com.kyx.factory.dal.domain.DeviceData;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
  * @create 2017-05-10 上午10:32
  **/
 
-public interface DeviceDataRepository extends JpaRepository<DeviceData, Long> {
+public interface DeviceDataRepository extends JpaRepository<DeviceData, Long> , JpaSpecificationExecutor {
     List<DeviceData> getBySn(String sn);
     Page<DeviceData> findAllByFactory(Pageable var1, String factory);
 

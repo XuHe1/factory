@@ -55,15 +55,15 @@ public class DeviceData implements Serializable {
     @Column(name = "product_line")
     private String product_line;
 
-    @NotNull(message = ErrorCode.MISS_HW_VERSION)
+    //@NotNull(message = ErrorCode.MISS_HW_VERSION)
     @Column(name = "hw_version")
     private String hw_version;
 
-    @NotNull(message = ErrorCode.MISS_SW_VERSION)
+    //@NotNull(message = ErrorCode.MISS_SW_VERSION)
     @Column(name = "sw_version")
     private String sw_version;
 
-    @NotNull(message = ErrorCode.MISS_CHIP_ID)
+    //@NotNull(message = ErrorCode.MISS_CHIP_ID)
     @Column(name = "chip_id")
     private String chip_id;
 
@@ -72,23 +72,23 @@ public class DeviceData implements Serializable {
     @Column(name = "sn", unique = true)
     private String sn;
 
-    @NotNull(message = ErrorCode.MISS_ICCID)
+    //@NotNull(message = ErrorCode.MISS_ICCID)
     @Column(name = "iccid")
     private String iccid;
 
-    @NotNull(message = ErrorCode.MISS_GPS)
+    //@NotNull(message = ErrorCode.MISS_GPS)
     @Column(name = "gps_count")
     private Integer gps_count;
 
-    @NotNull(message = ErrorCode.MISS_FLASH)
+    //@NotNull(message = ErrorCode.MISS_FLASH)
     @Column(name = "flash")
     private Integer flash;
 
-    @NotNull(message = ErrorCode.MISS_EEPROM)
+    //@NotNull(message = ErrorCode.MISS_EEPROM)
     @Column(name = "eeprom")
     private Integer eeprom;
 
-    @NotNull(message = ErrorCode.MISS_GPRS)
+    //@NotNull(message = ErrorCode.MISS_GPRS)
     @Column(name = "gprs")
     private Integer gprs;
 
@@ -96,31 +96,31 @@ public class DeviceData implements Serializable {
     @Column(name = "battery_voltage")
     private Integer battery_voltage;
 
-    @NotNull(message = ErrorCode.MISS_ELECTRIC_CURRENT)
+    //@NotNull(message = ErrorCode.MISS_ELECTRIC_CURRENT)
     @Column(name = "electric_current")
     private Integer electric_current;
 
-    @NotNull(message = ErrorCode.MISS_ACCE_X)
+    //@NotNull(message = ErrorCode.MISS_ACCE_X)
     @Column(name = "acce_x")
     private String acce_x;
 
-    @NotNull(message = ErrorCode.MISS_ACCE_Y)
+    //@NotNull(message = ErrorCode.MISS_ACCE_Y)
     @Column(name = "acce_y")
     private String acce_y;
 
-    @NotNull(message = ErrorCode.MISS_ACCE_Z)
+    //@NotNull(message = ErrorCode.MISS_ACCE_Z)
     @Column(name = "acce_z")
     private String acce_z;
 
-    @NotNull(message = ErrorCode.MISS_GYRO_X)
+    //@NotNull(message = ErrorCode.MISS_GYRO_X)
     @Column(name = "gyro_x")
     private String gyro_x;
 
-    @NotNull(message = ErrorCode.MISS_GYRO_Y)
+    //@NotNull(message = ErrorCode.MISS_GYRO_Y)
     @Column(name = "gyro_y")
     private String gyro_y;
 
-    @NotNull(message = ErrorCode.MISS_GYRO_Z)
+    //@NotNull(message = ErrorCode.MISS_GYRO_Z)
     @Column(name = "gyro_z")
     private String gyro_z;
 
@@ -128,19 +128,19 @@ public class DeviceData implements Serializable {
     @Column(name = "test_result")
     private Integer test_result;
 
-    @NotNull(message = ErrorCode.MISS_LAST_CHECK_END)
+    //@NotNull(message = ErrorCode.MISS_LAST_CHECK_END)
     @Column(name = "last_check_end")
     private Long last_check_end;
 
-    @NotNull(message = ErrorCode.MISS_DOWNLOAD_START)
+    //@NotNull(message = ErrorCode.MISS_DOWNLOAD_START)
     @Column(name = "download_start")
     private Long download_start;
 
-    @NotNull(message = ErrorCode.MISS_CHECK_START)
+    //@NotNull(message = ErrorCode.MISS_CHECK_START)
     @Column(name = "check_start")
     private Long check_start;
 
-    @NotNull(message = ErrorCode.MISS_CHECK_END)
+    //@NotNull(message = ErrorCode.MISS_CHECK_END)
     @Column(name = "check_end")
     private Long check_end;
 

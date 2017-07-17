@@ -1,5 +1,5 @@
 group = "com.kyx.factory"
-version = "1.0.1"
+version = "1.0.2"
 description = "factory"
 
 buildscript {
@@ -72,6 +72,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-amqp')
     compile 'net.sourceforge.jexcelapi:jxl:2.6.12'
     compile('commons-io:commons-io')
+    compile 'com.etianxia:open-api-filter:0.0.2'
 
     // Web
     compile("org.springframework.boot:spring-boot-starter-web")
@@ -91,6 +92,7 @@ dependencies {
         exclude module: "slf4j-rest"
     }
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("org.hibernate:hibernate-jpamodelgen")
     // flyway
     compile "org.flywaydb:flyway-core"
     // Test
