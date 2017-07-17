@@ -169,7 +169,7 @@
                     if (device === 'look' && data.data.failed_result) {
                         let numSix = 0;
                         data.data.failed_result.map((d) => {
-                            if (d > 128 && d.toString(2)[7] === '1') {
+                            if (d >= 128) {
                                 numSix += 1;
                             }
                         })
