@@ -312,44 +312,46 @@
                 console.log(e);
             }
         })
-        const url4 = `/analyse/battery_voltage/order?orderNo=${$('.search>input')[0].value}`;
-        $.ajax({
-            url: url4,
-            type: 'get',
-            success: (data) => {
-                const d = data.data;
-                if (data.data) {
-                    let average = 0;
-                    let num = 0;
-                    let numV = 0;
-                    const arr1 = [];
-                    const arr3 = [];
-                    data.data.map((d) => {
-                        average += d / (data.data.length);
-                        arr1.push('');
-                    })
-                    data.data.map((d) => {
-                        arr3.push(average);
-                        if (d >= (average * 0.95) && d <= (average * 1.05)) {
-                            num += 1;
-                        }
-                        if (d > 15000 || d < 13000) {
-                            numV += 1;
-                        }
-                        return num;
-                    })
-                    $('#data4>div>span')[0].innerHTML = (average).toFixed(2, 10);
-                    $('#data4>div>span')[1].innerHTML = num;
-                    $('#data4>div>span')[2].innerHTML = (num * 100 / (Number(finished) + Number(failed))).toFixed(2, 10) + '%';
+        if (device !== 'hdx') {
+            const url4 = `/analyse/battery_voltage/order?orderNo=${$('.search>input')[0].value}`;
+            $.ajax({
+                url: url4,
+                type: 'get',
+                success: (data) => {
+                    const d = data.data;
+                    if (data.data) {
+                        let average = 0;
+                        let num = 0;
+                        let numV = 0;
+                        const arr1 = [];
+                        const arr3 = [];
+                        data.data.map((d) => {
+                            average += d / (data.data.length);
+                            arr1.push('');
+                        })
+                        data.data.map((d) => {
+                            arr3.push(average);
+                            if (d >= (average * 0.95) && d <= (average * 1.05)) {
+                                num += 1;
+                            }
+                            if (d > 15000 || d < 13000) {
+                                numV += 1;
+                            }
+                            return num;
+                        })
+                        $('#data4>div>span')[0].innerHTML = (average).toFixed(2, 10);
+                        $('#data4>div>span')[1].innerHTML = num;
+                        $('#data4>div>span')[2].innerHTML = (num * 100 / (Number(finished) + Number(failed))).toFixed(2, 10) + '%';
 
-                    drawLineVol(arr1, data.data, arr3);
-                    drawFailedV(Number(finished) + Number(failed) - numV, numV);
+                        drawLineVol(arr1, data.data, arr3);
+                        drawFailedV(Number(finished) + Number(failed) - numV, numV);
+                    }
+                },
+                error: (e) => {
+                    console.log(e);
                 }
-            },
-            error: (e) => {
-                console.log(e);
-            }
-        })
+            })
+        }
         const url5 = `/analyse/flash/order?orderNo=${$('.search>input')[0].value}`;
         $.ajax({
             url: url5,
