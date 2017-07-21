@@ -1,5 +1,6 @@
 package com.kyx.factory.config;
 
+import com.etianxia.openapi.OAuthFilter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -12,6 +13,7 @@ import com.kyx.factory.support.helper.DateConvertHelper;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +32,20 @@ import java.util.TimeZone;
 @Configuration
 @ServletComponentScan(value = "com.kyx.factory.web")
 public class WebConfig {
+
+    @Bean
+    public FilterRegistrationBean testFilterRegistration() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new OAuthFilter());
+        registration.addUrlPatterns("/sn_range/**", "/order/user", "/product");
+        registration.addInitParameter("cache", "com.etianxia.openapi.cache.NonceOnSimpleMemCache");
+        registration.addInitParameter("third_party_file", "thirdparty.json");
+        registration.setName("oauthFilter");
+        registration.setOrder(1);
+        return registration;
+    }
+
+
     @Bean
     public Filter characterEncodingFilter() {
         CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
