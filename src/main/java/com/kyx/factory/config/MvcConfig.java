@@ -1,6 +1,8 @@
 package com.kyx.factory.config;
 
 import com.google.common.collect.Maps;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -35,7 +37,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
                     return;
 
                 Map<String, String> userDetails = Maps.newHashMap();
-                userDetails.put("username", "管理员");
+                userDetails.put("username", getUsername());
                 view.addObject(USER_DETAILS_NAME, userDetails);
             }
         };
@@ -54,5 +56,13 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
                 view.addObject(SIDEBAR_URI_NAME, request.getRequestURI().split("/")[1]);
             }
         };
+    }
+
+    public String getUsername() {
+        Subject subject = SecurityUtils.getSubject();
+        if (subject == null || subject.getPrincipals() == null) {
+            return "";
+        }
+        return (String) subject.getPrincipals().getPrimaryPrincipal();
     }
 }

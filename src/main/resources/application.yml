@@ -4,7 +4,7 @@ app:
   fwVersionUrl: http://nbfb.test.getqood.com/api/app/project_id/all
 
 server:
-  port: 8081
+  port: 8080
 
 spring:
   application.name: factory
@@ -49,6 +49,10 @@ pebble:
 
 flyway:
   baseline-on-migrate: true
+
+shiro:
+  cas: https://passport.1tianxia.net
+  server: http://localhost:8080
 
 
 

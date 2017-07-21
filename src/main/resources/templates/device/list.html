@@ -96,5 +96,8 @@
 {% block body_script %}
 <script type="text/javascript" src="/js/bower_components/moment/min/moment-with-locales.min.js"></script>
 {% include "include/bootstrap-table" %}
+<script>
+       user ="{{ userdetails.username | escape(strategy='js') }}";
+</script>
 <script src="/js/app/device/list.js"></script>
 {% endblock %}

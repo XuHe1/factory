@@ -203,10 +203,12 @@
                 title: '备注',
                 formatter: function (value, row, index) {
                       var html = '';
-                      if(value == 1){
-                        html = "<input type='checkbox' class = 'notes' checked='checked' value='" + row.id + "'/> 无效";
-                      }else {
-                        html = "<input type='checkbox' class = 'notes' value='" + row.id + "'/> 无效";
+                      if (user == "l.huang") {
+                          if(value == 1){
+                              html = "<input type='checkbox' class = 'notes' checked='checked' value='" + row.id + "'/> 无效";
+                          }else {
+                              html = "<input type='checkbox' class = 'notes' value='" + row.id + "'/> 无效";
+                          }
                       }
                       return html;
                 }
@@ -246,7 +248,7 @@
         }
         var params = {"invalid": invalid, "id": this.value};
         $.ajax({
-            url: '/product',
+            url: '/product/invalid',
             type: 'put',
             data: params,
             error: function(data) {
