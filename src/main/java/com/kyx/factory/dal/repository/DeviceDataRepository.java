@@ -44,7 +44,7 @@ public interface DeviceDataRepository extends JpaRepository<DeviceData, Long> , 
     @Query(value = "select d.eeprom from DeviceData d where d.order_id = ?1")
     Integer[] getEeprom(String orderNo);
 
-    @Query(value = "select  date(receive_time), test_result, count(id) from device_data where order_id = ?1 group by DATE(receive_time), test_result", nativeQuery = true)
+    @Query(value = "select  date(receive_time), case test_result when 0 then 0 else  1 end, count(id) from device_data where order_id = ?1 group by DATE(receive_time), case test_result when 0 then 0 else  1 end", nativeQuery = true)
     List<Object[]> getDailyStat(String orderNo);
 
     @Query("select check_total from DeviceData d where d.order_id = ?1 order by d.receive_time asc")
@@ -52,6 +52,9 @@ public interface DeviceDataRepository extends JpaRepository<DeviceData, Long> , 
 
     @Query(value = "select  test_result from device_data d where d.order_id = ?1 and test_result > 0", nativeQuery = true)
     Integer[] getFaildResult(String orderId);
+
+    @Query(value = "select count(distinct(chip_id)) from device_data d where d.order_id = ?1 and d.test_result > 0 and d.chip_id not IN(select  chip_id  from device_data  where order_id = ?1 and test_result = 0) ", nativeQuery = true)
+    Long getFaildCount(String orderId);
 
     @Query(value = "select d.can from DeviceData d where d.order_id = ?1")
     Integer[] getCans(String orderNo);
