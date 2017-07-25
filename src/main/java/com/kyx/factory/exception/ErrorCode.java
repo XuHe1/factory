@@ -9,6 +9,11 @@ public final class ErrorCode {
 
     private static final String ERROR_CODE_PREFIX = "FA";
 
+    public static final String PARAMETER_ABSENT  = ERROR_CODE_PREFIX + "100001";
+    public static final String TIMESTAMP_REFUSED  = ERROR_CODE_PREFIX + "100002";
+    public static final String NONCE_USED  = ERROR_CODE_PREFIX + "100003";
+    public static final String SIGNATURE_INVALID  = ERROR_CODE_PREFIX + "100004";
+
     public static final String UNKNOWN               = ERROR_CODE_PREFIX + "110001";
     public static final String PARAM_INVALID = ERROR_CODE_PREFIX + "200001";
 

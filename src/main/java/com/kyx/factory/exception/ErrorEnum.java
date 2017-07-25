@@ -2,6 +2,11 @@ package com.kyx.factory.exception;
 
 
 public enum ErrorEnum {
+    PARAMETER_ABSENT(ErrorCode.PARAMETER_ABSENT, "auth_parameter_absent"),
+    TIMESTAMP_REFUSED(ErrorCode.TIMESTAMP_REFUSED, "timestamp_refused"),
+    NONCE_USED(ErrorCode.NONCE_USED, "nonce_used"),
+    SIGNATURE_INVALID(ErrorCode.SIGNATURE_INVALID, "signature_invalid"),
+
     UNKNOWN(ErrorCode.UNKNOWN, "未知错误"),
     PARAM_INVALID(ErrorCode.PARAM_INVALID, "参数不合法"),
     ALREADY_EXISTS(ErrorCode.ALREADY_EXISTS, "sn号已存在"),
