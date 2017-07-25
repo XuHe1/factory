@@ -72,6 +72,20 @@
     "msg": "参数不合法"
  }
  ```
+## 接口签名
+所有接口均须添加下列参数供服务端验证签名实用。
+
+```
+	@Param required nonce
+	@Param required timestamp
+	@Param required signature
+```
+*  nonce: 随机数，[获取nonce接口](https://git.1tianxia.net/h.xu/factory/blob/master/doc/GET.-auth_nonce.md)
+* timestamp: 时间戳，单位秒，nonce截取后10位
+* signature: 签名
+   * 构建(url?nonce=xxx&timestamp=xxxx)
+   * 对url使用HmacSHA1(密钥：4bbf90\_SnRequestAPI\_50a7abf)加密
+
 ## 接口定义
 * [生产检测数据上报接口](https://git.1tianxia.net/h.xu/factory/blob/master/doc/POST.-product_data.md)
 
