@@ -25,7 +25,10 @@
 |500	|INTERNAL SERVER ERROR  | 内部错误        |
 
 ## 错误代码定义
-
+ - @error FA100001 签名参数缺失
+ - @error FA100002 请求超时
+ - @error FA100003 nonce已使用
+ - @error FA100004 签名错误
  - @error FA110001 未知错误
  - @error FA110002 其他错误
  - @error FA200001 参数不合法
