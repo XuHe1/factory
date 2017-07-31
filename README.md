@@ -1,5 +1,3 @@
-
- 
 ## 通用规范
 
 ---
@@ -101,7 +99,7 @@
 
 3. 请求接口，并传递nonce、timestamp、signature三个参数。
 
-![接口请求时序图](/h.xu/factory/tree/master/doc/images/signature.jpeg)
+![接口请求时序图](/h.xu/factory/blob/master/doc/images/signature.jpeg)
     	
 
 ## 接口定义
