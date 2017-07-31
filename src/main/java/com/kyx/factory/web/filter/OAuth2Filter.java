@@ -2,10 +2,10 @@ package com.kyx.factory.web.filter;
 
 import com.etianxia.openapi.cache.ICache;
 import com.etianxia.openapi.cache.NonceOnSimpleMemCache;
-import com.etianxia.openapi.utils.OAuth;
 import com.google.common.collect.Maps;
+import com.kyx.factory.exception.ErrorCode;
 import com.kyx.factory.exception.ErrorEnum;
-import com.kyx.factory.support.json.Error;
+import com.kyx.factory.support.json.JsonObject;
 import com.kyx.factory.util.EncryptUtil;
 import com.kyx.factory.util.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -64,25 +64,41 @@ public class OAuth2Filter implements Filter {
 
         String result;
         if (this.missOAuthParameters(paramMap)) {
-            response.setStatus(((Integer) OAuth.Problems.TO_HTTP_CODE.get("parameter_absent")).intValue());
-            result = JsonUtils.toJson( Error.newError(ErrorEnum.PARAMETER_ABSENT, meta(request)));
-            response.getWriter().write(result);
             log.debug("auth_parameter_absent");
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.setCode(ErrorCode.PARAMETER_ABSENT);
+            jsonObject.setMsg(ErrorEnum.getByCode(ErrorCode.PARAMETER_ABSENT).getMsg());
+            jsonObject.setMeta(meta(request));
+            result = JsonUtils.toJson(jsonObject);
+            response.getWriter().write(result);
+
         } else if (!this.checkTimeStamp(paramMap)) {
-            response.setStatus(((Integer) OAuth.Problems.TO_HTTP_CODE.get("timestamp_refused")).intValue());
-            result = JsonUtils.toJson( Error.newError(ErrorEnum.TIMESTAMP_REFUSED, meta(request)));
-            response.getWriter().write(result);
             log.debug("timestamp_refused");
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.setCode(ErrorCode.TIMESTAMP_REFUSED);
+            jsonObject.setMsg(ErrorEnum.getByCode(ErrorCode.TIMESTAMP_REFUSED).getMsg());
+            jsonObject.setMeta(meta(request));
+            result = JsonUtils.toJson(jsonObject);
+            response.getWriter().write(result);
+
         } else if(!this.checkNonce(paramMap)) {
-            response.setStatus(((Integer) OAuth.Problems.TO_HTTP_CODE.get("nonce_used")).intValue());
-            result = JsonUtils.toJson( Error.newError(ErrorEnum.NONCE_USED, meta(request)));
-            response.getWriter().write(result);
             log.debug("nonce_used");
-        } else if(!this.checkSignature(request)) {
-            response.setStatus(((Integer) OAuth.Problems.TO_HTTP_CODE.get("signature_invalid")).intValue());
-            result = JsonUtils.toJson( Error.newError(ErrorEnum.SIGNATURE_INVALID, meta(request)));
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.setCode(ErrorCode.NONCE_USED);
+            jsonObject.setMsg(ErrorEnum.getByCode(ErrorCode.NONCE_USED).getMsg());
+            jsonObject.setMeta(meta(request));
+            result = JsonUtils.toJson(jsonObject);
             response.getWriter().write(result);
+
+        } else if(!this.checkSignature(request)) {
             log.debug("signature_invalid");
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.setCode(ErrorCode.SIGNATURE_INVALID);
+            jsonObject.setMsg(ErrorEnum.getByCode(ErrorCode.SIGNATURE_INVALID).getMsg());
+            jsonObject.setMeta(meta(request));
+            result = JsonUtils.toJson(jsonObject);
+            response.getWriter().write(result);
+
         } else {
             filterChain.doFilter(request, response);
         }
