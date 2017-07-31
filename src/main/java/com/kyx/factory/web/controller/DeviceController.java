@@ -117,7 +117,7 @@ public class DeviceController extends BaseController {
                 wsheet.addCell(new Label(k++, j, String.valueOf(data.getAcce_z())));
                 wsheet.addCell(new Label(k++, j, String.valueOf(data.getGyro_x())));
                 wsheet.addCell(new Label(k++, j, String.valueOf(data.getGyro_y())));
-                wsheet.addCell(new Label(k++, j, String.valueOf(data.getAcce_z())));
+                wsheet.addCell(new Label(k++, j, String.valueOf(data.getGyro_z())));
 
                 // look 6轴校准
                 String binaryResult = Integer.toBinaryString(data.getTest_result());
