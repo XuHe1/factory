@@ -29,4 +29,9 @@ public class DbConfig {
         transactionManager.setDataSource(dataSource());
         return transactionManager;
     }
+
+    @Bean
+    public MyDbMigrate dbMigrate() {
+        return new MyDbMigrate();
+    }
 }
