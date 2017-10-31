@@ -279,6 +279,21 @@ public class AnalyseResource extends BaseResource {
         return ok(dailyStats);
     }
 
+    @GetMapping("/daily_count/order")
+    public JsonResp getDailyCount(@RequestParam String orderNo) {
+        if (StringUtils.isBlank(orderNo)) {
+            throw new GeneralException(ErrorEnum.MISS_ORDER_ID);
+        }
+
+        List<Object[]> dailyStats = deviceDataRepository.getDailyCount(orderNo);
+
+        if (dailyStats == null || dailyStats.size() < 1) {
+            throw new GeneralException(ErrorEnum.NO_STATISTIC);
+        }
+
+        return ok(dailyStats);
+    }
+
     @GetMapping("/device_time/order")
     public JsonResp getEveryDeviceTime(@RequestParam String orderNo) {
         if (StringUtils.isBlank(orderNo)) {

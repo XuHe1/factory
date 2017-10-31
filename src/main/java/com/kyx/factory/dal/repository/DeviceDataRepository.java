@@ -47,6 +47,16 @@ public interface DeviceDataRepository extends JpaRepository<DeviceData, Long> , 
     @Query(value = "select  date(receive_time), case test_result when 0 then 0 else  1 end, count(id) from device_data where order_id = ?1 group by DATE(receive_time), case test_result when 0 then 0 else  1 end", nativeQuery = true)
     List<Object[]> getDailyStat(String orderNo);
 
+    @Query(value = "select  date(receive_time), case test_result when 0 then 0 else  1 end, count(id) from device_data " +
+            "where " +
+            "(case  when test_result != 0 then " +
+            "chip_id not IN(select  chip_id  from device_data  where order_id = ?1 and test_result = 0) " +
+            "when test_result = 0 then 1=1 " +
+            "end) " +
+            "and order_id = ?1 " +
+            "group by DATE(receive_time), case test_result when 0 then 0 else  1 end", nativeQuery = true)
+    List<Object[]> getDailyCount(String orderNo);
+
     @Query("select check_total from DeviceData d where d.order_id = ?1 order by d.receive_time asc")
     Long[] findEveryDeviceTime(String orderId);
 
