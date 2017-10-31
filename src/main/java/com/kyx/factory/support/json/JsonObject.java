@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-class JsonObject<T> {
+public class JsonObject<T> {
     private T data;
     private String code;
     private String msg;

@@ -1,5 +1,5 @@
 group = "com.kyx.factory"
-version = "1.0.2"
+version = "1.0.5"
 description = "factory"
 
 buildscript {
@@ -95,6 +95,11 @@ dependencies {
     compile("org.hibernate:hibernate-jpamodelgen")
     // flyway
     compile "org.flywaydb:flyway-core"
+
+    compile("org.apache.shiro:shiro-spring:1.2.4")
+    compile("org.apache.shiro:shiro-ehcache:1.2.4")
+    compile("org.apache.shiro:shiro-cas:1.2.4")
+
     // Test
     testCompile("org.springframework.boot:spring-boot-starter-test")
 }

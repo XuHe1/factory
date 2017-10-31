@@ -53,9 +53,14 @@
                     <!--<button id="remove" class="btn btn-danger" disabled>-->
                         <!--<i class="glyphicon glyphicon-remove"></i> 删除-->
                     <!--</button>-->
+
+                    {% if userdetails.username == "l.huang" %}
                     <button id="add" class="btn btn-primary">
                         <i class="glyphicon glyphicon-plus"></i> 新建
                     </button>
+                    {% endif %}
+
+
                 </div>
                 <table class="table">
                 </table>
@@ -172,5 +177,8 @@
 <script type="text/javascript" src="/js/bower_components/jquery/dist/jquery.form.js"></script>
 <script type="text/javascript" src="/js/bower_components/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
 {% include "include/bootstrap-table" %}
+<script>
+       user ="{{ userdetails.username | escape(strategy='js') }}";
+</script>
 <script src="/js/app/order/list.js"></script>
 {% endblock %}

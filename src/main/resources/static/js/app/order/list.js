@@ -209,16 +209,17 @@
                 field: 'state',
                 title: '操作',
                 formatter: function (value, row, index) {
-
                         var html = '';
-
-                        if(value == 0) {
-                            html = "<button type='button' id='modify' class='btn btn-default' value='" + row.id + "'>修改</button>";
-                        } else if (value == 1 ) {
-                            html = "<button type='button' id='stop' class='btn btn-default' value='" + row.id + "'>暂停</button>";
-                        } else if (value == 2) {
-                            html = "<button type='button' id='continue' class='btn btn-default' value='" + row.id + "'>继续</button>";
+                        if (user == "l.huang") {
+                            if(value == 0) {
+                                html = "<button type='button' id='modify' class='btn btn-default' value='" + row.id + "'>修改</button>";
+                            } else if (value == 1 ) {
+                                html = "<button type='button' id='stop' class='btn btn-default' value='" + row.id + "'>暂停</button>";
+                            } else if (value == 2) {
+                                html = "<button type='button' id='continue' class='btn btn-default' value='" + row.id + "'>继续</button>";
+                            }
                         }
+
                         return html;
                 }
             }

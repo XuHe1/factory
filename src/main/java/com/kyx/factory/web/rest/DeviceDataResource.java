@@ -53,7 +53,7 @@ public class DeviceDataResource extends BaseResource {
 
     }
 
-    @RequestMapping(path = "/product" , method = RequestMethod.PUT)
+    @RequestMapping(path = "/product/invalid" , method = RequestMethod.PUT)
     public JsonResp update(@RequestParam Long id, @RequestParam Integer invalid) {
         log.info("id: {}, invalid: {}", id, invalid);
         if (id == null || invalid == null) {
