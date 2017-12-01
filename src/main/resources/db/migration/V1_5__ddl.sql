@@ -1,0 +1,1 @@
+alter table device_data change column battery_voltage battery_voltage int(11) default null;
