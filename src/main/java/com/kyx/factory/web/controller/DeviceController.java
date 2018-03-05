@@ -50,6 +50,7 @@ public class DeviceController extends BaseController {
         mv.setViewName("device/list");
         mv.addObject("devices", DeviceType.getAllType());
         mv.addObject("factories", FactoryEnum.getAllFactory());
+        mv.addObject("admin", appConfig.getAdmin());
         return mv;
     }
 

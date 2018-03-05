@@ -54,7 +54,7 @@
                         <!--<i class="glyphicon glyphicon-remove"></i> 删除-->
                     <!--</button>-->
 
-                    {% if userdetails.username == "l.huang" %}
+                    {% if userdetails.username == admin %}
                     <button id="add" class="btn btn-primary">
                         <i class="glyphicon glyphicon-plus"></i> 新建
                     </button>
@@ -78,7 +78,7 @@
                 <h4 class="modal-title" id="packet-edit-modal-label">新建订单</h4>
             </div>
             <div class="modal-body">
-                <form action="/order" id="orderForm" method="post">
+                <form action="/order" id="orderForm" method="put">
                     <div class="form-group">
                         <label for="orderNoPrefix" class="control-label">订单号前缀</label>
                         <input type="text" class="form-control" id="orderNoPrefix" name="orderNoPrefix">
@@ -179,6 +179,8 @@
 {% include "include/bootstrap-table" %}
 <script>
        user ="{{ userdetails.username | escape(strategy='js') }}";
+       admin = "{{admin}}";
+
 </script>
 <script src="/js/app/order/list.js"></script>
 {% endblock %}

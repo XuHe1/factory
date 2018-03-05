@@ -38,7 +38,7 @@
                         <!--<i class="glyphicon glyphicon-remove"></i> 删除-->
                     <!--</button>-->
 
-                    {% if userdetails.username == "l.huang" %}
+                    {% if userdetails.username == admin %}
                     <button id="add" class="btn btn-primary">
                         <i class="glyphicon glyphicon-plus"></i> 新建
                     </button>
@@ -89,5 +89,8 @@
 <script type="text/javascript" src="/js/bower_components/moment/min/moment-with-locales.min.js"></script>
 <script type="text/javascript" src="/js/bower_components/jquery/dist/jquery.form.js"></script>
 {% include "include/bootstrap-table" %}
+<script>
+       admin = "{{admin}}";
+</script>
 <script src="/js/app/config/sn-list.js"></script>
 {% endblock %}

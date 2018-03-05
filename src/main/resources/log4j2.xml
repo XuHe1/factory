@@ -3,7 +3,7 @@
     <Properties>
         <Property name="LogDir">./build/log4j/@name@</Property>
         <Property name="CommonPattern">%d{yyyy-MM-dd'T'HH:mm:ss.SSS} %5p %t %M(%F:%L) %m%n</Property>
-        <Property name="MainPackage">com.netstatx.device</Property>
+        <Property name="MainPackage">com.kyx.factory</Property>
     </Properties>
     <Filter type="ThresholdFilter" level="TRACE"/>
 

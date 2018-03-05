@@ -98,6 +98,7 @@
 {% include "include/bootstrap-table" %}
 <script>
        user ="{{ userdetails.username | escape(strategy='js') }}";
+       admin = "{{admin}}";
 </script>
 <script src="/js/app/device/list.js"></script>
 {% endblock %}

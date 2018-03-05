@@ -2,6 +2,7 @@ app:
   defaultSN: Z994499
   fwProjectUrl: http://nbfb.test.getqood.com/api/project/firmwares
   fwVersionUrl: http://nbfb.test.getqood.com/api/app/project_id/all
+  admin: h.xu
 
 server:
   port: 8080

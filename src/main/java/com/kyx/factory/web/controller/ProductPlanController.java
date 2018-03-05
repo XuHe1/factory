@@ -1,8 +1,10 @@
 package com.kyx.factory.web.controller;
 
+import com.kyx.factory.config.WebConfig;
 import com.kyx.factory.web.support.BaseController;
 import com.kyx.factory.web.validation.DeviceType;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,8 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/web/plan")
 public class ProductPlanController extends BaseController {
 
+    @Autowired
+    private WebConfig.AppConfig appConfig;
 
     @GetMapping
     public ModelAndView list() {
@@ -33,6 +37,7 @@ public class ProductPlanController extends BaseController {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("config/sn-list");
         mv.addObject("devices", DeviceType.getAllType());
+        mv.addObject("admin", appConfig.getAdmin());
         return mv;
     }
 

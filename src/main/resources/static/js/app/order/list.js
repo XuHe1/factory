@@ -210,7 +210,7 @@
                 title: '操作',
                 formatter: function (value, row, index) {
                         var html = '';
-                        if (user == "l.huang") {
+                        if (user == admin) {
                             if(value == 0) {
                                 html = "<button type='button' id='modify' class='btn btn-default' value='" + row.id + "'>修改</button>";
                             } else if (value == 1 ) {

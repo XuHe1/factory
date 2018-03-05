@@ -92,6 +92,7 @@ public class ProductOrderController extends BaseController {
         mv.addObject("devices", DeviceType.getAllType());
         mv.addObject("factories", FactoryEnum.getAllFactory());
         mv.addObject("projects", projectList);
+        mv.addObject("admin", appConfig.getAdmin());
         return mv;
     }
 

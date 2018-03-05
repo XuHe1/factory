@@ -83,6 +83,7 @@ public class WebConfig {
         private String defaultSN;
         private String fwProjectUrl;
         private String fwVersionUrl;
+        private String admin;
     }
 
 }

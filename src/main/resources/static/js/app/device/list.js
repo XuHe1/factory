@@ -103,7 +103,7 @@
                 field: 'iccid',
                 title: 'ICCID',
                 formatter: function (value, row, index) {
-                    return value.replace("ICCID:","");
+                    return value == null? '' : value.replace("ICCID:","");
                 }
             },
             {
@@ -203,7 +203,7 @@
                 title: '备注',
                 formatter: function (value, row, index) {
                       var html = '';
-                      if (user == "l.huang") {
+                      if (user == admin) {
                           if(value == 1){
                               html = "<input type='checkbox' class = 'notes' checked='checked' value='" + row.id + "'/> 无效";
                           }else {
